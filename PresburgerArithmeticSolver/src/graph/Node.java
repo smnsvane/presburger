@@ -1,15 +1,8 @@
 package graph;
 
-public abstract class Node {
+public interface Node {
 
-	private final Branch parent;
-	public Branch getParent() { return parent; }
-
-	private final String identifier;
-	public String getIdentifier() { return identifier; }
-
-	public Node(Branch parent, String identifier) {
-		this.parent = parent;
-		this.identifier = identifier;
-	}
+	Branch getParent();
+	String getIdentifier();
+//	void validate();
 }

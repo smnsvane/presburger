@@ -1,13 +1,15 @@
 package graph.math.quantifier;
 
-import java.util.List;
+import java.util.Iterator;
 
 import graph.Branch;
 import graph.Node;
+import graph.UnaryBranch;
+import graph.AbstractNode;
 import graph.VariableAssignment;
 import graph.logic.Logic;
 
-public abstract class Quantifier extends Branch implements Logic {
+public abstract class Quantifier extends AbstractNode implements UnaryBranch<Logic>, Logic {
 
 	public final String variableSymbol;
 	public Quantifier(Branch parent, String identifier, String variableSymbol) {
@@ -15,15 +17,24 @@ public abstract class Quantifier extends Branch implements Logic {
 		this.variableSymbol = variableSymbol;
 	}
 
-	public Logic getChild() { return (Logic) getChildren().get(0); }
+	private Logic child;
+	@Override
+	public Logic getChild() { return child; }
+	@Override
+	public void setChild(Logic child) { this.child = child; }
 
 	@Override
-	public void setChildren(List<Node> children) {
-		if (children.size() != 1)
-			throw new RuntimeException(getClass()+" must have exactly one child");
-		if (!(children.get(0) instanceof Logic))
-			throw new RuntimeException(getClass()+" must have a "+Logic.class+" child");
-		super.setChildren(children);
+	public Iterator<Node> iterator() {
+		return new Iterator<Node>() {
+			boolean done = false;
+			@Override
+			public Node next() {
+				done = true;
+				return child;
+			}
+			@Override
+			public boolean hasNext() { return done; }
+		};
 	}
 
 	@Override

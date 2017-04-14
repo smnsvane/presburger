@@ -1,10 +1,11 @@
 package graph.logic;
 
+import graph.AbstractNode;
 import graph.Branch;
 import graph.Leaf;
 import graph.VariableAssignment;
 
-public class True extends Leaf implements Logic {
+public class True extends AbstractNode implements Leaf, Logic {
 
 	public True(Branch parent, String identifier) { super(parent, "true"); }
 

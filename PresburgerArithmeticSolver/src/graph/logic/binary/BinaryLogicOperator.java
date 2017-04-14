@@ -1,27 +1,48 @@
 package graph.logic.binary;
 
-import java.util.List;
-
 import graph.Branch;
 import graph.Node;
+
+import java.util.Iterator;
+
+import graph.AbstractNode;
+import graph.BinaryBranch;
 import graph.logic.Logic;
 
-public abstract class BinaryLogicOperator extends Branch implements Logic {
+public abstract class BinaryLogicOperator extends AbstractNode implements BinaryBranch<Logic>, Logic {
 
 	public BinaryLogicOperator(Branch parent, String identifier) {
 		super(parent, identifier);
 	}
 
-	public Logic getFirstChild() { return (Logic) getChildren().get(0); }
-	public Logic getSecondChild() { return (Logic) getChildren().get(1); }
+	private Logic child1, child2;
+	@Override
+	public Logic getFirstChild() { return child1; }
+	@Override
+	public Logic getSecondChild() { return child2; }
+	@Override
+	public void setFirstChild(Logic child) { child1 = child; }
+	@Override
+	public void setSecondChild(Logic child) { child2 = child; }
 
 	@Override
-	public void setChildren(List<Node> children) {
-		if (children.size() != 2)
-			throw new RuntimeException(getClass()+" must have exactly two children");
-		for (Node n : children)
-			if (!(n instanceof Logic))
-				throw new RuntimeException(getClass()+" must have "+Logic.class+" children");
-		super.setChildren(children);
+	public Iterator<Node> iterator() {
+		return new Iterator<Node>() {
+			int nextCount = 0;
+			@Override
+			public Node next() {
+				nextCount++;
+				switch (nextCount) {
+				case 1:
+					return child1;
+				case 2:
+					return child2;
+				default:
+					throw new RuntimeException("Ran out of children");
+				}
+			}
+			@Override
+			public boolean hasNext() { return nextCount < 2; }
+		};
 	}
 }

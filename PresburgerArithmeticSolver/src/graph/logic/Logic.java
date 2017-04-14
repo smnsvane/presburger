@@ -1,8 +1,9 @@
 package graph.logic;
 
+import graph.Node;
 import graph.VariableAssignment;
 
-public interface Logic {
+public interface Logic extends Node {
 
 	boolean evaluate(VariableAssignment varAss);
 }

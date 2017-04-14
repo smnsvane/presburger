@@ -1,10 +1,11 @@
 package graph.math;
 
+import graph.AbstractNode;
 import graph.Branch;
 import graph.Leaf;
 import graph.VariableAssignment;
 
-public class Constant extends Leaf implements Math{
+public class Constant extends AbstractNode implements Leaf, Math {
 
 	private final int number;
 	public Constant(Branch parent, int number) {
