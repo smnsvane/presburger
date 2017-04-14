@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class Addition extends BinaryMathOperator {
 
-	public Addition(Branch parent) { super(parent, "+"); }
+	public static final String symbol = "+";
+	public Addition(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public int evaluate(VariableAssignment varAss) {

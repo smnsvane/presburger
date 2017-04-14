@@ -10,7 +10,8 @@ import graph.VariableAssignment;
 
 public class Not extends AbstractNode implements UnaryBranch<Logic>, Logic {
 
-	public Not(Branch parent) { super(parent, "~"); }
+	public static final String symbol = "~";
+	public Not(Branch parent) { super(parent, symbol); }
 
 	private Logic child;
 	@Override

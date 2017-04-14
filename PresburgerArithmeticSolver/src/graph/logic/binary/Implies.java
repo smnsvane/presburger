@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class Implies extends BinaryLogicOperator {
 
-	public Implies(Branch parent) { super(parent, "->"); }
+	public static final String symbol = "->";
+	public Implies(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

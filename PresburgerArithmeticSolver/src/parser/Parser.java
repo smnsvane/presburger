@@ -33,7 +33,7 @@ public class Parser {
 			
 		}
 	}
-	
+
 	public void find(Node n, String line) { find(n, line, 0); }
 	public void find(Node n, String line, int offset) {
 		int index = line.indexOf(n.getIdentifier(), offset);

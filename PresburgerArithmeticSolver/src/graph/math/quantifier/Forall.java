@@ -4,7 +4,8 @@ import graph.Branch;
 
 public class Forall extends Quantifier {
 
+	public static final String symbol = "A";
 	public Forall(Branch parent, String variableSymbol) {
-		super(parent, "A", variableSymbol);
+		super(parent, symbol, variableSymbol);
 	}
 }

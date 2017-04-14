@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class LessThan extends Comparator {
 
-	public LessThan(Branch parent) { super(parent, "<"); }
+	public static final String symbol = "<";
+	public LessThan(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

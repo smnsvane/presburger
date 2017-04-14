@@ -10,7 +10,8 @@ import graph.VariableAssignment;
 
 public class Minus extends AbstractNode implements UnaryBranch<Math>, Math {
 
-	public Minus(Branch parent) { super(parent, "-"); }
+	public static final String symbol = "-";
+	public Minus(Branch parent) { super(parent, symbol); }
 
 	private Math child;
 	@Override

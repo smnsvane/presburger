@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class And extends BinaryLogicOperator {
 
-	public And(Branch parent) { super(parent, "&"); }
+	public static final String symbol = "&";
+	public And(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

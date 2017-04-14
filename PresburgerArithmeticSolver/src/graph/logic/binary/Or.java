@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class Or extends BinaryLogicOperator {
 
-	public Or(Branch parent) { super(parent, "/"); }
+	public static final String symbol = "/";
+	public Or(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class EqualTo extends Comparator {
 
-	public EqualTo(Branch parent) { super(parent, "="); }
+	public static final String symbol = "=";
+	public EqualTo(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

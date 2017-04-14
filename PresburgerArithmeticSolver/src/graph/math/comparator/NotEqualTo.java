@@ -5,7 +5,8 @@ import graph.VariableAssignment;
 
 public class NotEqualTo extends Comparator {
 
-	public NotEqualTo(Branch parent) { super(parent, "!="); }
+	public static final String symbol = "!=";
+	public NotEqualTo(Branch parent) { super(parent, symbol); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
