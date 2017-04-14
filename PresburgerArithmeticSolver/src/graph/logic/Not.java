@@ -8,7 +8,7 @@ import graph.VariableAssignment;
 
 public class Not extends Branch implements Logic {
 
-	public Not(Branch parent) { super(parent, "~"); }
+	public Not(Branch parent) { super(parent, "~", 1); }
 
 	public Logic getChild() { return (Logic) getChildren().get(0); }
 
