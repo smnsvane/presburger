@@ -2,17 +2,10 @@ package graph.math.binary;
 
 import java.util.Iterator;
 
-import graph.Branch;
-import graph.Node;
-import graph.AbstractNode;
 import graph.BinaryBranch;
 import graph.math.Math;
 
-public abstract class BinaryMathOperator extends AbstractNode implements BinaryBranch<Math>, Math {
-
-	public BinaryMathOperator(Branch parent, String identifier) {
-		super(parent, identifier);
-	}
+public abstract class BinaryMathOperator implements BinaryBranch<Math>, Math {
 
 	private Math child1, child2;
 	@Override
@@ -25,11 +18,11 @@ public abstract class BinaryMathOperator extends AbstractNode implements BinaryB
 	public void setSecondChild(Math child) { child2 = child; }
 
 	@Override
-	public Iterator<Node> iterator() {
-		return new Iterator<Node>() {
+	public Iterator<Math> iterator() {
+		return new Iterator<Math>() {
 			int nextCount = 0;
 			@Override
-			public Node next() {
+			public Math next() {
 				nextCount++;
 				switch (nextCount) {
 				case 1:

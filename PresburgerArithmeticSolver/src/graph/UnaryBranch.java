@@ -1,7 +1,7 @@
 package graph;
 
-public interface UnaryBranch<N extends Node> extends Branch {
+public interface UnaryBranch<Child extends NodeType> extends NodeBranch<Child> {
 
-	Node getChild();
-	void setChild(N child);
+	Child getChild();
+	void setChild(Child child);
 }

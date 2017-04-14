@@ -2,16 +2,16 @@ package graph.math;
 
 import java.util.Iterator;
 
-import graph.Branch;
-import graph.Node;
 import graph.UnaryBranch;
-import graph.AbstractNode;
 import graph.VariableAssignment;
 
-public class Minus extends AbstractNode implements UnaryBranch<Math>, Math {
+public class Minus implements UnaryBranch<Math>, Math {
 
 	public static final String symbol = "-";
-	public Minus(Branch parent) { super(parent, symbol); }
+
+	//TODO: include '(' and ')' if child have lower precedence than '-'
+	@Override
+	public String toString() { return symbol+getChild(); }
 
 	private Math child;
 	@Override
@@ -25,11 +25,11 @@ public class Minus extends AbstractNode implements UnaryBranch<Math>, Math {
 	}
 
 	@Override
-	public Iterator<Node> iterator() {
-		return new Iterator<Node>() {
+	public Iterator<Math> iterator() {
+		return new Iterator<Math>() {
 			boolean done = false;
 			@Override
-			public Node next() {
+			public Math next() {
 				done = true;
 				return child;
 			}

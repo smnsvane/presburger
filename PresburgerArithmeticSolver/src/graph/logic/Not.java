@@ -2,16 +2,15 @@ package graph.logic;
 
 import java.util.Iterator;
 
-import graph.AbstractNode;
-import graph.Branch;
-import graph.Node;
 import graph.UnaryBranch;
 import graph.VariableAssignment;
 
-public class Not extends AbstractNode implements UnaryBranch<Logic>, Logic {
+public class Not implements UnaryBranch<Logic>, Logic {
 
 	public static final String symbol = "~";
-	public Not(Branch parent) { super(parent, symbol); }
+	//TODO: include '(' and ')' if child have lower precedence than '~'
+	@Override
+	public String toString() { return symbol+child; }
 
 	private Logic child;
 	@Override
@@ -25,11 +24,14 @@ public class Not extends AbstractNode implements UnaryBranch<Logic>, Logic {
 	}
 
 	@Override
-	public Iterator<Node> iterator() {
-		return new Iterator<Node>() {
+	public Logic negate() { return child; }
+
+	@Override
+	public Iterator<Logic> iterator() {
+		return new Iterator<Logic>() {
 			boolean done = false;
 			@Override
-			public Node next() {
+			public Logic next() {
 				done = true;
 				return child;
 			}

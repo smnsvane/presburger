@@ -1,19 +1,11 @@
 package graph.logic.binary;
 
-import graph.Branch;
-import graph.Node;
-
-import java.util.Iterator;
-
-import graph.AbstractNode;
 import graph.BinaryBranch;
 import graph.logic.Logic;
 
-public abstract class BinaryLogicOperator extends AbstractNode implements BinaryBranch<Logic>, Logic {
+import java.util.Iterator;
 
-	public BinaryLogicOperator(Branch parent, String identifier) {
-		super(parent, identifier);
-	}
+public abstract class BinaryLogicOperator implements BinaryBranch<Logic>, Logic {
 
 	private Logic child1, child2;
 	@Override
@@ -26,11 +18,11 @@ public abstract class BinaryLogicOperator extends AbstractNode implements Binary
 	public void setSecondChild(Logic child) { child2 = child; }
 
 	@Override
-	public Iterator<Node> iterator() {
-		return new Iterator<Node>() {
+	public Iterator<Logic> iterator() {
+		return new Iterator<Logic>() {
 			int nextCount = 0;
 			@Override
-			public Node next() {
+			public Logic next() {
 				nextCount++;
 				switch (nextCount) {
 				case 1:

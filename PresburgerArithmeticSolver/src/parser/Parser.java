@@ -1,47 +1,92 @@
 package parser;
 
-import graph.Branch;
-import graph.Node;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import graph.NodeBranch;
+import graph.logic.Logic;
 import graph.logic.Not;
 import graph.logic.binary.And;
-import graph.logic.binary.BinaryLogicOperator;
 import graph.logic.binary.Implies;
 import graph.logic.binary.Or;
 import graph.math.comparator.EqualTo;
-import graph.math.quantifier.Exists;
-import graph.math.quantifier.Forall;
+import graph.math.Constant;
+import graph.math.Math;
+import graph.math.Variable;
+import graph.math.binary.Addition;
 
 public class Parser {
 
-	public void parse(String rawFormula) {
-		find(new Forall(null, null), rawFormula);
-		find(new Exists(null, null), rawFormula);
-		find(new Implies(null), rawFormula);
-		find(new Or(null), rawFormula);
-		find(new And(null), rawFormula);
-		find(new Not(null), rawFormula);
-		find(new EqualTo(null), rawFormula);
-	}
+	public NodeBranch<?> root = null;
 
-	private Branch root = null;
-	private Branch workingParent = null;
-	private void putNewNode(Node n) {
-		if (root == null) {
-			root = (Branch) n;
-			workingParent = root;
-		} else {
-			
-		}
-	}
+	public Object parse(String rawFormula, NodeBranch<?> parent) {
 
-	public void find(Node n, String line) { find(n, line, 0); }
-	public void find(Node n, String line, int offset) {
-		int index = line.indexOf(n.getIdentifier(), offset);
+		int index = rawFormula.indexOf(Implies.symbol);
 		if (index != -1) {
-			System.out.println(n.getClass().getSimpleName()+" at index "+index);
-			if (n instanceof BinaryLogicOperator) // and / or / implies
-				n.getClass().getConstructors()[0].newInstance(arg0)
-			find(n, line, index + 1);
+			Implies implies = new Implies();
+			implies.setFirstChild((Logic) parse(rawFormula.substring(0, index), implies));
+			implies.setSecondChild((Logic) parse(rawFormula.substring(index + Implies.symbol.length()), implies));
+			return implies;
 		}
+
+		index = rawFormula.indexOf(Or.symbol);
+		if (index != -1) {
+			Or or = new Or();
+			or.setFirstChild((Logic) parse(rawFormula.substring(0, index), or));
+			or.setSecondChild((Logic) parse(rawFormula.substring(index + Or.symbol.length()), or));
+			return or;
+		}
+
+		index = rawFormula.indexOf(And.symbol);
+		if (index != -1) {
+			And and = new And();
+			and.setFirstChild((Logic) parse(rawFormula.substring(0, index), and));
+			and.setSecondChild((Logic) parse(rawFormula.substring(index + And.symbol.length()), and));
+			return and;
+		}
+
+		index = rawFormula.indexOf(Not.symbol);
+		if (index != -1) {
+			// TODO: index should be '0' or there is formula that is being skipped
+			Not not = new Not();
+			not.setChild((Logic) parse(rawFormula.substring(index + Not.symbol.length()), not));
+			return not;
+		}
+
+		index = rawFormula.indexOf(EqualTo.symbol);
+		if (index != -1) {
+			EqualTo equalTo = new EqualTo();
+			equalTo.setFirstChild((Math) parse(rawFormula.substring(0, index), equalTo));
+			equalTo.setSecondChild((Math) parse(rawFormula.substring(index + EqualTo.symbol.length()), equalTo));
+			return equalTo;
+		}
+
+		index = rawFormula.indexOf(Addition.symbol);
+		if (index != -1) {
+			Addition add = new Addition();
+			add.setFirstChild((Math) parse(rawFormula.substring(0, index), add));
+			add.setSecondChild((Math) parse(rawFormula.substring(index + Addition.symbol.length()), add));
+			return add;
+		}
+
+		// no other symbol matches at this point
+		// look for constant and variable matches
+		Pattern varPattern = Pattern.compile("([0-9]*)([A-Za-z][0-9]*)");
+		Matcher m = varPattern.matcher(rawFormula);
+		if (m.find()) {
+			String factorString = m.group(1);
+			Variable var;
+			if (factorString.isEmpty())
+				var = new Variable(1, m.group(2));
+			else {
+				int factor = Integer.parseInt(factorString);
+				var = new Variable(factor, m.group(2));
+			}
+			return var;
+		}
+
+		int number = Integer.parseInt(rawFormula);
+		Constant constant = new Constant(number);
+		return constant;
 	}
 }

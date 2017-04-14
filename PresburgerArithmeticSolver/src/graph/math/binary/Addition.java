@@ -1,12 +1,15 @@
 package graph.math.binary;
 
-import graph.Branch;
 import graph.VariableAssignment;
 
 public class Addition extends BinaryMathOperator {
 
 	public static final String symbol = "+";
-	public Addition(Branch parent) { super(parent, symbol); }
+
+	@Override
+	public String toString() {
+		return getFirstChild().toString()+symbol+getSecondChild();
+	}
 
 	@Override
 	public int evaluate(VariableAssignment varAss) {

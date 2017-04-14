@@ -1,9 +1,9 @@
 package graph;
 
-public interface BinaryBranch<N extends Node> extends Branch {
+public interface BinaryBranch<Child extends NodeType> extends NodeBranch<Child> {
 
-	Node getFirstChild();
-	Node getSecondChild();
-	void setFirstChild(N child);
-	void setSecondChild(N child);
+	Child getFirstChild();
+	Child getSecondChild();
+	void setFirstChild(Child child);
+	void setSecondChild(Child child);
 }

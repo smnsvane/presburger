@@ -2,18 +2,11 @@ package graph.math.comparator;
 
 import java.util.Iterator;
 
-import graph.Branch;
-import graph.Node;
-import graph.AbstractNode;
 import graph.BinaryBranch;
 import graph.logic.Logic;
 import graph.math.Math;
 
-public abstract class Comparator extends AbstractNode implements BinaryBranch<Math>, Logic {
-
-	public Comparator(Branch parent, String identifier) {
-		super(parent, identifier);
-	}
+public abstract class Comparator implements BinaryBranch<Math>, Logic {
 
 	private Math child1, child2;
 	@Override
@@ -26,11 +19,11 @@ public abstract class Comparator extends AbstractNode implements BinaryBranch<Ma
 	public void setSecondChild(Math child) { child2 = child; }
 
 	@Override
-	public Iterator<Node> iterator() {
-		return new Iterator<Node>() {
+	public Iterator<Math> iterator() {
+		return new Iterator<Math>() {
 			int nextCount = 0;
 			@Override
-			public Node next() {
+			public Math next() {
 				nextCount++;
 				switch (nextCount) {
 				case 1:

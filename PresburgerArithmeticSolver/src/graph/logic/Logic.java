@@ -1,9 +1,10 @@
 package graph.logic;
 
-import graph.Node;
+import graph.NodeType;
 import graph.VariableAssignment;
 
-public interface Logic extends Node {
+public interface Logic extends NodeType {
 
 	boolean evaluate(VariableAssignment varAss);
+	Logic negate();
 }

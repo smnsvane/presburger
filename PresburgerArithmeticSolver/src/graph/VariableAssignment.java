@@ -4,12 +4,12 @@ import java.util.HashMap;
 
 public class VariableAssignment {
 
-	private final HashMap<Character, Integer> assignment = new HashMap<>();
+	private final HashMap<String, Integer> assignment = new HashMap<>();
 
-	public int getAssignment(char variableSymbol) {
+	public int getAssignment(String variableSymbol) {
 		return assignment.get(variableSymbol);
 	}
-	public void addAssignment(char variableSymbol, int assignment) {
+	public void addAssignment(String variableSymbol, int assignment) {
 		this.assignment.put(variableSymbol, assignment);
 	}
 }

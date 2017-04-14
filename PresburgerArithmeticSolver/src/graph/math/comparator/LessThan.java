@@ -1,16 +1,28 @@
 package graph.math.comparator;
 
-import graph.Branch;
 import graph.VariableAssignment;
+import graph.logic.Logic;
 
 public class LessThan extends Comparator {
 
 	public static final String symbol = "<";
-	public LessThan(Branch parent) { super(parent, symbol); }
+
+	@Override
+	public String toString() {
+		return getFirstChild()+symbol+getSecondChild();
+	}
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
 		return getFirstChild().evaluate(varAss) <
 				getSecondChild().evaluate(varAss);
+	}
+
+	@Override
+	public Logic negate() {
+		GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo();
+		greaterOrEqual.setFirstChild(getFirstChild());
+		greaterOrEqual.setSecondChild(getSecondChild());
+		return greaterOrEqual;
 	}
 }
