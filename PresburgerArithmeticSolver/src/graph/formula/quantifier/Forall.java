@@ -13,4 +13,10 @@ public class Forall extends Quantifier {
 		exists.setChild(getChild().negate());
 		return exists;
 	}
+	@Override
+	public Forall copy() {
+		Forall copy = new Forall(variableSymbol);
+		copy.setChild((Formula) getChild().copy());
+		return copy;
+	}
 }

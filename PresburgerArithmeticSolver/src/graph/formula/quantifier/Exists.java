@@ -1,6 +1,8 @@
 package graph.formula.quantifier;
 
 import graph.formula.Formula;
+import graph.formula.comparator.EqualTo;
+import graph.term.Term;
 
 public class Exists extends Quantifier {
 
@@ -12,5 +14,11 @@ public class Exists extends Quantifier {
 		Forall forall = new Forall(variableSymbol);
 		forall.setChild(getChild().negate());
 		return forall;
+	}
+	@Override
+	public Exists copy() {
+		Exists copy = new Exists(variableSymbol);
+		copy.setChild((Formula) getChild().copy());
+		return copy;
 	}
 }
