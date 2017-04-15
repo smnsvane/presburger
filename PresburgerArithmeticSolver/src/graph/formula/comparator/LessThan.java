@@ -5,6 +5,7 @@ import graph.formula.False;
 import graph.formula.Formula;
 import graph.formula.True;
 import graph.term.Sum;
+import graph.term.Term;
 
 public class LessThan extends Comparator {
 
@@ -34,5 +35,12 @@ public class LessThan extends Comparator {
 					return new False();
 		}
 		return this;
+	}
+	@Override
+	public LessThan copy() {
+		LessThan copy = new LessThan();
+		copy.setFirstChild((Term) getFirstChild().copy());
+		copy.setSecondChild((Term) getSecondChild().copy());
+		return copy;
 	}
 }

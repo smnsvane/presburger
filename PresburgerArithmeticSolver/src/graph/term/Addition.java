@@ -30,4 +30,11 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 			return getFirstChild();
 		return this;
 	}
+	@Override
+	public Addition copy() {
+		Addition copy = new Addition();
+		copy.setFirstChild((Term) getFirstChild().copy());
+		copy.setSecondChild((Term) getSecondChild().copy());
+		return copy;
+	}
 }

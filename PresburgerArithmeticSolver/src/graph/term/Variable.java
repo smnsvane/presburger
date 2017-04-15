@@ -29,4 +29,6 @@ public class Variable implements Term {
 	public Variable simplify() { return this; }
 	@Override
 	public Sum toSum() { return Sum.sumFromChildren(this); }
+	@Override
+	public Variable copy() { return new Variable(factor, variableSymbol); }
 }

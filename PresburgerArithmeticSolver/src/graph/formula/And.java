@@ -30,4 +30,11 @@ public class And extends TwoChildrenBranch<Formula, Formula> implements Formula 
 			return new False();
 		return this;
 	}
+	@Override
+	public And copy() {
+		And copy = new And();
+		copy.setFirstChild((Formula) getFirstChild().copy());
+		copy.setSecondChild((Formula) getSecondChild().copy());
+		return copy;
+	}
 }

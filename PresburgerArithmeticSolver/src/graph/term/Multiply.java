@@ -25,4 +25,11 @@ public class Multiply extends TwoChildrenBranch<Constant, Term> implements Term 
 		Term overtaker = getSecondChild().multiply(getFirstChild().value);
 		return overtaker;
 	}
+	@Override
+	public Multiply copy() {
+		Multiply copy = new Multiply();
+		copy.setFirstChild((Constant) getFirstChild().copy());
+		copy.setSecondChild((Term) getSecondChild().copy());
+		return copy;
+	}
 }

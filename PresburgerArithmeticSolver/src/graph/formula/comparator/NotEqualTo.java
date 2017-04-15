@@ -5,6 +5,7 @@ import graph.formula.False;
 import graph.formula.Formula;
 import graph.formula.True;
 import graph.term.Sum;
+import graph.term.Term;
 
 public class NotEqualTo extends Comparator {
 
@@ -34,5 +35,12 @@ public class NotEqualTo extends Comparator {
 					return new False();
 		}
 		return this;
+	}
+	@Override
+	public NotEqualTo copy() {
+		NotEqualTo copy = new NotEqualTo();
+		copy.setFirstChild((Term) getFirstChild().copy());
+		copy.setSecondChild((Term) getSecondChild().copy());
+		return copy;
 	}
 }

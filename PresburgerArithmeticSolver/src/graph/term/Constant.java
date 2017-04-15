@@ -1,5 +1,6 @@
 package graph.term;
 
+import graph.Node;
 import graph.VariableAssignment;
 
 public class Constant implements Term {
@@ -33,4 +34,6 @@ public class Constant implements Term {
 			return value == (int) obj;
 		return false;
 	}
+	@Override
+	public Node copy() { return new Constant(value); }
 }

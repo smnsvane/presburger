@@ -18,4 +18,10 @@ public class Not extends SingleChildBranch<Formula> implements Formula {
 		Formula child = getChild().negate();
 		return (Formula) child.simplify();
 	}
+	@Override
+	public Not copy() {
+		Not copy = new Not();
+		copy.setChild((Formula) getChild().copy());
+		return copy;
+	}
 }

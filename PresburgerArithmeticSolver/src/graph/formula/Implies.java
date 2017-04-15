@@ -28,4 +28,11 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 		or.setSecondChild(getSecondChild());
 		return (Formula) or.simplify();
 	}
+	@Override
+	public Implies copy() {
+		Implies copy = new Implies();
+		copy.setFirstChild((Formula) getFirstChild().copy());
+		copy.setSecondChild((Formula) getSecondChild().copy());
+		return copy;
+	}
 }

@@ -29,4 +29,11 @@ public class Or extends TwoChildrenBranch<Formula, Formula> implements Formula {
 			return getFirstChild();
 		return this;
 	}
+	@Override
+	public Or copy() {
+		Or copy = new Or();
+		copy.setFirstChild((Formula) getFirstChild().copy());
+		copy.setSecondChild((Formula) getSecondChild().copy());
+		return copy;
+	}
 }

@@ -3,6 +3,7 @@ package graph.term;
 import java.util.HashMap;
 
 import graph.MultipleChildrenBranch;
+import graph.Node;
 import graph.VariableAssignment;
 
 public class Sum extends MultipleChildrenBranch<Term> implements Term {
@@ -94,5 +95,12 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		if (constantValue != 0)
 			addChild(new Constant(constantValue));
 		return this;
+	}
+	@Override
+	public Node copy() {
+		Sum copy = new Sum();
+		for (Term t : viewChildren())
+			copy.addChild((Term) t.copy());
+		return copy;
 	}
 }
