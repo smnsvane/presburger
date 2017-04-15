@@ -1,5 +1,6 @@
 package graph;
 
-public interface Branch extends Node, Iterable<Node> {
+public interface Branch extends Node {
 
+	void replaceChild(Node victim, Node overtaker);
 }

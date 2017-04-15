@@ -5,7 +5,6 @@ import graph.VariableAssignment;
 public class Variable implements Term {
 
 	public final int factor;
-	public int getFactor() { return factor; }
 	public final String variableSymbol;
 	public String getSymbol() { return variableSymbol; }
 
@@ -18,21 +17,8 @@ public class Variable implements Term {
 		return (factor==1?"":(factor==-1?"-":factor))+variableSymbol;
 	}
 	@Override
-	public int evaluate(VariableAssignment varAss) {
-		return varAss.getAssignment(variableSymbol) * factor;
-	}
-	@Override
-	public Term replaceVariables(VariableAssignment assignment) {
-		Integer value = assignment.getAssignment(variableSymbol);
-		if (value == null) {
-			System.out.println("Warning: No assignment for "+variableSymbol);
-			return this;
-		}
-		return new Constant(evaluate(assignment));
-	}
-	@Override
-	public Sum toSum() {
-		return Sum.sumFromChildren(this);
+	public int evaluate(VariableAssignment assignment) {
+		return assignment.getAssignment(variableSymbol) * factor;
 	}
 	@Override
 	public Variable multiply(int factor) {
@@ -41,4 +27,6 @@ public class Variable implements Term {
 	}
 	@Override
 	public Variable simplify() { return this; }
+	@Override
+	public Sum toSum() { return Sum.sumFromChildren(this); }
 }

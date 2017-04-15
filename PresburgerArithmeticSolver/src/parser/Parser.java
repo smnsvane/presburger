@@ -3,6 +3,7 @@ package parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import graph.SymbolBinding;
 import graph.formula.And;
 import graph.formula.Formula;
 import graph.formula.Implies;
@@ -25,132 +26,151 @@ import graph.term.Variable;
 
 public class Parser {
 
-	public Formula parseLogic(String rawFormula, Formula parent) {
+	private SymbolBinding bindings = new SymbolBinding();
 
-		int index = rawFormula.indexOf(Forall.symbol);
+	public Formula parseLogic(String rawFormula) {
+
+		String symbol = bindings.getSymbol(Forall.class);
+		int index = rawFormula.indexOf(symbol);
 		if (index == 0) {
-			int dotIndex = rawFormula.indexOf(".", Forall.symbol.length());
-			String varSymbol = rawFormula.substring(Forall.symbol.length(), dotIndex);
+			int dotIndex = rawFormula.indexOf(".", symbol.length());
+			String varSymbol = rawFormula.substring(symbol.length(), dotIndex);
 			Forall all = new Forall(varSymbol);
-			all.setChild(parseLogic(rawFormula.substring(dotIndex + 1), all));
+			all.setChild(parseLogic(rawFormula.substring(dotIndex + 1)));
 			return all;
 		}
 
-		index = rawFormula.indexOf(Exists.symbol);
+		symbol = bindings.getSymbol(Exists.class);
+		index = rawFormula.indexOf(symbol);
 		if (index == 0) {
-			int dotIndex = rawFormula.indexOf(".", Exists.symbol.length());
-			String varSymbol = rawFormula.substring(Exists.symbol.length(), dotIndex);
+			int dotIndex = rawFormula.indexOf(".", symbol.length());
+			String varSymbol = rawFormula.substring(symbol.length(), dotIndex);
 			Exists exists = new Exists(varSymbol);
-			exists.setChild(parseLogic(rawFormula.substring(dotIndex + 1), exists));
+			exists.setChild(parseLogic(rawFormula.substring(dotIndex + 1)));
 			return exists;
 		}
 
-		index = rawFormula.indexOf(Implies.symbol);
+		symbol = bindings.getSymbol(Implies.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			Implies implies = new Implies();
-			implies.setFirstChild(parseLogic(rawFormula.substring(0, index), implies));
-			implies.setSecondChild(parseLogic(rawFormula.substring(index + Implies.symbol.length()), implies));
+			implies.setFirstChild(parseLogic(rawFormula.substring(0, index)));
+			implies.setSecondChild(parseLogic(rawFormula.substring(index + symbol.length())));
 			return implies;
 		}
 
-		index = rawFormula.indexOf(Or.symbol);
+		symbol = bindings.getSymbol(Or.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			Or or = new Or();
-			or.setFirstChild(parseLogic(rawFormula.substring(0, index), or));
-			or.setSecondChild(parseLogic(rawFormula.substring(index + Or.symbol.length()), or));
+			or.setFirstChild(parseLogic(rawFormula.substring(0, index)));
+			or.setSecondChild(parseLogic(rawFormula.substring(index + symbol.length())));
 			return or;
 		}
 
-		index = rawFormula.indexOf(And.symbol);
+		symbol = bindings.getSymbol(And.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			And and = new And();
-			and.setFirstChild(parseLogic(rawFormula.substring(0, index), and));
-			and.setSecondChild(parseLogic(rawFormula.substring(index + And.symbol.length()), and));
+			and.setFirstChild(parseLogic(rawFormula.substring(0, index)));
+			and.setSecondChild(parseLogic(rawFormula.substring(index + symbol.length())));
 			return and;
 		}
 
-		index = rawFormula.indexOf(Not.symbol);
+		symbol = bindings.getSymbol(Not.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
-			// TODO: index should be '0' or there is formula that is being skipped
+			if (index != 0)
+				throw new RuntimeException("trying to pass "+Not.class+
+						" from a non-start line position, stuff will be skipped. Most likely malformed input");
 			Not not = new Not();
-			not.setChild(parseLogic(rawFormula.substring(index + Not.symbol.length()), not));
+			not.setChild(parseLogic(rawFormula.substring(index + symbol.length())));
 			return not;
 		}
 
-		index = rawFormula.indexOf(LessThanOrEqualTo.symbol);
+		symbol = bindings.getSymbol(LessThanOrEqualTo.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo();
-			lessOrEqual.setFirstChild(parseMath(rawFormula.substring(0, index), lessOrEqual));
-			lessOrEqual.setSecondChild(parseMath(rawFormula.substring(index + LessThanOrEqualTo.symbol.length()), lessOrEqual));
+			lessOrEqual.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			lessOrEqual.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return lessOrEqual;
 		}
 
-		index = rawFormula.indexOf(GreaterThanOrEqualTo.symbol);
+		symbol = bindings.getSymbol(GreaterThanOrEqualTo.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo();
-			greaterOrEqual.setFirstChild(parseMath(rawFormula.substring(0, index), greaterOrEqual));
-			greaterOrEqual.setSecondChild(parseMath(rawFormula.substring(index + GreaterThanOrEqualTo.symbol.length()), greaterOrEqual));
+			greaterOrEqual.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			greaterOrEqual.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return greaterOrEqual;
 		}
 
-		index = rawFormula.indexOf(LessThan.symbol);
+		symbol = bindings.getSymbol(LessThan.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			LessThan less = new LessThan();
-			less.setFirstChild(parseMath(rawFormula.substring(0, index), less));
-			less.setSecondChild(parseMath(rawFormula.substring(index + LessThan.symbol.length()), less));
+			less.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			less.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return less;
 		}
 
-		index = rawFormula.indexOf(GreaterThan.symbol);
+		symbol = bindings.getSymbol(GreaterThan.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			GreaterThan greater = new GreaterThan();
-			greater.setFirstChild(parseMath(rawFormula.substring(0, index), greater));
-			greater.setSecondChild(parseMath(rawFormula.substring(index + GreaterThan.symbol.length()), greater));
+			greater.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			greater.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return greater;
 		}
 
-		index = rawFormula.indexOf(NotEqualTo.symbol);
+		symbol = bindings.getSymbol(NotEqualTo.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			NotEqualTo notEqual = new NotEqualTo();
-			notEqual.setFirstChild(parseMath(rawFormula.substring(0, index), notEqual));
-			notEqual.setSecondChild(parseMath(rawFormula.substring(index + NotEqualTo.symbol.length()), notEqual));
+			notEqual.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			notEqual.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return notEqual;
 		}
 
-		index = rawFormula.indexOf(EqualTo.symbol);
+		symbol = bindings.getSymbol(EqualTo.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			EqualTo equalTo = new EqualTo();
-			equalTo.setFirstChild(parseMath(rawFormula.substring(0, index), equalTo));
-			equalTo.setSecondChild(parseMath(rawFormula.substring(index + EqualTo.symbol.length()), equalTo));
+			equalTo.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			equalTo.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return equalTo;
 		}
 
 		throw new RuntimeException(rawFormula+" could not be parsed as a "+Formula.class);
 	}
 
-	public Term parseMath(String rawFormula, Object parent) {
+	public Term parseMath(String rawFormula) {
 
-		int index = rawFormula.indexOf(Addition.symbol);
+		String symbol = bindings.getSymbol(Addition.class);
+		int index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			Addition add = new Addition();
-			add.setFirstChild(parseMath(rawFormula.substring(0, index), add));
-			add.setSecondChild(parseMath(rawFormula.substring(index + Addition.symbol.length()), add));
+			add.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			add.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return add;
 		}
 
-		index = rawFormula.indexOf(Subtraction.symbol);
+		symbol = bindings.getSymbol(Subtraction.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			Subtraction sub = new Subtraction();
-			sub.setFirstChild(parseMath(rawFormula.substring(0, index), sub));
-			sub.setSecondChild(parseMath(rawFormula.substring(index + Addition.symbol.length()), sub));
+			sub.setFirstChild(parseMath(rawFormula.substring(0, index)));
+			sub.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return sub;
 		}
 
-		index = rawFormula.indexOf(Multiply.symbol);
+		symbol = bindings.getSymbol(Multiply.class);
+		index = rawFormula.indexOf(symbol);
 		if (index != -1) {
 			Multiply mul = new Multiply();
-			mul.setFirstChild((Constant) parseMath(rawFormula.substring(0, index), mul));
-			mul.setSecondChild(parseMath(rawFormula.substring(index + Addition.symbol.length()), mul));
+			mul.setFirstChild((Constant) parseMath(rawFormula.substring(0, index)));
+			mul.setSecondChild(parseMath(rawFormula.substring(index + symbol.length())));
 			return mul;
 		}
 

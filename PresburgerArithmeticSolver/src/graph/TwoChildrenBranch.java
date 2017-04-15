@@ -1,7 +1,5 @@
 package graph;
 
-import java.util.Iterator;
-
 public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node> implements Branch {
 
 	private Child1 child1;
@@ -13,30 +11,23 @@ public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Node replaceVariables(VariableAssignment assignment) {
-		child1 = (Child1) child1.replaceVariables(assignment);
-		child2 = (Child2) child2.replaceVariables(assignment);
-		return this;
+	public void replaceChild(Node victim, Node overtaker) {
+		if (child1.equals(victim))
+			child1 = (Child1) overtaker;
+		else if (child2.equals(victim))
+			child2 = (Child2) overtaker;
+		else
+			throw new RuntimeException("child not found");
 	}
-
 	@Override
-	public Iterator<Node> iterator() {
-		return new Iterator<Node>() {
-			int nextCount = 0;
-			@Override
-			public Node next() {
-				nextCount++;
-				switch (nextCount) {
-				case 1:
-					return child1;
-				case 2:
-					return child2;
-				default:
-					throw new RuntimeException("Ran out of children");
-				}
-			}
-			@Override
-			public boolean hasNext() { return nextCount < 2; }
-		};
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TwoChildrenBranch<?, ?>))
+			return false;
+		TwoChildrenBranch<?, ?> other = (TwoChildrenBranch<?, ?>) obj;
+		if (!getSymbol().equals(other.getSymbol()))
+			return false;
+		return child1.equals(other.child1) && child2.equals(other.child2);
 	}
+	@Override
+	public String toString() { return child1+getSymbol()+child2; }
 }

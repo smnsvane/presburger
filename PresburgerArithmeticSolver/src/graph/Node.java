@@ -2,5 +2,6 @@ package graph;
 
 public interface Node {
 
-	Node replaceVariables(VariableAssignment assignment);
+	boolean equals(Object obj);
+	String getSymbol();
 }

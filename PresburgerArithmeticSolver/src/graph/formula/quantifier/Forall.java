@@ -4,15 +4,9 @@ import graph.formula.Formula;
 
 public class Forall extends Quantifier {
 
-	public static final String symbol = "A";
-
-	public Forall(String variableSymbol) { super(variableSymbol); }
-
 	@Override
-	public String toString() {
-		return symbol+variableSymbol+"."+getChild();
-	}
-
+	public String getSymbol() { return "A"; }
+	public Forall(String variableSymbol) { super(variableSymbol); }
 	@Override
 	public Formula negate() {
 		Exists exists = new Exists(variableSymbol);

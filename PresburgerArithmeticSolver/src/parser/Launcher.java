@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import graph.GraphIterator;
+import graph.Node;
 import graph.VariableAssignment;
 import graph.formula.Formula;
+import graph.term.Constant;
+import graph.term.Multiply;
+import graph.term.Variable;
 
 public class Launcher {
 
@@ -28,23 +33,37 @@ public class Launcher {
 			System.out.println("shortened to \""+line+"\"");
 
 			Parser p = new Parser();
-			Formula parsedRoot = p.parseLogic(line, null);
+			Formula parsedRoot = p.parseLogic(line);
 			System.out.println("parsed as: "+parsedRoot);
-			
-			VariableAssignment varAss = new VariableAssignment();
-			varAss.addAssignment("x", 1);
-			varAss.addAssignment("y", 1);
-			
-			Engine e = new Engine();
-			boolean success = e.applyAssignment(parsedRoot, varAss);
-			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
-			
-			varAss.addAssignment("y", null);
-			Formula partiallyAssignedRoot = (Formula) parsedRoot.replaceVariables(varAss);
-			System.out.println("Variables replaced with the assignment "+varAss+" result: "+parsedRoot);
-			
-			Formula simplified = (Formula) partiallyAssignedRoot.simplify();
-			System.out.println("Graph have been simplified, result: "+simplified);
+
+			VariableAssignment assignment = new VariableAssignment();
+			assignment.addAssignment("x", 1);
+			assignment.addAssignment("y", 1);
+
+			GraphIterator explorer = new GraphIterator(parsedRoot);
+			for (Node n : explorer)
+				if (n instanceof Variable) {
+					Variable v = (Variable) n;
+
+					Constant child1 = new Constant(v.factor);
+					Constant child2 = new Constant(assignment.getAssignment(v.variableSymbol));
+
+					Multiply m = new Multiply();
+					m.setFirstChild(child1);
+					m.setSecondChild(child2);
+
+					explorer.getParent().replaceChild(v, m);
+				}
+//			Engine e = new Engine();
+//			boolean success = e.applyAssignment(parsedRoot, varAss);
+//			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
+//			
+//			varAss.addAssignment("y", null);
+//			Formula partiallyAssignedRoot = (Formula) parsedRoot.replaceVariables(varAss);
+//			System.out.println("Variables replaced with the assignment "+varAss+" result: "+parsedRoot);
+//			
+//			Formula simplified = (Formula) partiallyAssignedRoot.simplify();
+//			System.out.println("Graph have been simplified, result: "+simplified);
 		}
 	}
 }

@@ -4,15 +4,16 @@ import graph.VariableAssignment;
 
 public class False implements Formula {
 
-	public static final String symbol = "false";
+	@Override
+	public String getSymbol() { return "false"; }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) { return false; }
 	@Override
 	public Formula negate() { return new True(); }
 	@Override
-	public Formula replaceVariables(VariableAssignment assignment) { return this; }
-	@Override
 	public False simplify() { return this; }
 	@Override
-	public String toString() { return symbol; }
+	public String toString() { return getSymbol(); }
+	@Override
+	public boolean equals(Object obj) { return obj instanceof False; }
 }
