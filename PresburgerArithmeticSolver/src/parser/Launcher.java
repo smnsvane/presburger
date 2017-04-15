@@ -4,13 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import graph.GraphIterator;
-import graph.Node;
+import engine.VariableReplacer;
 import graph.VariableAssignment;
 import graph.formula.Formula;
-import graph.term.Constant;
-import graph.term.Multiply;
-import graph.term.Variable;
 
 public class Launcher {
 
@@ -33,31 +29,17 @@ public class Launcher {
 			System.out.println("shortened to \""+line+"\"");
 
 			Parser p = new Parser();
-			Formula parsedRoot = p.parseLogic(line);
-			System.out.println("parsed as: "+parsedRoot);
+			Formula root = p.parseLogic(line);
+			System.out.println("parsed as: "+root);
 
 			VariableAssignment assignment =
 					new VariableAssignment()
 					.put("x", 1)
 					.put("y", 1);
-
-			System.out.println("replacing variables with the assignment "+assignment);
-			GraphIterator explorer = new GraphIterator(parsedRoot);
-			for (Node n : explorer)
-				if (n instanceof Variable) {
-					Variable v = (Variable) n;
-
-					Constant child1 = new Constant(v.factor);
-					Constant child2 = new Constant(assignment.getAssignment(v.variableSymbol));
-
-					Multiply m = new Multiply();
-					m.setFirstChild(child1);
-					m.setSecondChild(child2);
-
-					explorer.getParent().replaceChild(v, m);
-				}
-			System.out.println("result: "+parsedRoot);
-//			Engine e = new Engine();
+			Formula assignedRoot = (Formula) root.copy();
+			new VariableReplacer(assignedRoot, assignment).go();
+			System.out.println("replacing variables with the assignment "+assignment+" result: "+assignedRoot);
+			
 //			boolean success = e.applyAssignment(parsedRoot, varAss);
 //			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
 //			

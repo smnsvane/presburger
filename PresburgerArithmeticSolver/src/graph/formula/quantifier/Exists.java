@@ -1,8 +1,6 @@
 package graph.formula.quantifier;
 
 import graph.formula.Formula;
-import graph.formula.comparator.EqualTo;
-import graph.term.Term;
 
 public class Exists extends Quantifier {
 
