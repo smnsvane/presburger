@@ -1,11 +1,14 @@
 package graph.term;
 
+import graph.Node;
 import graph.VariableAssignment;
 
 public class Variable implements Term {
 
 	public final int factor;
+	public int getFactor() { return factor; }
 	public final String variableSymbol;
+	public String getSymbol() { return variableSymbol; }
 
 	public Variable(int factor, String variableSymbol) {
 		this.factor = factor;
@@ -13,7 +16,7 @@ public class Variable implements Term {
 	}
 	@Override
 	public String toString() {
-		return (factor==1?"":factor)+variableSymbol;
+		return (factor==1?"":(factor==-1?"-":factor))+variableSymbol;
 	}
 	@Override
 	public int evaluate(VariableAssignment varAss) {
@@ -23,7 +26,7 @@ public class Variable implements Term {
 	public Term replaceVariables(VariableAssignment assignment) {
 		Integer value = assignment.getAssignment(variableSymbol);
 		if (value == null) {
-			System.out.println("No assignment for "+variableSymbol);
+			System.out.println("Warning: No assignment for "+variableSymbol);
 			return this;
 		}
 		return new Constant(evaluate(assignment));
@@ -39,4 +42,6 @@ public class Variable implements Term {
 		int newFactor = this.factor * factor;
 		return new Variable(newFactor, variableSymbol);
 	}
+	@Override
+	public Variable simplify() { return this; }
 }

@@ -26,4 +26,12 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 		and.setSecondChild(getSecondChild().negate());
 		return and;
 	}
+	@Override
+	public Formula simplify() {
+		Or or = new Or();
+		or.setFirstChild(getFirstChild().negate());
+		or.setSecondChild(getSecondChild());
+		return (Formula) or.simplify();
+	}
+	
 }

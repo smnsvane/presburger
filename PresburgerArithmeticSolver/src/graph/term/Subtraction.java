@@ -23,8 +23,15 @@ public class Subtraction extends TwoChildrenBranch<Term, Term> implements Term {
 	@Override
 	public Sum toSum() {
 		Sum sum = new Sum();
-		sum.addChild(getFirstChild());
-		sum.addChild(getSecondChild());
+		sum.addChild(getFirstChild().toSum());
+		sum.addChild(getSecondChild().multiply(-1).toSum());
 		return sum;
+	}
+	@Override
+	public Addition simplify() {
+		Addition add = new Addition();
+		add.setFirstChild(getFirstChild());
+		add.setSecondChild(getSecondChild().multiply(-1));
+		return add;
 	}
 }

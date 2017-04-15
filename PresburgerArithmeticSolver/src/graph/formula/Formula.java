@@ -7,4 +7,5 @@ public interface Formula extends Node {
 
 	boolean evaluate(VariableAssignment varAss);
 	Formula negate();
+	Formula simplify();
 }

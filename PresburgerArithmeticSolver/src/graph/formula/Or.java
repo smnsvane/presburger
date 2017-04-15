@@ -26,4 +26,17 @@ public class Or extends TwoChildrenBranch<Formula, Formula> implements Formula {
 		and.setSecondChild(getSecondChild().negate());
 		return and;
 	}
+
+	@Override
+	public Formula simplify() {
+		setFirstChild(getFirstChild().simplify());
+		setSecondChild(getSecondChild().simplify());
+		if (getFirstChild() instanceof True || getSecondChild() instanceof True)
+			return new True();
+		if (getFirstChild() instanceof False)
+			return getSecondChild();
+		if (getSecondChild() instanceof False)
+			return getFirstChild();
+		return this;
+	}
 }

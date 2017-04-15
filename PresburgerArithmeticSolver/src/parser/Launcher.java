@@ -28,20 +28,23 @@ public class Launcher {
 			System.out.println("shortened to \""+line+"\"");
 
 			Parser p = new Parser();
-			Formula root = p.parseLogic(line, null);
-			System.out.println("parsed as: "+root);
+			Formula parsedRoot = p.parseLogic(line, null);
+			System.out.println("parsed as: "+parsedRoot);
 			
 			VariableAssignment varAss = new VariableAssignment();
 			varAss.addAssignment("x", 1);
 			varAss.addAssignment("y", 1);
 			
 			Engine e = new Engine();
-			boolean success = e.applyAssignment(root, varAss);
+			boolean success = e.applyAssignment(parsedRoot, varAss);
 			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
 			
 			varAss.addAssignment("y", null);
-			root.replaceVariables(varAss);
-			System.out.println("Variables replaced with the assignment "+varAss+" result: "+root);
+			Formula partiallyAssignedRoot = (Formula) parsedRoot.replaceVariables(varAss);
+			System.out.println("Variables replaced with the assignment "+varAss+" result: "+parsedRoot);
+			
+			Formula simplified = (Formula) partiallyAssignedRoot.simplify();
+			System.out.println("Graph have been simplified, result: "+simplified);
 		}
 	}
 }

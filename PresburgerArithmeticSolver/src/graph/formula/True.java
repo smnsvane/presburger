@@ -12,4 +12,8 @@ public class True implements Formula {
 	public Formula negate() { return new True(); }
 	@Override
 	public Node replaceVariables(VariableAssignment assignment) { return this; }
+	@Override
+	public True simplify() { return this; }
+	@Override
+	public String toString() { return symbol; }
 }

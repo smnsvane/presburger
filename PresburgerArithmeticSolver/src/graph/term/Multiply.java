@@ -25,4 +25,9 @@ public class Multiply extends TwoChildrenBranch<Constant, Term> implements Term 
 		sum.addChild(this);
 		return sum;
 	}
+	@Override
+	public Term simplify() {
+		Term overtaker = getSecondChild().multiply(getFirstChild().getValue());
+		return overtaker;
+	}
 }

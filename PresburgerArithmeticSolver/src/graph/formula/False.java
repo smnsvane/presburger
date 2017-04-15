@@ -11,4 +11,8 @@ public class False implements Formula {
 	public Formula negate() { return new True(); }
 	@Override
 	public Formula replaceVariables(VariableAssignment assignment) { return this; }
+	@Override
+	public False simplify() { return this; }
+	@Override
+	public String toString() { return symbol; }
 }

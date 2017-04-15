@@ -13,4 +13,10 @@ public abstract class Quantifier extends SingleChildBranch<Formula> implements F
 	public boolean evaluate(VariableAssignment varAss) {
 		throw new RuntimeException("not implemented");
 	}
+	@Override
+	public Quantifier simplify() {
+		System.out.println("simplify quantifier is not implemented, just simplifying its child");
+		setChild((Formula) getChild().simplify());
+		return this;
+	}
 }

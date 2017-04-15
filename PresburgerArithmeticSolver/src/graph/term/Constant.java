@@ -5,12 +5,13 @@ import graph.VariableAssignment;
 
 public class Constant implements Term {
 
-	private final int number;
-	public Constant(int number) { this.number = number; }
+	private final int value;
+	public int getValue() { return value; }
+	public Constant(int value) { this.value = value; }
 	@Override
-	public String toString() { return Integer.toString(number); }
+	public String toString() { return Integer.toString(value); }
 	@Override
-	public int evaluate(VariableAssignment varAss) { return number; }
+	public int evaluate(VariableAssignment varAss) { return value; }
 	@Override
 	public Node replaceVariables(VariableAssignment assignment) { return this; }
 	@Override
@@ -21,8 +22,10 @@ public class Constant implements Term {
 	}
 	@Override
 	public Constant multiply(int factor) {
-		int value = number * factor;
+		int value = this.value * factor;
 		Constant constant = new Constant(value);
 		return constant;
 	}
+	@Override
+	public Constant simplify() { return this; }
 }
