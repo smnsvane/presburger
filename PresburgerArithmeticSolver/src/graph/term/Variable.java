@@ -28,4 +28,15 @@ public class Variable implements Term {
 		}
 		return new Constant(evaluate(assignment));
 	}
+	@Override
+	public Sum toSum() {
+		Sum sum = new Sum();
+		sum.addChild(this);
+		return sum;
+	}
+	@Override
+	public Variable multiply(int factor) {
+		int newFactor = this.factor * factor;
+		return new Variable(newFactor, variableSymbol);
+	}
 }

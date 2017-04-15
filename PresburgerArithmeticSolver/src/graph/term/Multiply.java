@@ -14,4 +14,15 @@ public class Multiply extends TwoChildrenBranch<Constant, Term> implements Term 
 	public int evaluate(VariableAssignment varAss) {
 		return getFirstChild().evaluate(varAss) * getSecondChild().evaluate(varAss);
 	}
+	@Override
+	public Multiply multiply(int factor) {
+		setFirstChild(getFirstChild().multiply(factor));
+		return this;
+	}
+	@Override
+	public Sum toSum() {
+		Sum sum = new Sum();
+		sum.addChild(this);
+		return sum;
+	}
 }
