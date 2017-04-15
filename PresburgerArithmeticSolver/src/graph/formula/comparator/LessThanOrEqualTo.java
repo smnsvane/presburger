@@ -1,7 +1,7 @@
-package graph.math.comparator;
+package graph.formula.comparator;
 
 import graph.VariableAssignment;
-import graph.logic.Formula;
+import graph.formula.Formula;
 
 public class LessThanOrEqualTo extends Comparator {
 

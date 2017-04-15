@@ -1,6 +1,6 @@
-package graph.math.quantifier;
+package graph.formula.quantifier;
 
-import graph.logic.Formula;
+import graph.formula.Formula;
 
 public class Exists extends Quantifier {
 

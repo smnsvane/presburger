@@ -1,8 +1,8 @@
-package graph.math.quantifier;
+package graph.formula.quantifier;
 
 import graph.SingleChildBranch;
 import graph.VariableAssignment;
-import graph.logic.Formula;
+import graph.formula.Formula;
 
 public abstract class Quantifier extends SingleChildBranch<Formula> implements Formula {
 

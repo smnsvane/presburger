@@ -1,8 +1,8 @@
-package graph.math.comparator;
+package graph.formula.comparator;
 
 import graph.TwoChildrenBranch;
-import graph.logic.Formula;
-import graph.math.Term;
+import graph.formula.Formula;
+import graph.term.Term;
 
 public abstract class Comparator extends TwoChildrenBranch<Term, Term> implements Formula {
 

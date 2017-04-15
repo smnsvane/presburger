@@ -1,4 +1,4 @@
-package graph.math;
+package graph.term;
 
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;

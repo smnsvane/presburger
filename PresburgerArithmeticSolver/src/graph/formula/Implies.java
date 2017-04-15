@@ -1,8 +1,7 @@
-package graph.logic.binary;
+package graph.formula;
 
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
-import graph.logic.Formula;
 
 public class Implies extends TwoChildrenBranch<Formula, Formula> implements Formula {
 

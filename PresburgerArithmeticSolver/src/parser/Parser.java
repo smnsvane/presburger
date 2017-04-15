@@ -3,25 +3,25 @@ package parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import graph.logic.Formula;
-import graph.logic.Not;
-import graph.logic.binary.And;
-import graph.logic.binary.Implies;
-import graph.logic.binary.Or;
-import graph.math.comparator.EqualTo;
-import graph.math.comparator.GreaterThan;
-import graph.math.comparator.GreaterThanOrEqualTo;
-import graph.math.comparator.LessThan;
-import graph.math.comparator.LessThanOrEqualTo;
-import graph.math.comparator.NotEqualTo;
-import graph.math.quantifier.Exists;
-import graph.math.quantifier.Forall;
-import graph.math.Constant;
-import graph.math.Term;
-import graph.math.Multiply;
-import graph.math.Variable;
-import graph.math.binary.Addition;
-import graph.math.binary.Subtraction;
+import graph.formula.And;
+import graph.formula.Formula;
+import graph.formula.Implies;
+import graph.formula.Not;
+import graph.formula.Or;
+import graph.formula.comparator.EqualTo;
+import graph.formula.comparator.GreaterThan;
+import graph.formula.comparator.GreaterThanOrEqualTo;
+import graph.formula.comparator.LessThan;
+import graph.formula.comparator.LessThanOrEqualTo;
+import graph.formula.comparator.NotEqualTo;
+import graph.formula.quantifier.Exists;
+import graph.formula.quantifier.Forall;
+import graph.term.Addition;
+import graph.term.Constant;
+import graph.term.Multiply;
+import graph.term.Subtraction;
+import graph.term.Term;
+import graph.term.Variable;
 
 public class Parser {
 

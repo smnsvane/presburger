@@ -1,4 +1,4 @@
-package graph.logic;
+package graph.formula;
 
 import graph.Node;
 import graph.VariableAssignment;

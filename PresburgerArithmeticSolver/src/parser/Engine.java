@@ -1,7 +1,7 @@
 package parser;
 
 import graph.VariableAssignment;
-import graph.logic.Formula;
+import graph.formula.Formula;
 
 public class Engine {
 

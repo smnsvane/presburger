@@ -2,12 +2,12 @@ package graph;
 
 import java.util.ArrayList;
 
-import graph.logic.Not;
-import graph.logic.binary.And;
-import graph.logic.binary.Implies;
-import graph.logic.binary.Or;
-import graph.math.quantifier.Exists;
-import graph.math.quantifier.Forall;
+import graph.formula.And;
+import graph.formula.Implies;
+import graph.formula.Not;
+import graph.formula.Or;
+import graph.formula.quantifier.Exists;
+import graph.formula.quantifier.Forall;
 
 public class SymbolBinding {
 

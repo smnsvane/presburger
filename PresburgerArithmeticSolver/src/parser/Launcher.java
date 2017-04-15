@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import graph.VariableAssignment;
-import graph.logic.Formula;
+import graph.formula.Formula;
 
 public class Launcher {
 
