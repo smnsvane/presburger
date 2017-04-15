@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import engine.Simplifier;
 import engine.VariableReplacer;
 import graph.VariableAssignment;
 import graph.formula.Formula;
@@ -36,10 +37,10 @@ public class Launcher {
 					new VariableAssignment()
 					.put("x", 1)
 					.put("y", 1);
-			Formula assignedRoot = (Formula) root.copy();
-			new VariableReplacer(assignedRoot, assignment).go();
+			Formula assignedRoot = new VariableReplacer((Formula) root.copy(), assignment).go();
 			System.out.println("replacing variables with the assignment "+assignment+" result: "+assignedRoot);
-			
+			Formula simplifiedRoot = new Simplifier((Formula) assignedRoot.copy()).go();
+			System.out.println("simplified the assgined graph, result: "+simplifiedRoot);
 //			boolean success = e.applyAssignment(parsedRoot, varAss);
 //			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
 //			
