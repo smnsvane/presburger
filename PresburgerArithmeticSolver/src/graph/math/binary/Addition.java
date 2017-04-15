@@ -1,8 +1,10 @@
 package graph.math.binary;
 
+import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
+import graph.math.Term;
 
-public class Addition extends BinaryTermOperator {
+public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 
 	public static final String symbol = "+";
 

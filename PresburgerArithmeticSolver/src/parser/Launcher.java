@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import graph.VariableAssignment;
+import graph.logic.Formula;
+
 public class Launcher {
 
 	public static void main(String[] args) {
@@ -25,7 +28,20 @@ public class Launcher {
 			System.out.println("shortened to \""+line+"\"");
 
 			Parser p = new Parser();
-			System.out.println("parsed as: "+p.parseLogic(line, null));
+			Formula root = p.parseLogic(line, null);
+			System.out.println("parsed as: "+root);
+			
+			VariableAssignment varAss = new VariableAssignment();
+			varAss.addAssignment("x", 1);
+			varAss.addAssignment("y", 1);
+			
+			Engine e = new Engine();
+			boolean success = e.applyAssignment(root, varAss);
+			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
+			
+			varAss.addAssignment("y", null);
+			root.replaceVariables(varAss);
+			System.out.println("Variables replaced with the assignment "+varAss+" result: "+root);
 		}
 	}
 }

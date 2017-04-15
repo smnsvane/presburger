@@ -19,4 +19,13 @@ public class Variable implements Term {
 	public int evaluate(VariableAssignment varAss) {
 		return varAss.getAssignment(variableSymbol) * factor;
 	}
+	@Override
+	public Term replaceVariables(VariableAssignment assignment) {
+		Integer value = assignment.getAssignment(variableSymbol);
+		if (value == null) {
+			System.out.println("No assignment for "+variableSymbol);
+			return this;
+		}
+		return new Constant(evaluate(assignment));
+	}
 }

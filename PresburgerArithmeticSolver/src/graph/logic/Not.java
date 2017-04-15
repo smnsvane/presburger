@@ -1,18 +1,14 @@
 package graph.logic;
 
-import graph.NodeBranch;
+import graph.SingleChildBranch;
 import graph.VariableAssignment;
 
-public class Not implements NodeBranch, Formula {
+public class Not extends SingleChildBranch<Formula> implements Formula {
 
 	public static final String symbol = "~";
 	//TODO: include '(' and ')' if child have lower precedence than '~'
 	@Override
-	public String toString() { return symbol+child; }
-
-	private Formula child;
-	public Formula getChild() { return child; }
-	public void setChild(Formula child) { this.child = child; }
+	public String toString() { return symbol+getChild(); }
 
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
@@ -20,5 +16,5 @@ public class Not implements NodeBranch, Formula {
 	}
 
 	@Override
-	public Formula negate() { return child; }
+	public Formula negate() { return getChild(); }
 }

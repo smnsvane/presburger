@@ -28,9 +28,9 @@ public class SymbolBinding {
 
 	class Binding {
 		public final String symbol;
-		public final Class<? extends NodeBranch> clazz;
+		public final Class<? extends Object> clazz;
 		public final int precedence;
-		public Binding(String symbol, NodeBranch instance, int precedence) {
+		public Binding(String symbol, Object instance, int precedence) {
 			this.symbol = symbol;
 			this.clazz = instance.getClass();
 			this.precedence = precedence;

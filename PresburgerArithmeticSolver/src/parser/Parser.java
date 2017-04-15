@@ -3,7 +3,6 @@ package parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import graph.NodeBranch;
 import graph.logic.Formula;
 import graph.logic.Not;
 import graph.logic.binary.And;
@@ -26,7 +25,7 @@ import graph.math.binary.Subtraction;
 
 public class Parser {
 
-	public Formula parseLogic(String rawFormula, NodeBranch parent) {
+	public Formula parseLogic(String rawFormula, Formula parent) {
 
 		int index = rawFormula.indexOf(Forall.symbol);
 		if (index == 0) {
@@ -129,7 +128,7 @@ public class Parser {
 		throw new RuntimeException(rawFormula+" could not be parsed as a "+Formula.class);
 	}
 
-	public Term parseMath(String rawFormula, NodeBranch parent) {
+	public Term parseMath(String rawFormula, Object parent) {
 
 		int index = rawFormula.indexOf(Addition.symbol);
 		if (index != -1) {
@@ -150,8 +149,8 @@ public class Parser {
 		index = rawFormula.indexOf(Multiply.symbol);
 		if (index != -1) {
 			Multiply mul = new Multiply();
-			mul.setConstantChild((Constant) parseMath(rawFormula.substring(0, index), mul));
-			mul.setMathChild(parseMath(rawFormula.substring(index + Addition.symbol.length()), mul));
+			mul.setFirstChild((Constant) parseMath(rawFormula.substring(0, index), mul));
+			mul.setSecondChild(parseMath(rawFormula.substring(index + Addition.symbol.length()), mul));
 			return mul;
 		}
 

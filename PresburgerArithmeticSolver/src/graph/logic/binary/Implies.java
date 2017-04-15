@@ -1,9 +1,10 @@
 package graph.logic.binary;
 
+import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
 import graph.logic.Formula;
 
-public class Implies extends BinaryFormulaOperator {
+public class Implies extends TwoChildrenBranch<Formula, Formula> implements Formula {
 
 	public static final String symbol = "->";
 

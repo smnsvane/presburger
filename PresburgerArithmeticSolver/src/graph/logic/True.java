@@ -1,5 +1,6 @@
 package graph.logic;
 
+import graph.Node;
 import graph.VariableAssignment;
 
 public class True implements Formula {
@@ -9,4 +10,6 @@ public class True implements Formula {
 	public boolean evaluate(VariableAssignment varAss) { return true; }
 	@Override
 	public Formula negate() { return new True(); }
+	@Override
+	public Node replaceVariables(VariableAssignment assignment) { return this; }
 }

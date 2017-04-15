@@ -1,9 +1,9 @@
 package graph.math;
 
-import graph.NodeType;
+import graph.Node;
 import graph.VariableAssignment;
 
-public interface Term extends NodeType {
+public interface Term extends Node {
 
 	int evaluate(VariableAssignment varAss);
 }
