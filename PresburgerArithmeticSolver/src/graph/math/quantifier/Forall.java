@@ -1,6 +1,6 @@
 package graph.math.quantifier;
 
-import graph.logic.Logic;
+import graph.logic.Formula;
 
 public class Forall extends Quantifier {
 
@@ -10,11 +10,11 @@ public class Forall extends Quantifier {
 
 	@Override
 	public String toString() {
-		return symbol+variableSymbol+" "+getChild();
+		return symbol+variableSymbol+"."+getChild();
 	}
 
 	@Override
-	public Logic negate() {
+	public Formula negate() {
 		Exists exists = new Exists(variableSymbol);
 		exists.setChild(getChild().negate());
 		return exists;

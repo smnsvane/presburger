@@ -2,13 +2,13 @@ package graph.math.binary;
 
 import graph.VariableAssignment;
 
-public class Addition extends BinaryMathOperator {
+public class Addition extends BinaryTermOperator {
 
 	public static final String symbol = "+";
 
 	@Override
 	public String toString() {
-		return getFirstChild().toString()+symbol+getSecondChild();
+		return getFirstChild()+symbol+getSecondChild();
 	}
 
 	@Override
@@ -16,5 +16,4 @@ public class Addition extends BinaryMathOperator {
 		return getFirstChild().evaluate(varAss) +
 				getSecondChild().evaluate(varAss);
 	}
-
 }

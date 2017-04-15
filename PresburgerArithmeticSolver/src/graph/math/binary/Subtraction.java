@@ -2,7 +2,7 @@ package graph.math.binary;
 
 import graph.VariableAssignment;
 
-public class Subtraction extends BinaryMathOperator {
+public class Subtraction extends BinaryTermOperator {
 
 	public static final String symbol = "-";
 

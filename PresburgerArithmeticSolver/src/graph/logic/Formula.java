@@ -3,8 +3,8 @@ package graph.logic;
 import graph.NodeType;
 import graph.VariableAssignment;
 
-public interface Logic extends NodeType {
+public interface Formula extends NodeType {
 
 	boolean evaluate(VariableAssignment varAss);
-	Logic negate();
+	Formula negate();
 }

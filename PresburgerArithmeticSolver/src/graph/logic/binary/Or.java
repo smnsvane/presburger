@@ -1,16 +1,16 @@
 package graph.logic.binary;
 
 import graph.VariableAssignment;
-import graph.logic.Logic;
+import graph.logic.Formula;
 
-public class Or extends BinaryLogicOperator {
+public class Or extends BinaryFormulaOperator {
 
 	public static final String symbol = "/";
 
 	//TODO: include '(' and ')' if children have lower precedence than 'this'
 	@Override
 	public String toString() {
-		return getFirstChild()+" "+symbol+" "+getSecondChild();
+		return getFirstChild()+symbol+getSecondChild();
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class Or extends BinaryLogicOperator {
 	}
 
 	@Override
-	public Logic negate() {
+	public Formula negate() {
 		And and = new And();
 		and.setFirstChild(getFirstChild().negate());
 		and.setSecondChild(getSecondChild().negate());

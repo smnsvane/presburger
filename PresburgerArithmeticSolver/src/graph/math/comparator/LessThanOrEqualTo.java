@@ -1,7 +1,7 @@
 package graph.math.comparator;
 
 import graph.VariableAssignment;
-import graph.logic.Logic;
+import graph.logic.Formula;
 
 public class LessThanOrEqualTo extends Comparator {
 
@@ -19,7 +19,7 @@ public class LessThanOrEqualTo extends Comparator {
 	}
 
 	@Override
-	public Logic negate() {
+	public Formula negate() {
 		GreaterThan greater = new GreaterThan();
 		greater.setFirstChild(getFirstChild());
 		greater.setSecondChild(getSecondChild());

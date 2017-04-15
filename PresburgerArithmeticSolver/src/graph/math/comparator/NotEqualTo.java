@@ -1,7 +1,7 @@
 package graph.math.comparator;
 
 import graph.VariableAssignment;
-import graph.logic.Logic;
+import graph.logic.Formula;
 
 public class NotEqualTo extends Comparator {
 
@@ -19,7 +19,7 @@ public class NotEqualTo extends Comparator {
 	}
 
 	@Override
-	public Logic negate() {
+	public Formula negate() {
 		EqualTo equal = new EqualTo();
 		equal.setFirstChild(getFirstChild());
 		equal.setSecondChild(getSecondChild());

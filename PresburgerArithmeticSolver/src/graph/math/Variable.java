@@ -2,7 +2,7 @@ package graph.math;
 
 import graph.VariableAssignment;
 
-public class Variable implements Math {
+public class Variable implements Term {
 
 	public final int factor;
 	public final String variableSymbol;

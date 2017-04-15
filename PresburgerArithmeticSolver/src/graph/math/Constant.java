@@ -2,7 +2,7 @@ package graph.math;
 
 import graph.VariableAssignment;
 
-public class Constant implements Math {
+public class Constant implements Term {
 
 	private final int number;
 	public Constant(int number) { this.number = number; }

@@ -2,11 +2,11 @@ package graph.logic;
 
 import graph.VariableAssignment;
 
-public class True implements Logic {
+public class True implements Formula {
 
 	public static final String symbol = "true";
 	@Override
 	public boolean evaluate(VariableAssignment varAss) { return true; }
 	@Override
-	public Logic negate() { return new True(); }
+	public Formula negate() { return new True(); }
 }

@@ -1,9 +1,9 @@
 package graph.logic.binary;
 
 import graph.VariableAssignment;
-import graph.logic.Logic;
+import graph.logic.Formula;
 
-public class And extends BinaryLogicOperator {
+public class And extends BinaryFormulaOperator {
 
 	public static final String symbol = "&";
 
@@ -16,11 +16,11 @@ public class And extends BinaryLogicOperator {
 	//TODO: include '(' and ')' if children have lower precedence than 'this'
 	@Override
 	public String toString() {
-		return getFirstChild()+" "+symbol+" "+getSecondChild();
+		return getFirstChild()+symbol+getSecondChild();
 	}
 
 	@Override
-	public Logic negate() {
+	public Formula negate() {
 		Or or = new Or();
 		or.setFirstChild(getFirstChild().negate());
 		or.setSecondChild(getSecondChild().negate());

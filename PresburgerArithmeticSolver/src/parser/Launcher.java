@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import graph.NodeBranch;
-
 public class Launcher {
 
 	public static void main(String[] args) {
@@ -27,8 +25,7 @@ public class Launcher {
 			System.out.println("shortened to \""+line+"\"");
 
 			Parser p = new Parser();
-			p.root = (NodeBranch<?>) p.parse(line, null);
-			System.out.println("parsed as: "+p.root);
+			System.out.println("parsed as: "+p.parseLogic(line, null));
 		}
 	}
 }
