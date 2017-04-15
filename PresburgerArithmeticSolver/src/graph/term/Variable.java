@@ -1,6 +1,5 @@
 package graph.term;
 
-import graph.Node;
 import graph.VariableAssignment;
 
 public class Variable implements Term {
@@ -33,9 +32,7 @@ public class Variable implements Term {
 	}
 	@Override
 	public Sum toSum() {
-		Sum sum = new Sum();
-		sum.addChild(this);
-		return sum;
+		return Sum.sumFromChildren(this);
 	}
 	@Override
 	public Variable multiply(int factor) {

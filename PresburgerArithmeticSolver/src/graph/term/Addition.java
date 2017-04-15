@@ -16,10 +16,7 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 	}
 	@Override
 	public Sum toSum() {
-		Sum sum = new Sum();
-		sum.addChild(getFirstChild().simplify().toSum());
-		sum.addChild(getSecondChild().simplify().toSum());
-		return sum;
+		return Sum.sumFromChildren(getFirstChild().simplify(), getSecondChild().simplify());
 	}
 	@Override
 	public Addition multiply(int factor) {

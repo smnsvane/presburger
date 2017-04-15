@@ -9,14 +9,18 @@ public abstract class Comparator extends TwoChildrenBranch<Term, Term> implement
 
 	@Override
 	public Formula simplify() {
-		Sum child1 = getFirstChild().toSum();
-		child1.flatten();
-		child1.simplify();
-		setFirstChild(child1);
-		Sum child2 = getSecondChild().toSum();
-		child2.flatten();
-		child2.simplify();
-		setSecondChild(child2);
+		Sum sum1 = getFirstChild().toSum();
+		sum1.flatten();
+		sum1.simplify();
+		
+		Sum sum2 = getSecondChild().toSum();
+		sum2.flatten();
+		sum2.simplify();
+
+		Sum emptySum = new Sum();
+		Sum combinedSum = Sum.isolationSum(sum2, sum1);
+		setFirstChild(emptySum);
+		setSecondChild(combinedSum.simplify());
 		return this;
 	}
 }

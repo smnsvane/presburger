@@ -22,10 +22,7 @@ public class Subtraction extends TwoChildrenBranch<Term, Term> implements Term {
 	}
 	@Override
 	public Sum toSum() {
-		Sum sum = new Sum();
-		sum.addChild(getFirstChild().toSum());
-		sum.addChild(getSecondChild().multiply(-1).toSum());
-		return sum;
+		return Sum.sumFromChildren(getFirstChild().simplify(), getSecondChild().multiply(-1).simplify());
 	}
 	@Override
 	public Addition simplify() {

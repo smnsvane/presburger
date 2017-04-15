@@ -21,9 +21,7 @@ public class Multiply extends TwoChildrenBranch<Constant, Term> implements Term 
 	}
 	@Override
 	public Sum toSum() {
-		Sum sum = new Sum();
-		sum.addChild(this);
-		return sum;
+		return Sum.sumFromChildren(this);
 	}
 	@Override
 	public Term simplify() {

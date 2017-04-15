@@ -1,22 +1,39 @@
 package graph.term;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 
 import graph.Branch;
+import graph.Node;
 import graph.VariableAssignment;
 
 public class Sum implements Term, Branch {
 
-	private ArrayList<Term> children = new ArrayList<>();
-	public void addChild(Term child) { children.add(child); }
-	public List<Term> getAllChildren() { return Collections.unmodifiableList(children); }
+	private final ArrayList<Term> children = new ArrayList<>();
+	@Override
+	public Iterator<Node> iterator() {
+		return new Iterator<Node>() {
+			Iterator<Term> i = children.iterator();
+			@Override
+			public Node next() { return i.next(); }
+			@Override
+			public boolean hasNext() { return i.hasNext(); }
+		};
+	}
 	public Sum() {}
-	public Sum(List<Term> children1, List<Term> children2) {
-		children.addAll(children1);
-		children.addAll(children2);
+	public static Sum sumFromChildren(Term...children) {
+		Sum sum = new Sum();
+		for (Term t : children)
+			sum.children.add(t);
+		return sum;
+	}
+	public static Sum isolationSum(Sum positiveSum, Sum negativeSum) {
+		Sum sum = new Sum();
+		sum.children.addAll(positiveSum.children);
+		for (Term t : negativeSum.children)
+			sum.children.add(t.multiply(-1));
+		return sum;
 	}
 	public boolean isConstant() {
 		for (Term t : children)
@@ -83,8 +100,11 @@ public class Sum implements Term, Branch {
 		}
 		children.clear();
 		for (String symbol : varToFactor.keySet()) {
-			Variable v = new Variable(varToFactor.get(symbol), symbol);
-			children.add(v);
+			int factor = varToFactor.get(symbol);
+			if (factor != 0) {
+				Variable v = new Variable(factor, symbol);
+				children.add(v);
+			}
 		}
 		if (constantValue != 0)
 			children.add(new Constant(constantValue));

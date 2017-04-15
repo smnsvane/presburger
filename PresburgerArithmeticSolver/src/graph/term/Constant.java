@@ -16,9 +16,7 @@ public class Constant implements Term {
 	public Node replaceVariables(VariableAssignment assignment) { return this; }
 	@Override
 	public Sum toSum() {
-		Sum sum = new Sum();
-		sum.addChild(this);
-		return sum;
+		return Sum.sumFromChildren(this);
 	}
 	@Override
 	public Constant multiply(int factor) {
