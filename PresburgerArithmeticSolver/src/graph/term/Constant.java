@@ -27,8 +27,10 @@ public class Constant implements Term {
 	public Constant simplify() { return this; }
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Constant))
-			return false;
-		return value == ((Constant) obj).value;
+		if (obj instanceof Constant)
+			return value == ((Constant) obj).value;
+		if (obj instanceof Integer)
+			return value == (int) obj;
+		return false;
 	}
 }

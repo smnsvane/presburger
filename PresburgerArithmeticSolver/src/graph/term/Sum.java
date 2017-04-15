@@ -12,7 +12,8 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 	public static Sum sumFromChildren(Term...children) {
 		Sum sum = new Sum();
 		for (Term t : children)
-			sum.addChild(t);
+			if (!t.equals(new Constant(0)))
+				sum.addChild(t);
 		return sum;
 	}
 	public static Sum isolationSum(Sum positiveSum, Sum negativeSum) {
@@ -60,6 +61,15 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 	public Sum toSum() { return this; }
 	@Override
 	public Sum simplify() {
+		boolean haveSumChildren = false;
+		for (Term t : viewChildren())
+			if (t instanceof Sum)
+				haveSumChildren = true;
+		if (haveSumChildren)
+			return flatten();
+		return compact();
+	}
+	public Sum compact() {
 		HashMap<String, Integer> varToFactor = new HashMap<>();
 		int constantValue = 0;
 		for (int i = 0; i < viewChildren().size(); i++) {

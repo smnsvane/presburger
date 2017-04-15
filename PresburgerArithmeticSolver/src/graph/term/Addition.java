@@ -23,9 +23,11 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 		return this;
 	}
 	@Override
-	public Addition simplify() {
-		setFirstChild(getFirstChild().simplify());
-		setSecondChild(getSecondChild().simplify());
+	public Term simplify() {
+		if (getFirstChild().equals(0))
+			return getSecondChild();
+		if (getSecondChild().equals(0))
+			return getFirstChild();
 		return this;
 	}
 }

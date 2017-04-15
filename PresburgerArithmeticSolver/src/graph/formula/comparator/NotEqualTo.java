@@ -24,14 +24,15 @@ public class NotEqualTo extends Comparator {
 	}
 	@Override
 	public Formula simplify() {
-		NotEqualTo notEqual = (NotEqualTo) super.simplify();
-		Sum sum1 = (Sum) notEqual.getFirstChild();
-		Sum sum2 = (Sum) notEqual.getSecondChild();
-		if (sum1.isConstant() && sum2.isConstant())
-			if (sum1.evaluate(null) != sum2.evaluate(null))
-				return new True();
-			else
-				return new False();
-		return notEqual;
+		if (getFirstChild() instanceof Sum && getSecondChild() instanceof Sum) {
+			Sum sum1 = (Sum) getFirstChild();
+			Sum sum2 = (Sum) getSecondChild();
+			if (sum1.isConstant() && sum2.isConstant())
+				if (sum1.evaluate(null) != sum2.evaluate(null))
+					return new True();
+				else
+					return new False();
+		}
+		return this;
 	}
 }

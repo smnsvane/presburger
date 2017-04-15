@@ -1,5 +1,3 @@
 package graph;
 
-public interface Leaf extends Node {
-
-}
+public interface Leaf extends Node {}

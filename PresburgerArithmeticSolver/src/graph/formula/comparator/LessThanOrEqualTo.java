@@ -24,14 +24,15 @@ public class LessThanOrEqualTo extends Comparator {
 	}
 	@Override
 	public Formula simplify() {
-		LessThanOrEqualTo lessOrEqual = (LessThanOrEqualTo) super.simplify();
-		Sum sum1 = (Sum) lessOrEqual.getFirstChild();
-		Sum sum2 = (Sum) lessOrEqual.getSecondChild();
-		if (sum1.isConstant() && sum2.isConstant())
-			if (sum1.evaluate(null) <= sum2.evaluate(null))
-				return new True();
-			else
-				return new False();
-		return lessOrEqual;
+		if (getFirstChild() instanceof Sum && getSecondChild() instanceof Sum) {
+			Sum sum1 = (Sum) getFirstChild();
+			Sum sum2 = (Sum) getSecondChild();
+			if (sum1.isConstant() && sum2.isConstant())
+				if (sum1.evaluate(null) <= sum2.evaluate(null))
+					return new True();
+				else
+					return new False();
+		}
+		return this;
 	}
 }

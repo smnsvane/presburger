@@ -36,10 +36,12 @@ public class Launcher {
 			Formula parsedRoot = p.parseLogic(line);
 			System.out.println("parsed as: "+parsedRoot);
 
-			VariableAssignment assignment = new VariableAssignment();
-			assignment.addAssignment("x", 1);
-			assignment.addAssignment("y", 1);
+			VariableAssignment assignment =
+					new VariableAssignment()
+					.put("x", 1)
+					.put("y", 1);
 
+			System.out.println("replacing variables with the assignment "+assignment);
 			GraphIterator explorer = new GraphIterator(parsedRoot);
 			for (Node n : explorer)
 				if (n instanceof Variable) {
@@ -54,6 +56,7 @@ public class Launcher {
 
 					explorer.getParent().replaceChild(v, m);
 				}
+			System.out.println("result: "+parsedRoot);
 //			Engine e = new Engine();
 //			boolean success = e.applyAssignment(parsedRoot, varAss);
 //			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);

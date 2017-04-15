@@ -22,7 +22,9 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 	@Override
 	public Formula simplify() {
 		Or or = new Or();
-		or.setFirstChild(getFirstChild().negate());
+		Not not = new Not();
+		not.setChild(getFirstChild());
+		or.setFirstChild(not);
 		or.setSecondChild(getSecondChild());
 		return (Formula) or.simplify();
 	}

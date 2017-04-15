@@ -22,8 +22,6 @@ public class And extends TwoChildrenBranch<Formula, Formula> implements Formula 
 	}
 	@Override
 	public Formula simplify() {
-		setFirstChild(getFirstChild().simplify());
-		setSecondChild(getSecondChild().simplify());
 		if (getFirstChild() instanceof True)
 			return getSecondChild();
 		if (getSecondChild() instanceof True)

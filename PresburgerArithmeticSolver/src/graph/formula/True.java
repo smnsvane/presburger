@@ -7,6 +7,8 @@ public class True implements Formula {
 	@Override
 	public String getSymbol() { return "true"; }
 	@Override
+	public String toString() { return getSymbol(); }
+	@Override
 	public boolean evaluate(VariableAssignment varAss) { return true; }
 	@Override
 	public Formula negate() { return new True(); }
