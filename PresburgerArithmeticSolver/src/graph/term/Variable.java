@@ -4,9 +4,13 @@ import graph.VariableAssignment;
 
 public class Variable implements Term {
 
-	public final int factor;
-	public final String variableSymbol;
-	public String getSymbol() { return variableSymbol; }
+	public String getSymbol() { return null; }
+
+	private int factor;
+	public int getFactor() { return factor; }
+
+	private String variableSymbol;
+	public String getVariableSymbol() { return variableSymbol; }
 
 	public Variable(int factor, String variableSymbol) {
 		this.factor = factor;
@@ -28,7 +32,5 @@ public class Variable implements Term {
 	@Override
 	public Variable simplify() { return this; }
 	@Override
-	public Sum toSum() { return Sum.sumFromChildren(this); }
-	@Override
-	public Variable copy() { return new Variable(factor, variableSymbol); }
+	public Sum toSum() { return new Sum(this); }
 }

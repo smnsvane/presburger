@@ -1,8 +1,12 @@
-package graph;
+package engine;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import graph.Branch;
+import graph.Node;
+import graph.SingleChildBranch;
+import graph.TwoChildrenBranch;
 import graph.formula.Formula;
 
 public class GraphIterator implements Iterable<Node> {

@@ -16,6 +16,4 @@ public class True implements Formula {
 	public True simplify() { return this; }
 	@Override
 	public boolean equals(Object obj) { return obj instanceof True; }
-	@Override
-	public True copy() { return new True(); }
 }

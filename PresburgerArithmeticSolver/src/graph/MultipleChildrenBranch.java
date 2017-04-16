@@ -1,23 +1,26 @@
 package graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 
-public abstract class MultipleChildrenBranch<Child extends Node> implements Branch {
+public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> implements Iterable<Child> {
 
-	private ArrayList<Child> children = new ArrayList<>();
-	public void addChild(Child child) { children.add(child); }
-	public List<Child> viewChildren() { return Collections.unmodifiableList(children); }
-	public ArrayList<Child> editChildren() { return children; }
-	@SuppressWarnings("unchecked")
+	private ArrayList<Child> children;
 	@Override
-	public void replaceChild(Node victim, Node overtaker) {
+	public void replaceChild(Child victim, Child overtaker) {
+		if (isLocked())
+			throw new RuntimeException("Locked");
 		int index = children.indexOf(victim);
 		if (index == -1)
-			throw new RuntimeException("child not found");
-		children.set(index, (Child) overtaker);
+			throw new RuntimeException("Can't find victim "+victim);
+		children.set(index, overtaker);
 	}
+	public MultipleChildrenBranch(Collection<Child> children) {
+		this.children.addAll(children);
+	}
+	@Override
+	public Iterator<Child> iterator() { return children.iterator(); }
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MultipleChildrenBranch<?>))

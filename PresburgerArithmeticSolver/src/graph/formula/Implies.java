@@ -7,6 +7,7 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 
 	@Override
 	public String getSymbol() { return "->"; }
+	public Implies(Formula child1, Formula child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
 		return !getFirstChild().evaluate(varAss) ||
@@ -14,25 +15,13 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 	}
 	@Override
 	public Formula negate() {
-		And and = new And();
-		and.setFirstChild(getFirstChild());
-		and.setSecondChild(getSecondChild().negate());
+		And and = new And(getFirstChild(), getSecondChild().negate());
 		return and;
 	}
 	@Override
 	public Formula simplify() {
-		Or or = new Or();
-		Not not = new Not();
-		not.setChild(getFirstChild());
-		or.setFirstChild(not);
-		or.setSecondChild(getSecondChild());
-		return (Formula) or.simplify();
-	}
-	@Override
-	public Implies copy() {
-		Implies copy = new Implies();
-		copy.setFirstChild((Formula) getFirstChild().copy());
-		copy.setSecondChild((Formula) getSecondChild().copy());
-		return copy;
+		Not not = new Not(getFirstChild());
+		Or or = new Or(not, getSecondChild());
+		return or;
 	}
 }

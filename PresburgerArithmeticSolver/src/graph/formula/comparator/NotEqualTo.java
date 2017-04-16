@@ -1,9 +1,8 @@
 package graph.formula.comparator;
 
 import graph.VariableAssignment;
-import graph.formula.False;
 import graph.formula.Formula;
-import graph.formula.True;
+import graph.formula.Or;
 import graph.term.Sum;
 import graph.term.Term;
 
@@ -11,6 +10,7 @@ public class NotEqualTo extends Comparator {
 
 	@Override
 	public String getSymbol() { return "!="; }
+	public NotEqualTo(Term child1, Term child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
 		return getFirstChild().evaluate(varAss) !=
@@ -18,29 +18,19 @@ public class NotEqualTo extends Comparator {
 	}
 	@Override
 	public Formula negate() {
-		EqualTo equal = new EqualTo();
-		equal.setFirstChild(getFirstChild());
-		equal.setSecondChild(getSecondChild());
+		EqualTo equal = new EqualTo(getFirstChild(), getSecondChild());
 		return equal;
 	}
 	@Override
-	public Formula simplify() {
-		if (getFirstChild() instanceof Sum && getSecondChild() instanceof Sum) {
-			Sum sum1 = (Sum) getFirstChild();
-			Sum sum2 = (Sum) getSecondChild();
-			if (sum1.isConstant() && sum2.isConstant())
-				if (sum1.evaluate(null) != sum2.evaluate(null))
-					return new True();
-				else
-					return new False();
-		}
-		return this;
+	public Formula toLessThan() {
+		LessThan child1 = new LessThan(getFirstChild(), getSecondChild());
+		LessThan child2 = new LessThan(getSecondChild(), getFirstChild());
+		Or or = new Or(child1, child2);
+		return or;
 	}
 	@Override
-	public NotEqualTo copy() {
-		NotEqualTo copy = new NotEqualTo();
-		copy.setFirstChild((Term) getFirstChild().copy());
-		copy.setSecondChild((Term) getSecondChild().copy());
-		return copy;
+	public NotEqualTo isolate() {
+		NotEqualTo notEqual = new NotEqualTo(new Sum(), Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
+		return notEqual;
 	}
 }

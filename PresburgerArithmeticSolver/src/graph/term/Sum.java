@@ -1,106 +1,102 @@
 package graph.term;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 import graph.MultipleChildrenBranch;
-import graph.Node;
 import graph.VariableAssignment;
 
 public class Sum extends MultipleChildrenBranch<Term> implements Term {
 
 	@Override
 	public String getSymbol() { return "SUM"; }
-	public static Sum sumFromChildren(Term...children) {
-		Sum sum = new Sum();
-		for (Term t : children)
-			if (!t.equals(new Constant(0)))
-				sum.addChild(t);
+	public Sum(Collection<Term> children) { super(children); }
+	public Sum(Term...children) { super(Arrays.asList(children)); }
+	public static Sum isolationSum(Sum addedSum, Sum subtractedSum) {
+		ArrayList<Term> sumChildren = new ArrayList<>();
+		for (Term t : addedSum)
+			sumChildren.add(t);
+		for (Term t : subtractedSum)
+			sumChildren.add(t.multiply(-1));
+		Sum sum = new Sum(sumChildren);
 		return sum;
 	}
-	public static Sum isolationSum(Sum positiveSum, Sum negativeSum) {
-		Sum sum = new Sum();
-		sum.editChildren().addAll(positiveSum.viewChildren());
-		for (Term t : negativeSum.viewChildren())
-			sum.addChild(t.multiply(-1));
-		return sum;
-	}
-	public boolean isConstant() {
-		for (Term t : viewChildren())
+	public boolean onlyConstantChildren() {
+		for (Term t : this)
 			if (!(t instanceof Constant))
 				return false;
 		return true;
 	}
 	@Override
-	public String toString() {
-		if (viewChildren().isEmpty())
-			return "SUM[0]";
-		return "SUM"+viewChildren();
-	}
-	@Override
-	public int evaluate(VariableAssignment varAss) {
+	public int evaluate(VariableAssignment assignment) {
 		int value = 0;
-		for (Term t : viewChildren())
-			value += t.evaluate(varAss);
+		for (Term t : this)
+			value += t.evaluate(assignment);
 		return value;
 	}
 	@Override
 	public Sum multiply(int factor) {
-		for (int i = 0; i < viewChildren().size(); i++)
-			editChildren().set(i, viewChildren().get(i).multiply(factor));
-		return this;
+		ArrayList<Term> sumChildren = new ArrayList<>();
+		for (Term child : this)
+			sumChildren.add(child.multiply(factor));
+		Sum sum = new Sum(sumChildren);
+		return sum;
 	}
 	public Sum flatten() {
-		for (int i = 0; i < viewChildren().size(); i++) {
-			if (viewChildren().get(i) instanceof Sum) {
-				Sum child = (Sum) editChildren().remove(i--);
-				editChildren().addAll(child.viewChildren());
-			}
+		ArrayList<Term> children = new ArrayList<>();
+		for (Term child : this) {
+			if (child instanceof Sum) {
+				Sum sumChild = (Sum) child;
+				for (Term grandChild : sumChild)
+					children.add(grandChild);
+			} else if (child instanceof Addition) {
+				Addition additionChild = (Addition) child;
+				children.add(additionChild.getFirstChild());
+				children.add(additionChild.getSecondChild());
+			} else if (child instanceof Subtraction) {
+				Subtraction subtractionChild = (Subtraction) child;
+				children.add(subtractionChild.getFirstChild());
+				children.add(subtractionChild.getSecondChild().multiply(-1));
+			} else
+				children.add(child);
 		}
-		return this;
+		Sum sum = new Sum(children);
+		return sum;
 	}
 	@Override
 	public Sum toSum() { return this; }
 	@Override
 	public Sum simplify() {
-		boolean haveSumChildren = false;
-		for (Term t : viewChildren())
-			if (t instanceof Sum)
-				haveSumChildren = true;
-		if (haveSumChildren)
-			return flatten();
-		return compact();
+		return this;//TODO
 	}
 	public Sum compact() {
 		HashMap<String, Integer> varToFactor = new HashMap<>();
 		int constantValue = 0;
-		for (int i = 0; i < viewChildren().size(); i++) {
-			if (viewChildren().get(i) instanceof Constant) {
-				Constant c = (Constant) editChildren().remove(i);
-				constantValue += c.value;
-			} else if (viewChildren().get(i) instanceof Variable) {
-				Variable v = (Variable) editChildren().remove(i);
+		for (Term t : this) {
+			if (t instanceof Constant) {
+				Constant c = (Constant) t;
+				constantValue += c.getValue();
+			} else if (t instanceof Variable) {
+				Variable v = (Variable) t;
 				if (varToFactor.containsKey(v.getSymbol()))
-					varToFactor.put(v.getSymbol(), varToFactor.get(v.getSymbol()) + v.factor);
+					varToFactor.put(v.getSymbol(), varToFactor.get(v.getSymbol()) + v.getFactor());
 				else
-					varToFactor.put(v.getSymbol(), v.factor);
+					varToFactor.put(v.getSymbol(), v.getFactor());
 			}
 		}
+		ArrayList<Term> children = new ArrayList<>();
 		for (String symbol : varToFactor.keySet()) {
 			int factor = varToFactor.get(symbol);
 			if (factor != 0) {
 				Variable v = new Variable(factor, symbol);
-				addChild(v);
+				children.add(v);
 			}
 		}
 		if (constantValue != 0)
-			addChild(new Constant(constantValue));
-		return this;
-	}
-	@Override
-	public Node copy() {
-		Sum copy = new Sum();
-		for (Term t : viewChildren())
-			copy.addChild((Term) t.copy());
-		return copy;
+			children.add(new Constant(constantValue));
+		Sum sum = new Sum(children);
+		return sum;
 	}
 }

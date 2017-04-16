@@ -1,6 +1,5 @@
 package engine;
 
-import graph.GraphIterator;
 import graph.Node;
 import graph.formula.Formula;
 import graph.term.Term;
@@ -15,11 +14,11 @@ public class Simplifier implements Engine {
 		GraphIterator explorer = new GraphIterator(root);
 		for (Node n : explorer)
 			if (explorer.getParent() == null)
-				root = ((Formula) n).simplify();
+				root = (Formula) n.simplify();
 			else if (n instanceof Formula)
-				explorer.getParent().replaceChild(n, ((Formula) n).simplify());
+				explorer.getParent().replaceChild(n, n.simplify());
 			else if (n instanceof Term)
-				explorer.getParent().replaceChild(n, ((Term) n).simplify());
+				explorer.getParent().replaceChild(n, n.simplify());
 			else
 				throw new RuntimeException("unknown node type");
 		return root;

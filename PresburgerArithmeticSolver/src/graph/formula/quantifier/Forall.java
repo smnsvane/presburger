@@ -1,22 +1,25 @@
 package graph.formula.quantifier;
 
 import graph.formula.Formula;
+import graph.formula.Not;
 
 public class Forall extends Quantifier {
 
 	@Override
 	public String getSymbol() { return "A"; }
-	public Forall(String variableSymbol) { super(variableSymbol); }
+	public Forall(String variableSymbol, Formula formula) {
+		super(variableSymbol, formula);
+	}
 	@Override
 	public Formula negate() {
-		Exists exists = new Exists(variableSymbol);
-		exists.setChild(getChild().negate());
+		Exists exists = new Exists(getVariableSymbol(), getChild().negate());
 		return exists;
 	}
 	@Override
-	public Forall copy() {
-		Forall copy = new Forall(variableSymbol);
-		copy.setChild((Formula) getChild().copy());
-		return copy;
+	public Formula simplify() { return this; }
+	public Not toExists() {
+		Exists exists = new Exists(getVariableSymbol(), getChild().negate());
+		Not not = new Not(exists);
+		return not;
 	}
 }

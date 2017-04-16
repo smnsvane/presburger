@@ -7,6 +7,7 @@ public class Not extends SingleChildBranch<Formula> implements Formula {
 
 	@Override
 	public String getSymbol() { return "~"; }
+	public Not(Formula child) { super(child); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
 		return !getChild().evaluate(varAss);
@@ -17,11 +18,5 @@ public class Not extends SingleChildBranch<Formula> implements Formula {
 	public Formula simplify() {
 		Formula child = getChild().negate();
 		return (Formula) child.simplify();
-	}
-	@Override
-	public Not copy() {
-		Not copy = new Not();
-		copy.setChild((Formula) getChild().copy());
-		return copy;
 	}
 }

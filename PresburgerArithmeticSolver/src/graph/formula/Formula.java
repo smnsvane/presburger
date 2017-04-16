@@ -5,7 +5,7 @@ import graph.VariableAssignment;
 
 public interface Formula extends Node {
 
-	boolean evaluate(VariableAssignment varAss);
+	boolean evaluate(VariableAssignment assignment);
 	Formula negate();
 	Formula simplify();
 }

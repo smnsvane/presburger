@@ -1,11 +1,10 @@
 package engine;
 
-import graph.GraphIterator;
 import graph.Node;
 import graph.VariableAssignment;
 import graph.formula.Formula;
 import graph.term.Constant;
-import graph.term.Multiply;
+import graph.term.Product;
 import graph.term.Variable;
 
 public class VariableReplacer implements Engine {
@@ -26,8 +25,8 @@ public class VariableReplacer implements Engine {
 	
 				Constant child1 = new Constant(v.factor);
 				Constant child2 = new Constant(assignment.getAssignment(v.variableSymbol));
-	
-				Multiply m = new Multiply();
+
+				Product m = new Product();
 				m.setFirstChild(child1);
 				m.setSecondChild(child2);
 	

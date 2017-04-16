@@ -1,6 +1,16 @@
 package graph;
 
-public interface Branch extends Node {
+import parser.SymbolBinding;
 
-	void replaceChild(Node victim, Node overtaker);
+public abstract class Branch<Child extends Node> implements Node {
+
+	public abstract void replaceChild(Child victim, Child overtaker);
+	private boolean locked = true;
+	public boolean isLocked() { return locked; }
+	public void lock() { locked = true; }
+	public void unlock() { locked = false; }
+	@Override
+	public String getSymbol() {
+		return SymbolBinding.getSymbol(getClass());
+	}
 }

@@ -5,7 +5,7 @@ import graph.VariableAssignment;
 
 public interface Term extends Node {
 
-	int evaluate(VariableAssignment varAss);
+	int evaluate(VariableAssignment assignment);
 	Sum toSum();
 	Term multiply(int factor);
 	Term simplify();

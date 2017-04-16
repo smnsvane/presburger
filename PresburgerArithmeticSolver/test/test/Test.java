@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import engine.Simplifier;
 import graph.formula.Formula;
 import parser.Parser;
 
@@ -14,8 +15,8 @@ public class Test {
 		String simplifiedFormula = "~(0 = x + 1)".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		assertEquals("~0=x+1", root.toString());
-		root = root.simplify();
-		assertEquals("0!=x+1", root.toString());
+		Formula simplifiedRoot = root.simplify();
+		assertEquals("0!=x+1", simplifiedRoot.toString());
 	}
 
 	@org.junit.Test
@@ -23,8 +24,10 @@ public class Test {
 		String simplifiedFormula = "x + 1 = y + 1 -> x = y".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		assertEquals("x+1=y+1->x=y", root.toString());
-		root = root.simplify();
-		assertEquals("~x+1=y+1/x=y", root.toString());
+		Formula simplifiedRoot = root.simplify();
+		assertEquals("~x+1=y+1/x=y", simplifiedRoot.toString());
+		Formula simplifiedGraphRoot = new Simplifier(root).go();
+		assertEquals("x+1!=y+1/x=y", simplifiedGraphRoot.toString());
 	}
 
 	@org.junit.Test
@@ -32,13 +35,20 @@ public class Test {
 		String simplifiedFormula = "x + 0 = x".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		assertEquals("x+0=x", root.toString());
-		root = root.simplify();
+		root = new Simplifier(root).go();
 		assertEquals("x=x", root.toString());
 	}
 
 	@org.junit.Test
 	public void testFormula05() {
-		String simplifiedFormula = "x + (y + 1) = (x + y) + 1".replaceAll("[\\s()]", "");
+		String simplifiedFormula = "x + y + 1 = x + y + 1".replaceAll("[\\s()]", "");
+		Formula root = p.parseLogic(simplifiedFormula);
+		assertEquals("x+(y+1)=x+(y+1)", root.toString());
+	}
+
+	@org.junit.Test
+	public void testFormula055() {
+		String simplifiedFormula = "x + (y + 1) = (x + y) + 1".replaceAll("[\\s]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		assertEquals("x+(y+1)=(x+y)+1", root.toString());
 	}
@@ -47,7 +57,7 @@ public class Test {
 	public void testFormula06() {
 		String simplifiedFormula = "(y + y = x) / (y + y + 1 = x)".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
-		assertEquals("y+y=x/y+y+1=x", root.toString());
+		assertEquals("y+y=x/y+(y+1)=x", root.toString());
 	}
 
 	@org.junit.Test
@@ -88,7 +98,7 @@ public class Test {
 		String simplifiedFormula = "Ex. (3 < x & x + 2y <= 6 & y < 0)".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		String parsing = root.toString();
-		assertEquals("Ex.3<x&x+2y<=6&y<0", parsing);
+		assertEquals("Ex.3<x&(x+2y<=6&y<0)", parsing);
 	}
 
 	@org.junit.Test
@@ -96,6 +106,6 @@ public class Test {
 		String simplifiedFormula = "3 < x & x +2y <= 6 & y < 0".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		String parsing = root.toString();
-		assertEquals("3<x&x+2y<=6&y<0", parsing);
+		assertEquals("3<x&(x+2y<=6&y<0)", parsing);
 	}
 }

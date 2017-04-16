@@ -7,7 +7,7 @@ public class And extends TwoChildrenBranch<Formula, Formula> implements Formula 
 
 	@Override
 	public String getSymbol() { return "&"; }
-
+	public And(Formula child1, Formula child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
 		return getFirstChild().evaluate(varAss) &&
@@ -15,10 +15,7 @@ public class And extends TwoChildrenBranch<Formula, Formula> implements Formula 
 	}
 	@Override
 	public Formula negate() {
-		Or or = new Or();
-		or.setFirstChild(getFirstChild().negate());
-		or.setSecondChild(getSecondChild().negate());
-		return or;
+		return new Or(getFirstChild().negate(), getSecondChild().negate());
 	}
 	@Override
 	public Formula simplify() {
@@ -29,12 +26,5 @@ public class And extends TwoChildrenBranch<Formula, Formula> implements Formula 
 		if (getFirstChild() instanceof False || getSecondChild() instanceof False)
 			return new False();
 		return this;
-	}
-	@Override
-	public And copy() {
-		And copy = new And();
-		copy.setFirstChild((Formula) getFirstChild().copy());
-		copy.setSecondChild((Formula) getSecondChild().copy());
-		return copy;
 	}
 }

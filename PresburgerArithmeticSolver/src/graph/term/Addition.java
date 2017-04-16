@@ -7,6 +7,7 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 
 	@Override
 	public String getSymbol() { return "+"; }
+	public Addition(Term child1, Term child2) { super(child1, child2); }
 	@Override
 	public int evaluate(VariableAssignment varAss) {
 		return getFirstChild().evaluate(varAss) +
@@ -14,13 +15,12 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 	}
 	@Override
 	public Sum toSum() {
-		return Sum.sumFromChildren(getFirstChild(), getSecondChild());
+		return new Sum(getFirstChild(), getSecondChild());
 	}
 	@Override
 	public Addition multiply(int factor) {
-		setFirstChild(getFirstChild().multiply(factor));
-		setSecondChild(getSecondChild().multiply(factor));
-		return this;
+		Addition add = new Addition(getFirstChild().multiply(factor), getSecondChild().multiply(factor));
+		return add;
 	}
 	@Override
 	public Term simplify() {
@@ -29,12 +29,5 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 		if (getSecondChild().equals(0))
 			return getFirstChild();
 		return this;
-	}
-	@Override
-	public Addition copy() {
-		Addition copy = new Addition();
-		copy.setFirstChild((Term) getFirstChild().copy());
-		copy.setSecondChild((Term) getSecondChild().copy());
-		return copy;
 	}
 }

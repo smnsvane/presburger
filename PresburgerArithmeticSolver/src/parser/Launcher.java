@@ -33,14 +33,17 @@ public class Launcher {
 			Formula root = p.parseLogic(line);
 			System.out.println("parsed as: "+root);
 
+			Formula simplifiedGraphRoot = new Simplifier(root).go();
+			System.out.println("simplified the passed graph, result: "+simplifiedGraphRoot);
+
 			VariableAssignment assignment =
 					new VariableAssignment()
 					.put("x", 1)
 					.put("y", 1);
-			Formula assignedRoot = new VariableReplacer((Formula) root.copy(), assignment).go();
+			Formula assignedRoot = new VariableReplacer(root, assignment).go();
 			System.out.println("replacing variables with the assignment "+assignment+" result: "+assignedRoot);
-			Formula simplifiedRoot = new Simplifier((Formula) assignedRoot.copy()).go();
-			System.out.println("simplified the assgined graph, result: "+simplifiedRoot);
+			Formula simplifiedAssignedGraphRoot = new Simplifier(assignedRoot).go();
+			System.out.println("simplified the assigned graph, result: "+simplifiedAssignedGraphRoot);
 //			boolean success = e.applyAssignment(parsedRoot, varAss);
 //			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
 //			

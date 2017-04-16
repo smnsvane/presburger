@@ -1,18 +1,21 @@
 package graph;
 
-public abstract class SingleChildBranch<Child extends Node> implements Branch {
+import parser.SymbolBinding;
+
+public abstract class SingleChildBranch<Child extends Node> extends Branch<Child> {
 
 	private Child child;
 	public Child getChild() { return child; }
-	public void setChild(Child child) { this.child = child; }
-	@SuppressWarnings("unchecked")
 	@Override
-	public void replaceChild(Node victim, Node overtaker) {
-		if (child.equals(victim))
-			child = (Child) overtaker;
+	public void replaceChild(Child victim, Child overtaker) {
+		if (isLocked())
+			throw new RuntimeException("Locked");
+		if (victim.equals(child))
+			child = overtaker;
 		else
-			throw new RuntimeException("child not found");
+			throw new RuntimeException("Can't find victim "+victim);
 	}
+	public SingleChildBranch(Child child) { this.child = child; }
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof SingleChildBranch<?>))
@@ -23,5 +26,12 @@ public abstract class SingleChildBranch<Child extends Node> implements Branch {
 		return child.equals(other.child);
 	}
 	@Override
-	public String toString() { return getSymbol()+child; }
+	public String toString() {
+		String childString;
+		if (SymbolBinding.lowerOrEqualPrecedence(child, this))
+			childString = "("+child.toString()+")";
+		else
+			childString = child.toString();
+		return getSymbol()+childString;
+	}
 }
