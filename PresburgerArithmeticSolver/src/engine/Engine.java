@@ -1,8 +1,8 @@
 package engine;
 
-import graph.Node;
+import graph.Formula;
 
 public interface Engine {
 
-	Node go();
+	Formula go();
 }

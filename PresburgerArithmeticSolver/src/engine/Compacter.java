@@ -1,29 +1,32 @@
 package engine;
 
 import graph.Branch;
+import graph.Formula;
 import graph.Node;
 import graph.term.Sum;
 
 public class Compacter implements Engine {
 
-	private Branch<Node> root;
-	public Compacter(Branch<Node> root) { this.root = root; }
+	private Formula root;
+	public Compacter(Formula root) { this.root = root; }
 
 	@Override
-	public Branch<Node> go() {
+	public Formula go() {
 
-		GraphTransverser transverser = new GraphTransverser(root);
-		while (transverser.hasNext()) {
-			Branch<Node> parent = transverser.next();
-			for (Node child : parent)
-				if (child instanceof Sum) {
-					Sum sum = (Sum) child;
-					Sum neW = sum.compact();
-					parent.replaceChild(child, neW);
-				}
-			transverser.done();
+		if (root instanceof Branch<?>) {
+			@SuppressWarnings("unchecked")
+			GraphTransverser transverser = new GraphTransverser((Branch<Node>) root);
+			while (transverser.hasNext()) {
+				Branch<Node> parent = transverser.next();
+				for (Node child : parent)
+					if (child instanceof Sum) {
+						Sum sum = (Sum) child;
+						Sum neW = sum.compact();
+						parent.replaceChild(child, neW);
+					}
+				transverser.done();
+			}
 		}
-
 		return root;
 	}
 }

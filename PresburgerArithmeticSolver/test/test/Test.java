@@ -8,7 +8,6 @@ import engine.Isolater;
 import engine.Simplifier;
 import engine.ToLessThan;
 import engine.VariableReplacer;
-import graph.Branch;
 import graph.Formula;
 import graph.Node;
 import graph.VariableAssignment;
@@ -43,8 +42,8 @@ public class Test {
 		String input = "x + 0 = x";
 		Formula root = p.parseLogic(input);
 		assertEquals("x+0=x", root.toString());
-		Node root2 = new Simplifier(root).go();
-		assertEquals("x=x", root2.toString());
+		Node root2 = new Isolater(root).go();
+		assertEquals("x+0=x", root2.toString());
 	}
 
 	@org.junit.Test
@@ -61,20 +60,21 @@ public class Test {
 		assertEquals("x+(y+1)=(x+y)+1", root.toString());
 	}
 
-	@SuppressWarnings("unchecked")
 	@org.junit.Test
 	public void testFormula06() {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parseLogic(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
-		Branch<Node> isolatedRoot = new Isolater((Branch<Node>) root).go();
+		Formula isolatedRoot = new Isolater(root).go();
 		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y+-1]", isolatedRoot.toString());
-		Branch<Node> flattenedRoot = new Flattener((Branch<Node>) root).go();
+		Formula flattenedRoot = new Flattener(root).go();
 		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y, -1]", flattenedRoot.toString());
-		Branch<Node> compactedRoot = new Compacter((Branch<Node>) root).go();
+		Formula compactedRoot = new Compacter(root).go();
 		assertEquals("0=SUM[x, -2y]/0=SUM[x, -2y, -1]", compactedRoot.toString());
-		Branch<Node> toLessThanRoot = new ToLessThan((Branch<Node>) root).go();
-		assertEquals("(0<SUM[x, -2y]&SUM[x, -2y]<0)/(0<SUM[x, -2y, -1]&SUM[x, -2y, -1]<0)", toLessThanRoot.toString());
+		Formula toLessThanRoot = new ToLessThan(root).go();
+		assertEquals("(0<SUM[x, -2y]+1&SUM[x, -2y]<0+1)/(0<SUM[x, -2y, -1]+1&SUM[x, -2y, -1]<0+1)", toLessThanRoot.toString());
+		Formula flattenedRoot2 = new Flattener(root).go();
+		assertEquals("(0<SUM[x, -2y, 1]&SUM[x, -2y]<1)/(0<SUM[x, -2y, -1, 1]&SUM[x, -2y, -1]<1)", flattenedRoot2.toString());
 	}
 
 	@org.junit.Test
@@ -131,17 +131,16 @@ public class Test {
 		String parsing = root.toString();
 		assertEquals("x+1=y+1->x=y", parsing);
 
-		Node simplifiedGraphRoot = new Simplifier(root).go();
+		Formula simplifiedGraphRoot = new Simplifier(root).go();
 		parsing = simplifiedGraphRoot.toString();
 		assertEquals("x+1!=y+1/x=y", parsing);
 
 		VariableAssignment assignment = new VariableAssignment().put("x", 1).put("y", 1);
-		@SuppressWarnings("unchecked")
-		Node assignedRoot = new VariableReplacer((Branch<Node>) simplifiedGraphRoot, assignment).go();
+		Formula assignedRoot = new VariableReplacer(simplifiedGraphRoot, assignment).go();
 		parsing = assignedRoot.toString();
 		assertEquals("1+1!=1+1/1=1", parsing);
 
-		Node simplifiedAssignedGraphRoot = new Simplifier(simplifiedGraphRoot).go();
+		Formula simplifiedAssignedGraphRoot = new Simplifier(simplifiedGraphRoot).go();
 		parsing = simplifiedAssignedGraphRoot.toString();
 		assertEquals("false/true", parsing);
 

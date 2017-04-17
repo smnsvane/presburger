@@ -49,10 +49,10 @@ public abstract class SymbolBinding {
 	}
 
 	static {
+		list.add(new Binding("SUM", Sum.class, nextPrecendence()));
 		list.add(new Binding("*", Product.class, nextPrecendence()));
 		list.add(new Binding("+", Addition.class, nextPrecendence()));
 		list.add(new Binding("-", Subtraction.class, samePrecendence()));
-		list.add(new Binding("SUM", Sum.class, nextPrecendence()));
 		list.add(new Binding("=", EqualTo.class, nextPrecendence()));
 		list.add(new Binding("!=", NotEqualTo.class, nextPrecendence()));
 		list.add(new Binding(">", GreaterThan.class, nextPrecendence()));

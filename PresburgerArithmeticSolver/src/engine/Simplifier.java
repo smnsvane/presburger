@@ -1,15 +1,16 @@
 package engine;
 
 import graph.Branch;
+import graph.Formula;
 import graph.Node;
 
 public class Simplifier implements Engine {
 
-	private Node root;
-	public Simplifier(Node root) { this.root = root; }
+	private Formula root;
+	public Simplifier(Formula root) { this.root = root; }
 
-	public Node fullSimplify(Node n) {
-		Node org;
+	public Formula fullSimplify(Formula n) {
+		Formula org;
 		do {
 			org = n;
 			n = org.simplify();
@@ -18,7 +19,7 @@ public class Simplifier implements Engine {
 	}
 
 	@Override
-	public Node go() {
+	public Formula go() {
 
 		root = fullSimplify(root.copy());
 
@@ -28,7 +29,8 @@ public class Simplifier implements Engine {
 			while (transverser.hasNext()) {
 				Branch<Node> parent = transverser.next();
 				for (Node child : parent)
-					parent.replaceChild(child, fullSimplify(child));
+					if (child instanceof Formula)
+						parent.replaceChild(child, fullSimplify((Formula) child));
 				transverser.done();
 			}
 		}

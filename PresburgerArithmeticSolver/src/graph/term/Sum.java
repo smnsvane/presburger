@@ -45,7 +45,13 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		Sum sum = new Sum(sumChildren);
 		return sum;
 	}
-	public Sum flatten() {
+	@Override
+	public Term flatten() {
+		if (numberOfChildren() == 1) {
+			Term child = iterator().next();
+			if (child instanceof Constant || child instanceof Variable)
+				return child;
+		}
 		ArrayList<Term> children = new ArrayList<>();
 		for (Term child : this) {
 			if (child instanceof Sum) {
@@ -68,14 +74,6 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 	}
 	@Override
 	public Sum toSum() { return this; }
-	@Override
-	public Term simplify() {
-		if (numberOfChildren() == 0)
-			return new Constant(0);
-		if (numberOfChildren() == 1)
-			return iterator().next();
-		return this;
-	}
 	public Sum compact() {
 		HashMap<String, Integer> varToFactor = new HashMap<>();
 		int constantValue = 0;

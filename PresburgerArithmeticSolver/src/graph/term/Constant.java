@@ -23,8 +23,6 @@ public class Constant implements Term {
 		return constant;
 	}
 	@Override
-	public Constant simplify() { return this; }
-	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Constant)
 			return value == ((Constant) obj).value;
@@ -34,4 +32,6 @@ public class Constant implements Term {
 	}
 	@Override
 	public Constant copy() { return new Constant(getValue()); }
+	@Override
+	public Term flatten() { return this; }
 }

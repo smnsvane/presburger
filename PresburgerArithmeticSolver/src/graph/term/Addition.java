@@ -22,7 +22,7 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 		return add;
 	}
 	@Override
-	public Term simplify() {
+	public Term flatten() {
 		if (getFirstChild().equals(0))
 			return getSecondChild();
 		if (getSecondChild().equals(0))

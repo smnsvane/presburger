@@ -21,7 +21,7 @@ public class Product extends TwoChildrenBranch<Constant, Term> implements Term {
 		return new Sum(this);
 	}
 	@Override
-	public Term simplify() {
+	public Term flatten() {
 		Term overtaker = getSecondChild().multiply(getFirstChild().getValue());
 		return overtaker;
 	}

@@ -19,10 +19,10 @@ public class Subtraction extends TwoChildrenBranch<Term, Term> implements Term {
 	}
 	@Override
 	public Sum toSum() {
-		return new Sum(getFirstChild().simplify(), getSecondChild().multiply(-1).simplify());
+		return new Sum(getFirstChild(), getSecondChild().multiply(-1));
 	}
 	@Override
-	public Addition simplify() {
+	public Addition flatten() {
 		Addition add = new Addition(getFirstChild(), getSecondChild().multiply(-1));
 		return add;
 	}
