@@ -10,5 +10,5 @@ public abstract class Branch<Child extends Node> implements Node, Iterable<Child
 	public void lock() { locked = true; }
 	public void unlock() { locked = false; }
 	@Override
-	public String getSymbol() { return SymbolBinding.getSymbol(getClass()); }
+	public final String getSymbol() { return SymbolBinding.getSymbol(getClass()); }
 }

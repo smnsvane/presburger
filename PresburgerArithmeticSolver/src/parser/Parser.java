@@ -3,8 +3,9 @@ package parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import graph.Formula;
+import graph.Term;
 import graph.formula.And;
-import graph.formula.Formula;
 import graph.formula.Implies;
 import graph.formula.Not;
 import graph.formula.Or;
@@ -20,7 +21,6 @@ import graph.term.Addition;
 import graph.term.Constant;
 import graph.term.Product;
 import graph.term.Subtraction;
-import graph.term.Term;
 import graph.term.Variable;
 
 public class Parser {

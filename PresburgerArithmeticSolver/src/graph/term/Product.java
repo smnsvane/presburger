@@ -1,12 +1,11 @@
 package graph.term;
 
+import graph.Term;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
 
 public class Product extends TwoChildrenBranch<Constant, Term> implements Term {
 
-	@Override
-	public String getSymbol() { return "*"; }
 	public Product(Constant constant, Term term) { super(constant, term); }
 	@Override
 	public int evaluate(VariableAssignment varAss) {

@@ -1,5 +1,6 @@
 package graph.formula;
 
+import graph.Formula;
 import graph.VariableAssignment;
 
 public class True implements Formula {

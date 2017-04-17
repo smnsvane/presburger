@@ -1,12 +1,10 @@
 package graph.formula.quantifier;
 
-import graph.formula.Formula;
+import graph.Formula;
 import graph.formula.Not;
 
 public class Exists extends Quantifier {
 
-	@Override
-	public String getSymbol() { return "E"; }
 	public Exists(String variableSymbol, Formula formula) {
 		super(variableSymbol, formula);
 	}

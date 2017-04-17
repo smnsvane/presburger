@@ -1,16 +1,14 @@
 package graph.formula.comparator;
 
+import graph.Formula;
+import graph.Term;
 import graph.VariableAssignment;
-import graph.formula.Formula;
 import graph.formula.Or;
 import graph.term.Constant;
 import graph.term.Sum;
-import graph.term.Term;
 
 public class NotEqualTo extends Comparator {
 
-	@Override
-	public String getSymbol() { return "!="; }
 	public NotEqualTo(Term child1, Term child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

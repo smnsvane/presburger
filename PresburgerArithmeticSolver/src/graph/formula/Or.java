@@ -1,12 +1,11 @@
 package graph.formula;
 
+import graph.Formula;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
 
 public class Or extends TwoChildrenBranch<Formula, Formula> implements Formula {
 
-	@Override
-	public String getSymbol() { return "/"; }
 	public Or(Formula child1, Formula child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

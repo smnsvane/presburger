@@ -1,12 +1,11 @@
 package graph.formula;
 
+import graph.Formula;
 import graph.SingleChildBranch;
 import graph.VariableAssignment;
 
 public class Not extends SingleChildBranch<Formula> implements Formula {
 
-	@Override
-	public String getSymbol() { return "~"; }
 	public Not(Formula child) { super(child); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

@@ -1,7 +1,6 @@
-package graph.term;
+package graph;
 
-import graph.Node;
-import graph.VariableAssignment;
+import graph.term.Sum;
 
 public interface Term extends Node {
 

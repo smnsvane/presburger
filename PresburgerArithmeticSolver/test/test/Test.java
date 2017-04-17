@@ -2,12 +2,16 @@ package test;
 
 import static org.junit.Assert.*;
 
+import engine.Compacter;
+import engine.Flattener;
+import engine.Isolater;
 import engine.Simplifier;
+import engine.ToLessThan;
 import engine.VariableReplacer;
 import graph.Branch;
+import graph.Formula;
 import graph.Node;
 import graph.VariableAssignment;
-import graph.formula.Formula;
 import parser.Parser;
 
 public class Test {
@@ -57,11 +61,20 @@ public class Test {
 		assertEquals("x+(y+1)=(x+y)+1", root.toString());
 	}
 
+	@SuppressWarnings("unchecked")
 	@org.junit.Test
 	public void testFormula06() {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parseLogic(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
+		Branch<Node> isolatedRoot = new Isolater((Branch<Node>) root).go();
+		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y+-1]", isolatedRoot.toString());
+		Branch<Node> flattenedRoot = new Flattener((Branch<Node>) root).go();
+		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y, -1]", flattenedRoot.toString());
+		Branch<Node> compactedRoot = new Compacter((Branch<Node>) root).go();
+		assertEquals("0=SUM[x, -2y]/0=SUM[x, -2y, -1]", compactedRoot.toString());
+		Branch<Node> toLessThanRoot = new ToLessThan((Branch<Node>) root).go();
+		assertEquals("(0<SUM[x, -2y]&SUM[x, -2y]<0)/(0<SUM[x, -2y, -1]&SUM[x, -2y, -1]<0)", toLessThanRoot.toString());
 	}
 
 	@org.junit.Test

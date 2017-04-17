@@ -6,12 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import graph.MultipleChildrenBranch;
+import graph.Term;
 import graph.VariableAssignment;
 
 public class Sum extends MultipleChildrenBranch<Term> implements Term {
 
-	@Override
-	public String getSymbol() { return "SUM"; }
 	public Sum(Collection<Term> children) { super(children); }
 	public Sum(Term...children) { super(Arrays.asList(children)); }
 	public static Sum isolationSum(Sum addedSum, Sum subtractedSum) {
@@ -86,10 +85,11 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 				constantValue += c.getValue();
 			} else if (t instanceof Variable) {
 				Variable v = (Variable) t;
-				if (varToFactor.containsKey(v.getSymbol()))
-					varToFactor.put(v.getSymbol(), varToFactor.get(v.getSymbol()) + v.getFactor());
+				if (varToFactor.containsKey(v.getVariableSymbol()))
+					varToFactor.put(v.getVariableSymbol(),
+							varToFactor.get(v.getVariableSymbol()) + v.getFactor());
 				else
-					varToFactor.put(v.getSymbol(), v.getFactor());
+					varToFactor.put(v.getVariableSymbol(), v.getFactor());
 			}
 		}
 		ArrayList<Term> children = new ArrayList<>();

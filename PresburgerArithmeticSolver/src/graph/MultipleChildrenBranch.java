@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> {
 
-	private ArrayList<Child> children;
+	private ArrayList<Child> children = new ArrayList<>();
 	public int numberOfChildren() { return children.size(); }
 	@Override
 	public void replaceChild(Child victim, Child overtaker) {
@@ -17,9 +17,7 @@ public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<
 			throw new RuntimeException("Can't find victim "+victim);
 		children.set(index, overtaker);
 	}
-	public MultipleChildrenBranch(Collection<Child> children) {
-		this.children.addAll(children);
-	}
+	public MultipleChildrenBranch(Collection<Child> children) { this.children.addAll(children); }
 	@Override
 	public Iterator<Child> iterator() { return children.iterator(); }
 	@Override

@@ -1,5 +1,6 @@
 package graph.formula;
 
+import graph.Formula;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
 

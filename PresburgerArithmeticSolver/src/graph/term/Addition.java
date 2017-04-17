@@ -1,12 +1,11 @@
 package graph.term;
 
+import graph.Term;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
 
 public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 
-	@Override
-	public String getSymbol() { return "+"; }
 	public Addition(Term child1, Term child2) { super(child1, child2); }
 	@Override
 	public int evaluate(VariableAssignment varAss) {

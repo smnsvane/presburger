@@ -1,7 +1,4 @@
-package graph.formula;
-
-import graph.Node;
-import graph.VariableAssignment;
+package graph;
 
 public interface Formula extends Node {
 

@@ -7,9 +7,9 @@ import java.util.Scanner;
 import engine.Simplifier;
 import engine.VariableReplacer;
 import graph.Branch;
+import graph.Formula;
 import graph.Node;
 import graph.VariableAssignment;
-import graph.formula.Formula;
 
 public class Launcher {
 

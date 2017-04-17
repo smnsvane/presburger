@@ -1,12 +1,10 @@
 package graph.formula.quantifier;
 
-import graph.formula.Formula;
+import graph.Formula;
 import graph.formula.Not;
 
 public class Forall extends Quantifier {
 
-	@Override
-	public String getSymbol() { return "A"; }
 	public Forall(String variableSymbol, Formula formula) {
 		super(variableSymbol, formula);
 	}

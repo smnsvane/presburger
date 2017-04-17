@@ -1,18 +1,16 @@
 package graph.formula.comparator;
 
+import graph.Formula;
+import graph.Term;
 import graph.VariableAssignment;
 import graph.formula.And;
-import graph.formula.Formula;
 import graph.formula.True;
 import graph.term.Addition;
 import graph.term.Constant;
 import graph.term.Sum;
-import graph.term.Term;
 
 public class EqualTo extends Comparator {
 
-	@Override
-	public String getSymbol() { return "="; }
 	public EqualTo(Term child1, Term child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

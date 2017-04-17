@@ -1,5 +1,6 @@
 package graph.term;
 
+import graph.Term;
 import graph.VariableAssignment;
 
 public class Variable implements Term {
