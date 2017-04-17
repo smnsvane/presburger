@@ -4,7 +4,6 @@ import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
 import graph.term.Constant;
-import graph.term.Sum;
 
 public class GreaterThanOrEqualTo extends Comparator {
 
@@ -26,8 +25,7 @@ public class GreaterThanOrEqualTo extends Comparator {
 	}
 	@Override
 	public GreaterThanOrEqualTo isolate() {
-		GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(new Constant(0),
-				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
+		GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(new Constant(0), getSecondChild().toSum().sumDiff(getFirstChild().toSum()));
 		return greaterOrEqual;
 	}
 	@Override

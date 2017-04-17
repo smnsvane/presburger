@@ -42,8 +42,10 @@ public class Test {
 		String input = "x + 0 = x";
 		Formula root = p.parseLogic(input);
 		assertEquals("x+0=x", root.toString());
-		Node root2 = new Isolater(root).go();
-		assertEquals("x+0=x", root2.toString());
+		root = new Flattener(root).go();
+		assertEquals("x=x", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("true", root.toString());
 	}
 
 	@org.junit.Test
@@ -65,17 +67,42 @@ public class Test {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parseLogic(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
-		Formula isolatedRoot = new Isolater(root).go();
-		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y+-1]", isolatedRoot.toString());
-		Formula flattenedRoot = new Flattener(root).go();
-		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y, -1]", flattenedRoot.toString());
-		Formula compactedRoot = new Compacter(root).go();
-		assertEquals("0=SUM[x, -2y]/0=SUM[x, -2y, -1]", compactedRoot.toString());
-		Formula toLessThanRoot = new ToLessThan(root).go();
-		assertEquals("(0<SUM[x, -2y]+1&SUM[x, -2y]<0+1)/(0<SUM[x, -2y, -1]+1&SUM[x, -2y, -1]<0+1)", toLessThanRoot.toString());
-		Formula flattenedRoot2 = new Flattener(root).go();
-		assertEquals("(0<SUM[x, -2y, 1]&SUM[x, -2y]<1)/(0<SUM[x, -2y, -1, 1]&SUM[x, -2y, -1]<1)", flattenedRoot2.toString());
+		root = new Isolater(root).go();
+		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y+-1]", root.toString());
+		root = new Flattener(root).go();
+		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y, -1]", root.toString());
+		root = new Compacter(root).go();
+		assertEquals("0=SUM[x, -2y]/0=SUM[x, -2y, -1]", root.toString());
+		root = new ToLessThan(root).go();
+		assertEquals("(0<SUM[x, -2y]+1&SUM[x, -2y]<0+1)/(0<SUM[x, -2y, -1]+1&SUM[x, -2y, -1]<0+1)", root.toString());
+		root = new Flattener(root).go();
+		assertEquals("(0<SUM[x, -2y, 1]&SUM[x, -2y]<1)/(0<SUM[x, -2y, -1, 1]&SUM[x, -2y, -1]<1)", root.toString());
+		root = new Compacter(root).go();
+		assertEquals("(0<SUM[x, -2y, 1]&SUM[x, -2y]<1)/(0<SUM[x, -2y]&SUM[x, -2y, -1]<1)", root.toString());
+		VariableAssignment assignment = new VariableAssignment().put("x", 41).put("y", -23);
+		root = new VariableReplacer(root, assignment).go();
+		assertEquals("(0<SUM[41, 46, 1]&SUM[41, 46]<1)/(0<SUM[41, 46]&SUM[41, 46, -1]<1)", root.toString());
+		root = new Compacter(root).go();
+		assertEquals("(0<SUM[88]&SUM[87]<1)/(0<SUM[87]&SUM[86]<1)", root.toString());
+		root = new Flattener(root).go();
+		assertEquals("(0<88&87<1)/(0<87&86<1)", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("(true&false)/(true&false)", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("false/false", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("false", root.toString());
 	}
+
+	@org.junit.Test
+	public void testFormula65() {
+		String input = "(y + y = x) / (y + y + 1 = x)";
+		Formula root = p.parseLogic(input);
+		assertEquals("y+y=x/y+(y+1)=x", root.toString());
+		root = new Flattener(root).go();
+		assertEquals("y+y=x/SUM[y, y, 1]=x", root.toString());
+	}
+
 
 	@org.junit.Test
 	public void testFormula07() {
@@ -140,7 +167,7 @@ public class Test {
 		parsing = assignedRoot.toString();
 		assertEquals("1+1!=1+1/1=1", parsing);
 
-		Formula simplifiedAssignedGraphRoot = new Simplifier(simplifiedGraphRoot).go();
+		Formula simplifiedAssignedGraphRoot = new Simplifier(assignedRoot).go();
 		parsing = simplifiedAssignedGraphRoot.toString();
 		assertEquals("false/true", parsing);
 

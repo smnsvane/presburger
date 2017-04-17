@@ -8,7 +8,7 @@ import graph.formula.comparator.Comparator;
 public class Isolater implements Engine {
 
 	private Formula root;
-	public Isolater(Formula root) { this.root = root; }
+	public Isolater(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {

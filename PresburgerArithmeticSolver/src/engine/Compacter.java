@@ -8,7 +8,7 @@ import graph.term.Sum;
 public class Compacter implements Engine {
 
 	private Formula root;
-	public Compacter(Formula root) { this.root = root; }
+	public Compacter(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {

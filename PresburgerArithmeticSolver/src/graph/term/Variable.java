@@ -36,4 +36,13 @@ public class Variable implements Term {
 	public Term copy() { return new Variable(getFactor(), getVariableSymbol()); }
 	@Override
 	public Term flatten() { return this; }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Variable) {
+			Variable other = (Variable) obj;
+			return factor == other.factor &&
+					getVariableSymbol().equals(other.getVariableSymbol());
+		}
+		return false;
+	}
 }

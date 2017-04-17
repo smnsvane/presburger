@@ -7,12 +7,11 @@ import graph.Node;
 public class IncrementSimplifier implements Engine {
 
 	private Formula root;
-	public IncrementSimplifier(Formula root) { this.root = root; }
+	public IncrementSimplifier(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
 
-		root = root.copy();
 		Formula simplifiedRoot = root.simplify();
 		if (!simplifiedRoot.equals(root))
 			return simplifiedRoot;

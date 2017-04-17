@@ -13,14 +13,21 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 
 	public Sum(Collection<Term> children) { super(children); }
 	public Sum(Term...children) { super(Arrays.asList(children)); }
-	public static Sum isolationSum(Sum addedSum, Sum subtractedSum) {
+	public Sum sumDiff(Sum subtractedSum) {
 		ArrayList<Term> sumChildren = new ArrayList<>();
-		for (Term t : addedSum)
-			if (!t.equals(0))
-				sumChildren.add(t);
+		for (Term t : this)
+			sumChildren.add(t);
 		for (Term t : subtractedSum)
-			if (!t.equals(0))
-				sumChildren.add(t.multiply(-1));
+			sumChildren.add(t.multiply(-1));
+		Sum sum = new Sum(sumChildren);
+		return sum;
+	}
+	public Sum addToSum(Term add) {
+		ArrayList<Term> sumChildren = new ArrayList<>();
+		for (Term t : this)
+			sumChildren.add(t);
+		for (Term t : add.toSum())
+			sumChildren.add(t);
 		Sum sum = new Sum(sumChildren);
 		return sum;
 	}

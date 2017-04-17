@@ -1,5 +1,6 @@
 package graph.term;
 
+import graph.Branch;
 import graph.Term;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
@@ -27,6 +28,10 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 			return getSecondChild();
 		if (getSecondChild().equals(0))
 			return getFirstChild();
+		if (getFirstChild() instanceof Branch<?> || getSecondChild() instanceof Branch<?>) {
+			Sum sum = getFirstChild().toSum().addToSum(getSecondChild());
+			return sum;
+		}
 		return this;
 	}
 	@Override

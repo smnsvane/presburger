@@ -4,12 +4,11 @@ import graph.Branch;
 import graph.Formula;
 import graph.Node;
 import graph.Term;
-import graph.term.Sum;
 
 public class Flattener implements Engine {
 
 	private Formula root;
-	public Flattener(Formula root) { this.root = root; }
+	public Flattener(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
@@ -20,9 +19,9 @@ public class Flattener implements Engine {
 			while (transverser.hasNext()) {
 				Branch<Node> parent = transverser.next();
 				for (Node child : parent)
-					if (child instanceof Sum) {
-						Sum sum = (Sum) child;
-						Term neW = sum.flatten();
+					if (child instanceof Term && child instanceof Branch<?>) {
+						Term t = (Term) child;
+						Term neW = t.flatten();
 						parent.replaceChild(child, neW);
 					}
 				transverser.done();

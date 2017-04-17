@@ -4,7 +4,6 @@ import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
 import graph.term.Constant;
-import graph.term.Sum;
 
 public class LessThan extends Comparator {
 
@@ -23,8 +22,7 @@ public class LessThan extends Comparator {
 	public LessThan toLessThan() { return this; }
 	@Override
 	public LessThan isolate() {
-		LessThan less = new LessThan(new Constant(0),
-				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
+		LessThan less = new LessThan(new Constant(0), getSecondChild().toSum().sumDiff(getFirstChild().toSum()));
 		return less;
 	}
 	@Override

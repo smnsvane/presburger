@@ -7,7 +7,6 @@ import graph.formula.And;
 import graph.formula.True;
 import graph.term.Addition;
 import graph.term.Constant;
-import graph.term.Sum;
 
 public class EqualTo extends Comparator {
 
@@ -39,7 +38,7 @@ public class EqualTo extends Comparator {
 	}
 	@Override
 	public EqualTo isolate() {
-		EqualTo equal = new EqualTo(new Constant(0), Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
+		EqualTo equal = new EqualTo(new Constant(0), getSecondChild().toSum().sumDiff(getFirstChild().toSum()));
 		return equal;
 	}
 	@Override

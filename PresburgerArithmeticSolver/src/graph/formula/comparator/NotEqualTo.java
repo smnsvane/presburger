@@ -5,7 +5,6 @@ import graph.Term;
 import graph.VariableAssignment;
 import graph.formula.Or;
 import graph.term.Constant;
-import graph.term.Sum;
 
 public class NotEqualTo extends Comparator {
 
@@ -29,8 +28,7 @@ public class NotEqualTo extends Comparator {
 	}
 	@Override
 	public NotEqualTo isolate() {
-		NotEqualTo notEqual = new NotEqualTo(new Constant(0),
-				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
+		NotEqualTo notEqual = new NotEqualTo(new Constant(0), getSecondChild().toSum().sumDiff(getFirstChild().toSum()));
 		return notEqual;
 	}
 	@Override

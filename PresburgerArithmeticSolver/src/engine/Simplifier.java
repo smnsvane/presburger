@@ -7,7 +7,7 @@ import graph.Node;
 public class Simplifier implements Engine {
 
 	private Formula root;
-	public Simplifier(Formula root) { this.root = root; }
+	public Simplifier(Formula root) { this.root = root.copy(); }
 
 	public Formula fullSimplify(Formula n) {
 		Formula org;
@@ -21,7 +21,7 @@ public class Simplifier implements Engine {
 	@Override
 	public Formula go() {
 
-		root = fullSimplify(root.copy());
+		root = fullSimplify(root);
 
 		if (root instanceof Branch<?>) {
 			@SuppressWarnings("unchecked")

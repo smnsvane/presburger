@@ -8,7 +8,7 @@ import graph.formula.comparator.Comparator;
 public class ToLessThan implements Engine {
 
 	private Formula root;
-	public ToLessThan(Formula root) { this.root = root; }
+	public ToLessThan(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {

@@ -12,7 +12,7 @@ public class VariableReplacer implements Engine {
 	private Formula root;
 	private VariableAssignment assignment;
 	public VariableReplacer(Formula root, VariableAssignment assignment) {
-		this.root = root;
+		this.root = root.copy();
 		this.assignment = assignment;
 	}
 
