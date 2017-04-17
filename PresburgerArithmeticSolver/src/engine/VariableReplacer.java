@@ -6,12 +6,21 @@ import graph.VariableAssignment;
 import graph.term.Constant;
 import graph.term.Variable;
 
-public class VariableReplacer extends Engine {
+public class VariableReplacer implements Engine {
 
+	private Branch<Node> root;
+	private VariableAssignment assignment;
 	public VariableReplacer(Branch<Node> root, VariableAssignment assignment) {
-		super(root);
-		while (hasNext()) {
-			Branch<Node> parent = next();
+		this.root = root;
+		this.assignment = assignment;
+	}
+
+	@Override
+	public Branch<Node> go() {
+
+		GraphTransverser transverser = new GraphTransverser(root);
+		while (transverser.hasNext()) {
+			Branch<Node> parent = transverser.next();
 			for (Node child : parent)
 				if (child instanceof Variable) {
 					Variable v = (Variable) child;
@@ -21,7 +30,9 @@ public class VariableReplacer extends Engine {
 						parent.replaceChild(child, c);
 					}
 				}
-			done();
+			transverser.done();
 		}
+
+		return root;
 	}
 }

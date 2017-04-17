@@ -22,4 +22,6 @@ public class Exists extends Quantifier {
 		Not not = new Not(forall);
 		return not;
 	}
+	@Override
+	public Exists copy() { return new Exists(getVariableSymbol(), getChild().copy()); }
 }

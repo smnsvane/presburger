@@ -27,7 +27,7 @@ public class Parser {
 
 	public Formula parseLogic(String rawFormula) {
 
-		rawFormula = removeEnclosingBrackets(rawFormula);
+		rawFormula = removeEnclosingBrackets(rawFormula.trim()).trim();
 
 		String symbol = SymbolBinding.getSymbol(Forall.class);
 		if (rawFormula.substring(0, symbol.length()).equals(symbol)) {
@@ -73,18 +73,14 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(Not.class);
-		int index = findSymbolIndexInDepthZero(symbol, rawFormula);
-		if (index != -1) {
-			if (index != 0)
-				throw new RuntimeException("trying to pass "+Not.class+
-						" from a non-start line position, stuff will be skipped. Most likely malformed input");
+		if (rawFormula.substring(0, symbol.length()).equals(symbol)) {
 			Not not = new Not(
-					parseLogic(rawFormula.substring(index + symbol.length())));
+					parseLogic(rawFormula.substring(symbol.length())));
 			return not;
 		}
 
 		symbol = SymbolBinding.getSymbol(LessThanOrEqualTo.class);
-		index = findSymbolIndexInDepthZero(symbol, rawFormula);
+		int index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(
 					parseMath(rawFormula.substring(0, index)),
@@ -142,7 +138,7 @@ public class Parser {
 
 	private Term parseMath(String rawFormula) {
 
-		rawFormula = removeEnclosingBrackets(rawFormula);
+		rawFormula = removeEnclosingBrackets(rawFormula.trim()).trim();
 
 		String symbol = SymbolBinding.getSymbol(Addition.class);
 		int index = findSymbolIndexInDepthZero(symbol, rawFormula);
@@ -188,7 +184,7 @@ public class Parser {
 			return var;
 		}
 
-		int number = Integer.parseInt(rawFormula);
+		int number = Integer.parseInt(rawFormula.trim());
 		Constant constant = new Constant(number);
 		return constant;
 	}
@@ -217,8 +213,20 @@ public class Parser {
 	}
 	private String removeEnclosingBrackets(String rawFormula) {
 		int indexOfLastChar = rawFormula.length() - 1;
-		if (rawFormula.charAt(0) == '(' && rawFormula.charAt(indexOfLastChar) == ')')
+		if (rawFormula.charAt(0) == '(' && rawFormula.charAt(indexOfLastChar) == ')') {
+			int depth = 1;
+			for (int i = 1; i < indexOfLastChar; i++) {
+				char charInRawFormula = rawFormula.charAt(i);
+				if (charInRawFormula == '(')
+					depth++;
+				else if (charInRawFormula == ')') {
+					depth--;
+					if (depth == 0) // first and last bracket in the line does not match each other
+						return rawFormula;
+				}
+			}
 			return rawFormula.substring(1, indexOfLastChar);
+		}
 		return rawFormula;
 	}
 }

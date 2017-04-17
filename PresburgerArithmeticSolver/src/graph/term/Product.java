@@ -26,4 +26,6 @@ public class Product extends TwoChildrenBranch<Constant, Term> implements Term {
 		Term overtaker = getSecondChild().multiply(getFirstChild().getValue());
 		return overtaker;
 	}
+	@Override
+	public Product copy() { return new Product(getFirstChild().copy(), getSecondChild().copy()); }
 }

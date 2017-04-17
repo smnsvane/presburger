@@ -33,4 +33,6 @@ public class Variable implements Term {
 	public Variable simplify() { return this; }
 	@Override
 	public Sum toSum() { return new Sum(this); }
+	@Override
+	public Term copy() { return new Variable(getFactor(), getVariableSymbol()); }
 }

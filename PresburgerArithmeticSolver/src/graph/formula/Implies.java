@@ -24,4 +24,6 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 		Or or = new Or(not, getSecondChild());
 		return or;
 	}
+	@Override
+	public Implies copy() { return new Implies(getFirstChild().copy(), getSecondChild().copy()); }
 }

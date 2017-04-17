@@ -105,4 +105,11 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		Sum sum = new Sum(children);
 		return sum;
 	}
+	@Override
+	public Sum copy() {
+		ArrayList<Term> children = new ArrayList<>();
+		for (Term child : this)
+			children.add(child.copy());
+		return new Sum(children);
+	}
 }

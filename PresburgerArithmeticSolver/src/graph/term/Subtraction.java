@@ -27,4 +27,6 @@ public class Subtraction extends TwoChildrenBranch<Term, Term> implements Term {
 		Addition add = new Addition(getFirstChild(), getSecondChild().multiply(-1));
 		return add;
 	}
+	@Override
+	public Subtraction copy() { return new Subtraction(getFirstChild().copy(), getSecondChild().copy()); }
 }

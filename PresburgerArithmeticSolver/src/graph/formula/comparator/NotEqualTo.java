@@ -35,4 +35,6 @@ public class NotEqualTo extends Comparator {
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return notEqual;
 	}
+	@Override
+	public NotEqualTo copy() { return new NotEqualTo(getFirstChild().copy(), getSecondChild().copy()); }
 }

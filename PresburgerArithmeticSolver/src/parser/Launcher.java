@@ -28,24 +28,24 @@ public class Launcher {
 				continue;
 			System.out.println("\nformula "+lineNumber+": "+line);
 
-			line = line.replaceAll("[\\s()]", "");
-			System.out.println("shortened to \""+line+"\"");
-
 			Parser p = new Parser();
 			Formula root = p.parseLogic(line);
 			System.out.println("parsed as: "+root);
 
-			Branch<Node> simplifiedGraphRoot = new Simplifier((Branch<Node>) root).getRoot();
+			Node simplifiedGraphRoot = new Simplifier(root).go();
 			System.out.println("simplified the passed graph, result: "+simplifiedGraphRoot);
 
 			VariableAssignment assignment =
 					new VariableAssignment()
 					.put("x", 1)
 					.put("y", 1);
-			Branch<Node> assignedRoot = new VariableReplacer(simplifiedGraphRoot, assignment).getRoot();
+			@SuppressWarnings("unchecked")
+			Node assignedRoot = new VariableReplacer((Branch<Node>) simplifiedGraphRoot, assignment).go();
 			System.out.println("replacing variables with the assignment "+assignment+" result: "+assignedRoot);
-			Branch<Node> simplifiedAssignedGraphRoot = new Simplifier(simplifiedGraphRoot).getRoot();
+			Node simplifiedAssignedGraphRoot = new Simplifier(simplifiedGraphRoot).go();
 			System.out.println("simplified the assigned graph, result: "+simplifiedAssignedGraphRoot);
+			simplifiedAssignedGraphRoot = new Simplifier(simplifiedAssignedGraphRoot).go();
+			System.out.println("simplified again, result: "+simplifiedAssignedGraphRoot);
 //			boolean success = e.applyAssignment(parsedRoot, varAss);
 //			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);
 //			

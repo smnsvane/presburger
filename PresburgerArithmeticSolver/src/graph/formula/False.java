@@ -16,4 +16,6 @@ public class False implements Formula {
 	public False simplify() { return this; }
 	@Override
 	public boolean equals(Object obj) { return obj instanceof False; }
+	@Override
+	public Formula copy() { return new False(); }
 }

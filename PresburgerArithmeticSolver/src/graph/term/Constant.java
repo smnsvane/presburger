@@ -31,4 +31,6 @@ public class Constant implements Term {
 			return value == (int) obj;
 		return false;
 	}
+	@Override
+	public Constant copy() { return new Constant(getValue()); }
 }

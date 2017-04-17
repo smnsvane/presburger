@@ -22,4 +22,6 @@ public class Forall extends Quantifier {
 		Not not = new Not(exists);
 		return not;
 	}
+	@Override
+	public Forall copy() { return new Forall(getVariableSymbol(), getChild().copy()); }
 }

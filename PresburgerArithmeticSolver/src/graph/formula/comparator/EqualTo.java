@@ -44,4 +44,6 @@ public class EqualTo extends Comparator {
 		EqualTo equal = new EqualTo(new Constant(0), Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return equal;
 	}
+	@Override
+	public EqualTo copy() { return new EqualTo(getFirstChild().copy(), getSecondChild().copy()); }
 }

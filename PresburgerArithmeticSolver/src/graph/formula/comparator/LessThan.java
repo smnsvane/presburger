@@ -29,4 +29,6 @@ public class LessThan extends Comparator {
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return less;
 	}
+	@Override
+	public LessThan copy() { return new LessThan(getFirstChild().copy(), getSecondChild().copy()); }
 }

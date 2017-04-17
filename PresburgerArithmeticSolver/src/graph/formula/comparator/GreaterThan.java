@@ -32,4 +32,6 @@ public class GreaterThan extends Comparator {
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return greater;
 	}
+	@Override
+	public GreaterThan copy() { return new GreaterThan(getFirstChild().copy(), getSecondChild().copy()); }
 }

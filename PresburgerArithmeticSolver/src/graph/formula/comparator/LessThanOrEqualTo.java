@@ -34,4 +34,6 @@ public class LessThanOrEqualTo extends Comparator {
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return lessOrEqual;
 	}
+	@Override
+	public LessThanOrEqualTo copy() { return new LessThanOrEqualTo(getFirstChild().copy(), getSecondChild().copy()); }
 }

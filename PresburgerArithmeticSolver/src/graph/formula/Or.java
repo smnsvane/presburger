@@ -28,4 +28,6 @@ public class Or extends TwoChildrenBranch<Formula, Formula> implements Formula {
 			return getFirstChild();
 		return this;
 	}
+	@Override
+	public Or copy() { return new Or(getFirstChild().copy(), getSecondChild().copy()); }
 }
