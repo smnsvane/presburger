@@ -15,22 +15,22 @@ public class VariableReplacer implements Engine {
 		this.root = root;
 		this.assignment = assignment;
 	}
-	
+
 	@Override
 	public Formula go() {
 		GraphIterator explorer = new GraphIterator(root);
 		for (Node n : explorer)
 			if (n instanceof Variable) {
 				Variable v = (Variable) n;
-	
-				Constant child1 = new Constant(v.factor);
-				Constant child2 = new Constant(assignment.getAssignment(v.variableSymbol));
+				if (assignment.getAssignment(v.getVariableSymbol()) != null) {
 
-				Product m = new Product();
-				m.setFirstChild(child1);
-				m.setSecondChild(child2);
-	
-				explorer.getParent().replaceChild(v, m);
+					Constant child1 = new Constant(v.getFactor());
+					Constant child2 = new Constant(assignment.getAssignment(v.getVariableSymbol()));
+
+					Product m = new Product(child1, child2);
+
+					explorer.getParent().replaceChild(v, m);
+				}
 			}
 		return root;
 	}
