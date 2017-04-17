@@ -2,6 +2,7 @@ package graph.formula.comparator;
 
 import graph.VariableAssignment;
 import graph.formula.Formula;
+import graph.term.Constant;
 import graph.term.Sum;
 import graph.term.Term;
 
@@ -27,7 +28,7 @@ public class GreaterThan extends Comparator {
 	}
 	@Override
 	public GreaterThan isolate() {
-		GreaterThan greater = new GreaterThan(new Sum(),
+		GreaterThan greater = new GreaterThan(new Constant(0),
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return greater;
 	}

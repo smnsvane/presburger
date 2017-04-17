@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> implements Iterable<Child> {
+public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> {
 
 	private ArrayList<Child> children;
+	public int numberOfChildren() { return children.size(); }
 	@Override
 	public void replaceChild(Child victim, Child overtaker) {
 		if (isLocked())

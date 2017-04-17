@@ -27,9 +27,10 @@ public class Parser {
 
 	public Formula parseLogic(String rawFormula) {
 
+		rawFormula = removeEnclosingBrackets(rawFormula);
+
 		String symbol = SymbolBinding.getSymbol(Forall.class);
-		int index = rawFormula.indexOf(symbol);
-		if (index == 0) {
+		if (rawFormula.substring(0, symbol.length()).equals(symbol)) {
 			int dotIndex = rawFormula.indexOf(".", symbol.length());
 			String varSymbol = rawFormula.substring(symbol.length(), dotIndex);
 			Forall all = new Forall(varSymbol, parseLogic(rawFormula.substring(dotIndex + 1)));
@@ -37,43 +38,42 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(Exists.class);
-		index = rawFormula.indexOf(symbol);
-		if (index == 0) {
+		if (rawFormula.substring(0, symbol.length()).equals(symbol)) {
 			int dotIndex = rawFormula.indexOf(".", symbol.length());
 			String varSymbol = rawFormula.substring(symbol.length(), dotIndex);
 			Exists exists = new Exists(varSymbol, parseLogic(rawFormula.substring(dotIndex + 1)));
 			return exists;
 		}
 
-		symbol = SymbolBinding.getSymbol(Implies.class);
-		index = rawFormula.indexOf(symbol);
-		if (index != -1) {
+		String symbolForImplies = SymbolBinding.getSymbol(Implies.class);
+		int indexForImplies = findSymbolIndexInDepthZero(symbolForImplies, rawFormula);
+		String symbolForOr = SymbolBinding.getSymbol(Or.class);
+		int indexForOr = findSymbolIndexInDepthZero(symbolForOr, rawFormula);
+		String symbolForAnd = SymbolBinding.getSymbol(And.class);
+		int indexForAnd = findSymbolIndexInDepthZero(symbolForAnd, rawFormula);
+		if (indexForImplies != -1 &&
+				(indexForOr == -1 || indexForImplies < indexForOr) &&
+				(indexForAnd == -1 || indexForImplies < indexForAnd)) {
 			Implies implies = new Implies(
-					parseLogic(rawFormula.substring(0, index)),
-					parseLogic(rawFormula.substring(index + symbol.length())));
+					parseLogic(rawFormula.substring(0, indexForImplies)),
+					parseLogic(rawFormula.substring(indexForImplies + symbolForImplies.length())));
 			return implies;
 		}
-
-		symbol = SymbolBinding.getSymbol(Or.class);
-		index = rawFormula.indexOf(symbol);
-		if (index != -1) {
+		if (indexForOr != -1 && (indexForAnd == -1 || indexForOr < indexForAnd)) {
 			Or or = new Or(
-					parseLogic(rawFormula.substring(0, index)),
-					parseLogic(rawFormula.substring(index + symbol.length())));
+					parseLogic(rawFormula.substring(0, indexForOr)),
+					parseLogic(rawFormula.substring(indexForOr + symbolForOr.length())));
 			return or;
 		}
-
-		symbol = SymbolBinding.getSymbol(And.class);
-		index = rawFormula.indexOf(symbol);
-		if (index != -1) {
+		if (indexForAnd != -1) {
 			And and = new And(
-					parseLogic(rawFormula.substring(0, index)),
-					parseLogic(rawFormula.substring(index + symbol.length())));
+					parseLogic(rawFormula.substring(0, indexForAnd)),
+					parseLogic(rawFormula.substring(indexForAnd + symbolForAnd.length())));
 			return and;
 		}
 
 		symbol = SymbolBinding.getSymbol(Not.class);
-		index = rawFormula.indexOf(symbol);
+		int index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			if (index != 0)
 				throw new RuntimeException("trying to pass "+Not.class+
@@ -84,7 +84,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(LessThanOrEqualTo.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(
 					parseMath(rawFormula.substring(0, index)),
@@ -93,7 +93,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(GreaterThanOrEqualTo.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(
 					parseMath(rawFormula.substring(0, index)),
@@ -102,7 +102,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(LessThan.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			LessThan less = new LessThan(
 					parseMath(rawFormula.substring(0, index)),
@@ -111,7 +111,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(GreaterThan.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			GreaterThan greater = new GreaterThan(
 					parseMath(rawFormula.substring(0, index)),
@@ -120,7 +120,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(NotEqualTo.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			NotEqualTo notEqual = new NotEqualTo(
 					parseMath(rawFormula.substring(0, index)),
@@ -129,7 +129,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(EqualTo.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			EqualTo equalTo = new EqualTo(
 					parseMath(rawFormula.substring(0, index)),
@@ -137,22 +137,24 @@ public class Parser {
 			return equalTo;
 		}
 
-		throw new RuntimeException(rawFormula+" could not be parsed as a "+Formula.class);
+		throw new RuntimeException(rawFormula+" could not be parsed as a "+Formula.class.getSimpleName());
 	}
 
-	public Term parseMath(String rawFormula) {
+	private Term parseMath(String rawFormula) {
+
+		rawFormula = removeEnclosingBrackets(rawFormula);
 
 		String symbol = SymbolBinding.getSymbol(Addition.class);
-		int index = rawFormula.indexOf(symbol);
+		int index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			Addition add = new Addition(
 					parseMath(rawFormula.substring(0, index)),
 					parseMath(rawFormula.substring(index + symbol.length())));
 			return add;
 		}
-
+		//FIXME: addition and subtraction have to be parsed with same precedence
 		symbol = SymbolBinding.getSymbol(Subtraction.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			Subtraction sub = new Subtraction(
 					parseMath(rawFormula.substring(0, index)),
@@ -161,7 +163,7 @@ public class Parser {
 		}
 
 		symbol = SymbolBinding.getSymbol(Product.class);
-		index = rawFormula.indexOf(symbol);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			Product mul = new Product(
 					(Constant) parseMath(rawFormula.substring(0, index)),
@@ -189,5 +191,34 @@ public class Parser {
 		int number = Integer.parseInt(rawFormula);
 		Constant constant = new Constant(number);
 		return constant;
+	}
+
+	private int findSymbolIndexInDepthZero(String symbol, String rawFormula) {
+		int depth = 0;
+		int lastPossibleMatchIndex = rawFormula.length() - symbol.length();
+		for (int i = 0; i < rawFormula.length(); i++) {
+			char charInRawFormula = rawFormula.charAt(i);
+			if (charInRawFormula == '(')
+				depth++;
+			else if (charInRawFormula == ')') {
+				depth--;
+				if (depth < 0)
+					throw new RuntimeException("')' at index='"+i+
+							"' not matched by preceding '(' in the substring "+rawFormula);
+			} else if (depth == 0 && i <= lastPossibleMatchIndex) {
+				String symbolCandidate = rawFormula.substring(i, i + symbol.length());
+				if (symbolCandidate.equals(symbol))
+					return i;
+			}
+		}
+		if (depth > 0)
+			throw new RuntimeException("More '(' than ')' in the substring "+rawFormula);
+		return -1;
+	}
+	private String removeEnclosingBrackets(String rawFormula) {
+		int indexOfLastChar = rawFormula.length() - 1;
+		if (rawFormula.charAt(0) == '(' && rawFormula.charAt(indexOfLastChar) == ')')
+			return rawFormula.substring(1, indexOfLastChar);
+		return rawFormula;
 	}
 }

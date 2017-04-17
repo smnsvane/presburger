@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class VariableAssignment {
 
 	private HashMap<String, Integer> assignment = new HashMap<>();
+	public boolean hasAssignment(String variableSymbol) { return assignment.containsKey(variableSymbol); }
 	public Integer getAssignment(String variableSymbol) { return assignment.get(variableSymbol); }
 	public VariableAssignment put(String variableSymbol, Integer assignment) {
 		this.assignment.put(variableSymbol, assignment);

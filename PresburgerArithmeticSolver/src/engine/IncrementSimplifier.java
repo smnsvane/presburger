@@ -1,33 +1,22 @@
 package engine;
 
+import graph.Branch;
 import graph.Node;
-import graph.formula.Formula;
-import graph.term.Term;
 
-public class IncrementSimplifier implements Engine {
+public class IncrementSimplifier extends Engine {
 
-	private Formula root;
-	public IncrementSimplifier(Formula root) { this.root = root; }
-	
-	@Override
-	public Formula go() {
-		GraphIterator explorer = new GraphIterator(root);
-		for (Node n : explorer) {
-			Node simplified = null;
-			if (explorer.getParent() == null) {
-				simplified = n.simplify();
-				root = (Formula) simplified;
-			} else if (n instanceof Formula) {
-				simplified = n.simplify();
-				explorer.getParent().replaceChild(n, (Formula) simplified);
-			} else if (n instanceof Term) {
-				simplified = n.simplify();
-				explorer.getParent().replaceChild(n, (Term) simplified);
-			} else
-				throw new RuntimeException("unknown node type");
-			if (!simplified.equals(n))
-				break;
+	public IncrementSimplifier(Branch<Node> root) {
+		super(root);
+		while (hasNext()) {
+			Branch<Node> parent = next();
+			for (Node child : parent) {
+				Node simplifiedChild = child.simplify();
+				if (!child.equals(simplifiedChild)) {
+					parent.replaceChild(child, simplifiedChild);
+					break;
+				}
+			}
+			done();
 		}
-		return root;
 	}
 }

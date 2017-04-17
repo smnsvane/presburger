@@ -3,6 +3,8 @@ package test;
 import static org.junit.Assert.*;
 
 import engine.Simplifier;
+import graph.Branch;
+import graph.Node;
 import graph.formula.Formula;
 import parser.Parser;
 
@@ -26,7 +28,7 @@ public class Test {
 		assertEquals("x+1=y+1->x=y", root.toString());
 		Formula simplifiedRoot = root.simplify();
 		assertEquals("~x+1=y+1/x=y", simplifiedRoot.toString());
-		Formula simplifiedGraphRoot = new Simplifier(root).go();
+		Branch<Node> simplifiedGraphRoot = new Simplifier((Branch<Node>) root).getRoot();
 		assertEquals("x+1!=y+1/x=y", simplifiedGraphRoot.toString());
 	}
 
@@ -35,8 +37,8 @@ public class Test {
 		String simplifiedFormula = "x + 0 = x".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		assertEquals("x+0=x", root.toString());
-		root = new Simplifier(root).go();
-		assertEquals("x=x", root.toString());
+		Branch<Node> root2 = new Simplifier((Branch<Node>) root).getRoot();
+		assertEquals("x=x", root2.toString());
 	}
 
 	@org.junit.Test
@@ -64,9 +66,7 @@ public class Test {
 	public void testFormula07() {
 		String simplifiedFormula = "Ax. Ey. x + 1 = 2y & x > 0 / y < 2".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
-		assertEquals("Ax.Ey.x+1=2y&x>0/y<2", root.toString());
-		root = root.simplify();
-		assertEquals("Ax.Ey.x+1=2y&x>0/y<2", root.toString());
+		assertEquals("Ax.Ey.x+1=2y&(x>0/y<2)", root.toString());
 	}
 
 	@org.junit.Test
@@ -82,7 +82,7 @@ public class Test {
 		String simplifiedFormula = "Ax. Ey. x + 1 = 2y & x > 0 / y < 2".replaceAll("[\\s()]", "");
 		Formula root = p.parseLogic(simplifiedFormula);
 		String parsing = root.toString();
-		assertEquals("Ax.Ey.x+1=2y&x>0/y<2", parsing);
+		assertEquals("Ax.Ey.x+1=2y&(x>0/y<2)", parsing);
 	}
 
 	@org.junit.Test

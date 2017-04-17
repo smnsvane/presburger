@@ -2,6 +2,7 @@ package graph.formula.comparator;
 
 import graph.VariableAssignment;
 import graph.formula.Formula;
+import graph.term.Constant;
 import graph.term.Sum;
 import graph.term.Term;
 
@@ -27,7 +28,7 @@ public class GreaterThanOrEqualTo extends Comparator {
 	}
 	@Override
 	public GreaterThanOrEqualTo isolate() {
-		GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(new Sum(),
+		GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(new Constant(0),
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return greaterOrEqual;
 	}

@@ -3,6 +3,7 @@ package graph.formula.comparator;
 import graph.VariableAssignment;
 import graph.formula.Formula;
 import graph.formula.Or;
+import graph.term.Constant;
 import graph.term.Sum;
 import graph.term.Term;
 
@@ -30,7 +31,8 @@ public class NotEqualTo extends Comparator {
 	}
 	@Override
 	public NotEqualTo isolate() {
-		NotEqualTo notEqual = new NotEqualTo(new Sum(), Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
+		NotEqualTo notEqual = new NotEqualTo(new Constant(0),
+				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return notEqual;
 	}
 }

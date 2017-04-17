@@ -30,7 +30,7 @@ public class LessThanOrEqualTo extends Comparator {
 	}
 	@Override
 	public LessThanOrEqualTo isolate() {
-		LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(new Sum(),
+		LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(new Constant(0),
 				Sum.isolationSum(getSecondChild().toSum(), getFirstChild().toSum()));
 		return lessOrEqual;
 	}

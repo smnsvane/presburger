@@ -5,8 +5,6 @@ import graph.VariableAssignment;
 
 public class And extends TwoChildrenBranch<Formula, Formula> implements Formula {
 
-	@Override
-	public String getSymbol() { return "&"; }
 	public And(Formula child1, Formula child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {

@@ -1,5 +1,7 @@
 package graph;
 
+import java.util.Iterator;
+
 import parser.SymbolBinding;
 
 public abstract class SingleChildBranch<Child extends Node> extends Branch<Child> {
@@ -33,5 +35,20 @@ public abstract class SingleChildBranch<Child extends Node> extends Branch<Child
 		else
 			childString = child.toString();
 		return getSymbol()+childString;
+	}
+	@Override
+	public Iterator<Child> iterator() {
+		return new Iterator<Child>() {
+			boolean given = false;
+			@Override
+			public Child next() {
+				given = true;
+				return child;
+			}
+			@Override
+			public boolean hasNext() {
+				return given;
+			}
+		};
 	}
 }

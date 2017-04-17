@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 import engine.Simplifier;
 import engine.VariableReplacer;
+import graph.Branch;
+import graph.Node;
 import graph.VariableAssignment;
 import graph.formula.Formula;
 
@@ -33,16 +35,16 @@ public class Launcher {
 			Formula root = p.parseLogic(line);
 			System.out.println("parsed as: "+root);
 
-			Formula simplifiedGraphRoot = new Simplifier(root).go();
+			Branch<Node> simplifiedGraphRoot = new Simplifier((Branch<Node>) root).getRoot();
 			System.out.println("simplified the passed graph, result: "+simplifiedGraphRoot);
 
 			VariableAssignment assignment =
 					new VariableAssignment()
 					.put("x", 1)
 					.put("y", 1);
-			Formula assignedRoot = new VariableReplacer(root, assignment).go();
+			Branch<Node> assignedRoot = new VariableReplacer(simplifiedGraphRoot, assignment).getRoot();
 			System.out.println("replacing variables with the assignment "+assignment+" result: "+assignedRoot);
-			Formula simplifiedAssignedGraphRoot = new Simplifier(assignedRoot).go();
+			Branch<Node> simplifiedAssignedGraphRoot = new Simplifier(simplifiedGraphRoot).getRoot();
 			System.out.println("simplified the assigned graph, result: "+simplifiedAssignedGraphRoot);
 //			boolean success = e.applyAssignment(parsedRoot, varAss);
 //			System.out.println("Evaluated with the assignment "+varAss+" result was: "+success);

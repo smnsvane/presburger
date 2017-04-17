@@ -1,0 +1,49 @@
+EBNF definition
+'(<something>)*' implies "zero or more repetitions" of <something>
+'(*' and '*)' 
+
+formula				= quantifier formula | formula logic_connetive formula | negation formula | term comparator term
+					| divisible | "(" formula ")" | "true" | "false";
+
+quantifier			= Quantifier_Symbol Variable(, Variable)*. (* ex "Ax.", "Ex,y." *);
+
+quantifier_Symbol	= "A"  (* for all, all *)
+					| "E"  (* there exists, exists *);
+
+logic connective	= "&"  (* conjunction, and *)
+					| "/"  (* disjunction, or *)
+					| "->" (* implicature, implies *);
+
+negation			= "~"  (* negation, not *);
+
+comparator			= "="  (* equality, equal to *)
+					| "!=" (* inequality, not equal to *)
+					| "<"  (* strictly less than *)
+					| "<=" (* less than or equal to *))
+					| ">"  (* strictly greater than *)
+					| ">=" (* greater than or equal to *);
+
+divisible			| constant "|" term (* divisible, term is divisible by constant, ex "4|x", "3|j+2", "42|7x+y+9"  *);
+
+term				= term term_connective term | multiplication | variable | constant | "(" term ")";
+
+term_connective		= "+"  (* addition, plus *)
+					| "-"  (* subtraction, minus *); 
+
+multiplication		= constant "*" term; (* multiplication with constant, shorthand for "term + term + ... + term" *)
+
+simple_variable		= letter(digit)*  (* a variable, ex "x", "x112", "z45" *);
+variable			= unary_minus simple_variable (* ex "-x", "-d" *)
+					| constant simple_variable (* ex "3x", "-54r" *);
+					
+constant			= non_zero_digit(digit)* (* ex "0", "873" *)
+					| unary_minus non_zero_digit(digit)* (* ex "-5" *);
+
+unary_minus			= "-" (* used to denote a negative constant or variable *);
+
+digit				= "0" | non_zero_digit
+non_zero_digit		= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+letter				= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
+					| "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t"
+					| "u" | "v" | "w" | "x" | "y" | "z" ;
