@@ -2,7 +2,10 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+
+import parser.ToStringSorter;
 
 public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> {
 
@@ -17,7 +20,10 @@ public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<
 			throw new RuntimeException("Can't find victim "+victim);
 		children.set(index, overtaker);
 	}
-	public MultipleChildrenBranch(Collection<Child> children) { this.children.addAll(children); }
+	public MultipleChildrenBranch(Collection<Child> children) {
+		this.children.addAll(children);
+		Collections.sort(this.children, new ToStringSorter());
+	}
 	@Override
 	public Iterator<Child> iterator() { return children.iterator(); }
 	@Override

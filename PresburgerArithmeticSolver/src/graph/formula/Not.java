@@ -3,6 +3,7 @@ package graph.formula;
 import graph.Formula;
 import graph.SingleChildBranch;
 import graph.VariableAssignment;
+import graph.formula.quantifier.Exists;
 
 public class Not extends SingleChildBranch<Formula> implements Formula {
 
@@ -15,6 +16,8 @@ public class Not extends SingleChildBranch<Formula> implements Formula {
 	public Formula negate() { return getChild(); }
 	@Override
 	public Formula simplify() {
+		if (getChild() instanceof Exists)
+			return this;
 		Formula child = getChild().negate();
 		return (Formula) child.simplify();
 	}

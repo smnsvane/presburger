@@ -16,9 +16,10 @@ public class Forall extends Quantifier {
 	@Override
 	public Formula simplify() { return this; }
 	public Not toExists() {
-		Exists exists = new Exists(getVariableSymbol(), getChild().negate());
-		Not not = new Not(exists);
-		return not;
+		Not notChild = new Not(getChild());
+		Exists exists = new Exists(getVariableSymbol(), notChild);
+		Not notParent = new Not(exists);
+		return notParent;
 	}
 	@Override
 	public Forall copy() { return new Forall(getVariableSymbol(), getChild().copy()); }

@@ -6,8 +6,10 @@ import engine.Compacter;
 import engine.Flattener;
 import engine.Isolater;
 import engine.Simplifier;
-import engine.ToLessThan;
 import engine.VariableReplacer;
+import engine.cooper.ToExister;
+import engine.cooper.ToLessThan;
+import engine.cooper.VariableIsolater;
 import graph.Formula;
 import graph.Node;
 import graph.VariableAssignment;
@@ -68,7 +70,7 @@ public class Test {
 		Formula root = p.parseLogic(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
 		root = new Isolater(root).go();
-		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y+-1]", root.toString());
+		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y+-1, -y]", root.toString());
 		root = new Flattener(root).go();
 		assertEquals("0=SUM[x, -y, -y]/0=SUM[x, -y, -y, -1]", root.toString());
 		root = new Compacter(root).go();
@@ -76,12 +78,12 @@ public class Test {
 		root = new ToLessThan(root).go();
 		assertEquals("(0<SUM[x, -2y]+1&SUM[x, -2y]<0+1)/(0<SUM[x, -2y, -1]+1&SUM[x, -2y, -1]<0+1)", root.toString());
 		root = new Flattener(root).go();
-		assertEquals("(0<SUM[x, -2y, 1]&SUM[x, -2y]<1)/(0<SUM[x, -2y, -1, 1]&SUM[x, -2y, -1]<1)", root.toString());
+		assertEquals("(0<SUM[x, 1, -2y]&SUM[x, -2y]<1)/(0<SUM[x, 1, -2y, -1]&SUM[x, -2y, -1]<1)", root.toString());
 		root = new Compacter(root).go();
-		assertEquals("(0<SUM[x, -2y, 1]&SUM[x, -2y]<1)/(0<SUM[x, -2y]&SUM[x, -2y, -1]<1)", root.toString());
+		assertEquals("(0<SUM[x, 1, -2y]&SUM[x, -2y]<1)/(0<SUM[x, -2y]&SUM[x, -2y, -1]<1)", root.toString());
 		VariableAssignment assignment = new VariableAssignment().put("x", 41).put("y", -23);
 		root = new VariableReplacer(root, assignment).go();
-		assertEquals("(0<SUM[41, 46, 1]&SUM[41, 46]<1)/(0<SUM[41, 46]&SUM[41, 46, -1]<1)", root.toString());
+		assertEquals("(0<SUM[41, 1, 46]&SUM[41, 46]<1)/(0<SUM[41, 46]&SUM[41, 46, -1]<1)", root.toString());
 		root = new Compacter(root).go();
 		assertEquals("(0<SUM[88]&SUM[87]<1)/(0<SUM[87]&SUM[86]<1)", root.toString());
 		root = new Flattener(root).go();
@@ -174,5 +176,63 @@ public class Test {
 		simplifiedAssignedGraphRoot = new Simplifier(simplifiedAssignedGraphRoot).go();
 		parsing = simplifiedAssignedGraphRoot.toString();
 		assertEquals("true", parsing);
+	}
+
+	@org.junit.Test
+	public void testCooperExample() {
+		String input = "Ex.(3x+1<10/7x-6>7)&2|x";
+		Formula root = p.parseLogic(input);
+		String parsing = root.toString();
+		assertEquals("Ex.(3x+1<10/7x-6>7)&2|x", parsing);
+		root = new ToLessThan(root).go();
+		assertEquals("Ex.(3x+1<10/7<7x-6)&2|x", root.toString());
+		root = new VariableIsolater(root).go();
+		assertEquals("Ex.(3x<SUM[10, -1]/SUM[7, 6]<7x)&2|x", root.toString());
+	}
+
+	@org.junit.Test
+	public void testCooperExample2() {
+		String input = "Ex.Ay.(3x+1<10/7x-6>7+y)&2|x";
+		Formula root = p.parseLogic(input);
+		String parsing = root.toString();
+		assertEquals("Ex.Ay.(3x+1<10/7x-6>7+y)&2|x", parsing);
+		root = new ToExister(root).go();
+		assertEquals("Ex.~Ey.~((3x+1<10/7x-6>7+y)&2|x)", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
+	}
+
+	@org.junit.Test
+	public void testCooperExample22() {
+		String input = "Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x";
+		Formula root = p.parseLogic(input);
+		assertEquals("Ex.~Ey.~((3x+1<10/7+y<7x-6)&2|x)", root.toString());
+		root = new ToLessThan(root).go();
+		assertEquals("Ex.~Ey.~((3x+1<10/7+y<7x-6)&2|x)", root.toString());
+		root = new VariableIsolater(root).go();
+		assertEquals("Ex.true", root.toString());
+	}
+
+	@org.junit.Test
+	public void testCooperExample23() {
+		String input = "Ex.~(Ey.(3x+1>=10&7x-6<=7+y)/~2|x)";
+		Formula root = p.parseLogic(input);
+		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
+		root = new ToLessThan(root).go();
+		assertEquals("Ex.~Ey.(3x+1<10/7+y<7x-6)&2|x", root.toString());
+		root = new VariableIsolater(root).go();
+		assertEquals("Ex.true", root.toString());
+	}
+
+	@org.junit.Test
+	public void testCooperExample3() {
+		String input = "Ex.y=y";
+		Formula root = p.parseLogic(input);
+		String parsing = root.toString();
+		assertEquals("Ex.y=y", parsing);
+		root = new Simplifier(root).go();
+		assertEquals("Ex.true", root.toString());
+		root = new VariableIsolater(root).go();
+		assertEquals("Ex.true", root.toString());
 	}
 }

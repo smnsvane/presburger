@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import graph.Formula;
 import graph.Term;
 import graph.formula.And;
+import graph.formula.Divisable;
 import graph.formula.Implies;
 import graph.formula.Not;
 import graph.formula.Or;
@@ -79,8 +80,18 @@ public class Parser {
 			return not;
 		}
 
-		symbol = SymbolBinding.getSymbol(LessThanOrEqualTo.class);
+		symbol = SymbolBinding.getSymbol(Divisable.class);
 		int index = findSymbolIndexInDepthZero(symbol, rawFormula);
+		if (index != -1) {
+			Divisable divisable = new Divisable(
+					false,
+					((Constant) parseMath(rawFormula.substring(0, index))).getValue(),
+					parseMath(rawFormula.substring(index + symbol.length())));
+			return divisable;
+		}
+
+		symbol = SymbolBinding.getSymbol(LessThanOrEqualTo.class);
+		index = findSymbolIndexInDepthZero(symbol, rawFormula);
 		if (index != -1) {
 			LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(
 					parseMath(rawFormula.substring(0, index)),

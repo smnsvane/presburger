@@ -1,5 +1,7 @@
-package engine;
+package engine.cooper;
 
+import engine.Engine;
+import engine.GraphTransverser;
 import graph.Branch;
 import graph.Formula;
 import graph.Node;

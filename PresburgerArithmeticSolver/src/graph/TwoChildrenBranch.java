@@ -38,12 +38,12 @@ public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node
 	@Override
 	public String toString() {
 		String child1String;
-		if (SymbolBinding.lowerOrEqualPrecedence(child1, this))
+		if (child1 instanceof Branch<?> && SymbolBinding.lowerOrEqualPrecedence(child1, this))
 			child1String = "("+child1.toString()+")";
 		else
 			child1String = child1.toString();
 		String child2String;
-		if (SymbolBinding.lowerOrEqualPrecedence(child2, this))
+		if (child2 instanceof Branch<?> && SymbolBinding.lowerOrEqualPrecedence(child2, this))
 			child2String = "("+child2.toString()+")";
 		else
 			child2String = child2.toString();

@@ -1,9 +1,10 @@
 package graph.term;
 
+import graph.Leaf;
 import graph.Term;
 import graph.VariableAssignment;
 
-public class Constant implements Term {
+public class Constant implements Term, Leaf {
 
 	@Override
 	public String getSymbol() { return null; }

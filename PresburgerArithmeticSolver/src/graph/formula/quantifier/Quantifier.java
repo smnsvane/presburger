@@ -13,7 +13,7 @@ public abstract class Quantifier extends SingleChildBranch<Formula> implements F
 		this.variableSymbol = variableSymbol;
 	}
 	@Override
-	public boolean evaluate(VariableAssignment varAss) {
+	public boolean evaluate(VariableAssignment assignment) {
 		throw new RuntimeException("not implemented");
 	}
 	@Override

@@ -1,9 +1,10 @@
 package graph.term;
 
+import graph.Leaf;
 import graph.Term;
 import graph.VariableAssignment;
 
-public class Variable implements Term {
+public class Variable implements Term, Leaf {
 
 	public String getSymbol() { return null; }
 

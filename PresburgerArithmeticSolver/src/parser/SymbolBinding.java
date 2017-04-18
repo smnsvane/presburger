@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import graph.Node;
 import graph.formula.And;
+import graph.formula.Divisable;
 import graph.formula.Implies;
 import graph.formula.Not;
 import graph.formula.Or;
@@ -53,6 +54,7 @@ public abstract class SymbolBinding {
 		list.add(new Binding("*", Product.class, nextPrecendence()));
 		list.add(new Binding("+", Addition.class, nextPrecendence()));
 		list.add(new Binding("-", Subtraction.class, samePrecendence()));
+		list.add(new Binding("|", Divisable.class, nextPrecendence()));
 		list.add(new Binding("=", EqualTo.class, nextPrecendence()));
 		list.add(new Binding("!=", NotEqualTo.class, nextPrecendence()));
 		list.add(new Binding(">", GreaterThan.class, nextPrecendence()));

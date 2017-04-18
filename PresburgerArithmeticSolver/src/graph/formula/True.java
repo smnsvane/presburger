@@ -1,9 +1,10 @@
 package graph.formula;
 
 import graph.Formula;
+import graph.Leaf;
 import graph.VariableAssignment;
 
-public class True implements Formula {
+public class True implements Formula, Leaf {
 
 	@Override
 	public String getSymbol() { return "true"; }

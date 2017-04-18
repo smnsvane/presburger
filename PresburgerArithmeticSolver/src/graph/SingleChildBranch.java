@@ -30,7 +30,8 @@ public abstract class SingleChildBranch<Child extends Node> extends Branch<Child
 	@Override
 	public String toString() {
 		String childString;
-		if (SymbolBinding.lowerOrEqualPrecedence(child, this))
+		if (SymbolBinding.lowerOrEqualPrecedence(child, this) &&
+				child instanceof TwoChildrenBranch<?, ?>)
 			childString = "("+child.toString()+")";
 		else
 			childString = child.toString();
@@ -47,7 +48,7 @@ public abstract class SingleChildBranch<Child extends Node> extends Branch<Child
 			}
 			@Override
 			public boolean hasNext() {
-				return given;
+				return !given;
 			}
 		};
 	}
