@@ -27,7 +27,7 @@ public class Launcher {
 			System.out.println("\nformula "+lineNumber+": "+line);
 
 			Parser p = new Parser();
-			Formula root = p.parseLogic(line);
+			Formula root = p.parse(line);
 			System.out.println("parsed as: "+root);
 
 			Formula simplifiedGraphRoot = new Simplifier(root).go();

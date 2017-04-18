@@ -20,7 +20,7 @@ public class NotEqualTo extends Comparator {
 		return equal;
 	}
 	@Override
-	public Formula toLessThan() {
+	public Or toLessThan() {
 		LessThan child1 = new LessThan(getFirstChild(), getSecondChild());
 		LessThan child2 = new LessThan(getSecondChild(), getFirstChild());
 		Or or = new Or(child1, child2);

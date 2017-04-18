@@ -52,4 +52,10 @@ public abstract class SingleChildBranch<Child extends Node> extends Branch<Child
 			}
 		};
 	}
+	@Override
+	public void validate() {
+		if (child == null)
+			throw new RuntimeException(this+" has its child being null");
+		child.validate();
+	}
 }

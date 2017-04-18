@@ -20,4 +20,6 @@ public class True implements Formula, Leaf {
 	public boolean equals(Object obj) { return obj instanceof True; }
 	@Override
 	public Formula copy() { return new True(); }
+	@Override
+	public void validate() {}
 }

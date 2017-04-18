@@ -69,4 +69,13 @@ public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node
 			public boolean hasNext() { return nextCount < 2; }
 		};
 	}
+	@Override
+	public void validate() {
+		if (child1 == null)
+			throw new RuntimeException(this+" child2 was null");
+		if (child2 == null)
+			throw new RuntimeException(this+" child2 was null");
+		child1.validate();
+		child2.validate();
+	}
 }

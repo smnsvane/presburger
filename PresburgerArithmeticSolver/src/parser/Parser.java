@@ -26,7 +26,13 @@ import graph.term.Variable;
 
 public class Parser {
 
-	public Formula parseLogic(String rawFormula) {
+	public Formula parse(String rawFormula) {
+		Formula root = parseLogic(rawFormula);
+		root.validate();
+		return root;
+	}
+
+	private Formula parseLogic(String rawFormula) {
 
 		rawFormula = removeEnclosingBrackets(rawFormula.trim()).trim();
 

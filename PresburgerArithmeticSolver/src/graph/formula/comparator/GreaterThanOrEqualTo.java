@@ -4,6 +4,7 @@ import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
 import graph.term.Constant;
+import graph.term.Sum;
 
 public class GreaterThanOrEqualTo extends Comparator {
 
@@ -19,9 +20,9 @@ public class GreaterThanOrEqualTo extends Comparator {
 		return less;
 	}
 	@Override
-	public Formula toLessThan() {
-		// TODO Auto-generated method stub
-		return null;
+	public LessThan toLessThan() {
+		LessThan less = new LessThan(getSecondChild(), new Sum(getFirstChild(), new Constant(1)));
+		return less;
 	}
 	@Override
 	public GreaterThanOrEqualTo isolate() {

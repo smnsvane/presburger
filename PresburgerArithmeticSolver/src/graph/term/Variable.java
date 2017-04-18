@@ -46,4 +46,11 @@ public class Variable implements Term, Leaf {
 		}
 		return false;
 	}
+	@Override
+	public void validate() {
+		if (factor == 0)
+			throw new RuntimeException(this+" has a factor of 0");
+		if (variableSymbol == null || variableSymbol.isEmpty())
+			throw new RuntimeException(this+" has no variable");
+	}
 }

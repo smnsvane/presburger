@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
+import graph.Leaf;
 import graph.MultipleChildrenBranch;
 import graph.Term;
 import graph.VariableAssignment;
@@ -56,7 +57,7 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 	public Term flatten() {
 		if (numberOfChildren() == 1) {
 			Term child = iterator().next();
-			if (child instanceof Constant || child instanceof Variable)
+			if (child instanceof Leaf)
 				return child;
 		}
 		ArrayList<Term> children = new ArrayList<>();

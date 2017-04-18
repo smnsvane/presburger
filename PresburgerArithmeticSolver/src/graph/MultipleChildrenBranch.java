@@ -42,4 +42,14 @@ public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<
 	}
 	@Override
 	public String toString() { return getSymbol()+children; }
+	@Override
+	public void validate() {
+		if (!children.isEmpty())
+			throw new RuntimeException(this+" have no children");
+		for (Child c : this)
+			if (c == null)
+				throw new RuntimeException(this+" has a null child");
+			else
+				validate();
+	}
 }

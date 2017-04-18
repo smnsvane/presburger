@@ -34,13 +34,12 @@ public abstract class SymbolBinding {
 		throw new RuntimeException("can't find class "+clazz);
 	}
 	public static int getPrecedence(String symbol) {
-		if (symbol == null)
-			return 102;
+		if (symbol == null) // Constant or Variable
+			return 101;
 		for (Binding b : list)
 			if (symbol.equals(b.symbol))
 				return b.precedence;
-//		System.out.println("Warning: could not find symbol "+symbol);
-		return 101;
+		throw new RuntimeException("Could not find symbol "+symbol+" in precedence bindings");
 	}
 	public static boolean lowerOrEqualPrecedence(Node n1, Node n2) {
 		int prec1 = getPrecedence(n1.getSymbol());
