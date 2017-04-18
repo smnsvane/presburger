@@ -20,7 +20,7 @@ public class Test {
 	private Parser p = new Parser();
 
 	@org.junit.Test
-	public void testFormula01() {
+	public void testRootSimplify() {
 		String input = "~(0 = x + 1)";
 		Formula root = p.parseLogic(input);
 		assertEquals("~0=x+1", root.toString());
@@ -29,7 +29,7 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testFormula02() {
+	public void testSimpleSimplify() {
 		String input = "x + 1 = y + 1 -> x = y";
 		Formula root = p.parseLogic(input);
 		assertEquals("x+1=y+1->x=y", root.toString());
@@ -40,7 +40,7 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testFormula04() {
+	public void testSimpleFlattenerAndSimplify() {
 		String input = "x + 0 = x";
 		Formula root = p.parseLogic(input);
 		assertEquals("x+0=x", root.toString());
@@ -51,21 +51,21 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testFormula05() {
+	public void testParser() {
 		String input = "x + y + 1 = x + y + 1";
 		Formula root = p.parseLogic(input);
 		assertEquals("x+(y+1)=x+(y+1)", root.toString());
 	}
 
 	@org.junit.Test
-	public void testFormula055() {
+	public void testParserBrackets() {
 		String input = "x + (y + 1) = (x + y) + 1";
 		Formula root = p.parseLogic(input);
 		assertEquals("x+(y+1)=(x+y)+1", root.toString());
 	}
 
 	@org.junit.Test
-	public void testFormula06() {
+	public void testEngines() {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parseLogic(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
@@ -97,7 +97,7 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testFormula65() {
+	public void testFlattener() {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parseLogic(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
@@ -107,18 +107,22 @@ public class Test {
 
 
 	@org.junit.Test
-	public void testFormula07() {
+	public void testParseQuantifiers() {
 		String input = "Ax. Ey. x + 1 = 2y & x > 0 / y < 2";
 		Formula root = p.parseLogic(input);
 		assertEquals("Ax.Ey.x+1=2y&(x>0/y<2)", root.toString());
 	}
 
 	@org.junit.Test
-	public void testFormula08() {
+	public void testSolveMath() {
 		String input = "10 > 11 / 3 + 4 < 15 - 6";
 		Formula root = p.parseLogic(input);
 		String parsing = root.toString();
 		assertEquals("10>11/3+4<15-6", parsing);
+		root = new Simplifier(root).go();
+		assertEquals("false/true", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("true", root.toString());
 	}
 
 	@org.junit.Test

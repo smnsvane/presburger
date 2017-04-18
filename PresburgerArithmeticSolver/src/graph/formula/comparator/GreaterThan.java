@@ -9,9 +9,10 @@ public class GreaterThan extends Comparator {
 
 	public GreaterThan(Term child1, Term child2) { super(child1, child2); }
 	@Override
-	public boolean evaluate(VariableAssignment varAss) {
-		return getFirstChild().evaluate(varAss) >
-				getSecondChild().evaluate(varAss);
+	public boolean evaluate(VariableAssignment assignment) {
+		int eval1 = getFirstChild().evaluate(assignment);
+		int eval2 = getSecondChild().evaluate(assignment);
+		return eval1 > eval2;
 	}
 	@Override
 	public Formula negate() {

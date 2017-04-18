@@ -29,8 +29,10 @@ public class Simplifier implements Engine {
 			while (transverser.hasNext()) {
 				Branch<Node> parent = transverser.next();
 				for (Node child : parent)
-					if (child instanceof Formula)
-						parent.replaceChild(child, fullSimplify((Formula) child));
+					if (child instanceof Formula) {
+						Formula neW = fullSimplify((Formula) child);
+						parent.replaceChild(child, neW);
+					}
 				transverser.done();
 			}
 		}
