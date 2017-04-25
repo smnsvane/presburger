@@ -2,7 +2,7 @@ package graph;
 
 import java.util.Iterator;
 
-import parser.SymbolBinding;
+import parser.SymbolBindings;
 
 public abstract class SingleChildBranch<Child extends Node> extends Branch<Child> {
 
@@ -30,7 +30,7 @@ public abstract class SingleChildBranch<Child extends Node> extends Branch<Child
 	@Override
 	public String toString() {
 		String childString;
-		if (SymbolBinding.lowerOrEqualPrecedence(child, this) &&
+		if (SymbolBindings.lowerOrEqualPrecedence(child, this) &&
 				child instanceof TwoChildrenBranch<?, ?>)
 			childString = "("+child.toString()+")";
 		else

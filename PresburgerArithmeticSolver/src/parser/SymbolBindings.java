@@ -21,7 +21,7 @@ import graph.term.Product;
 import graph.term.Subtraction;
 import graph.term.Sum;
 
-public abstract class SymbolBinding {
+public class SymbolBindings {
 
 	private static int precendenceCounter = 100;
 	private static int nextPrecendence() { return --precendenceCounter; }
@@ -31,7 +31,7 @@ public abstract class SymbolBinding {
 		for (Binding b : list)
 			if (clazz.equals(b.clazz))
 				return b.symbol;
-		throw new RuntimeException("can't find class "+clazz);
+		throw new RuntimeException("can't find class in symbol bindings"+clazz);
 	}
 	public static int getPrecedence(String symbol) {
 		if (symbol == null) // Constant or Variable

@@ -210,9 +210,8 @@ public class Test {
 	public void testCooperExample22() {
 		String input = "Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x";
 		Formula root = p.parse(input);
-		assertEquals("Ex.~Ey.~((3x+1<10/7+y<7x-6)&2|x)", root.toString());
 		root = new ToLessThan(root).go();
-		assertEquals("Ex.~Ey.~((3x+1<10/7+y<7x-6)&2|x)", root.toString());
+		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
 		root = new VariableIsolater(root).go();
 		assertEquals("Ex.true", root.toString());
 	}
