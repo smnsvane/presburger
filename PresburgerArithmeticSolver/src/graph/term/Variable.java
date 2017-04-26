@@ -34,8 +34,6 @@ public class Variable extends Leaf implements Term {
 	@Override
 	public Term copy() { return new Variable(getFactor(), getVariableSymbol()); }
 	@Override
-	public Term flatten() { return this; }
-	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Variable) {
 			Variable other = (Variable) obj;

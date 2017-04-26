@@ -5,6 +5,7 @@ import graph.Term;
 import graph.VariableAssignment;
 import graph.term.Addition;
 import graph.term.Constant;
+import graph.term.Sum;
 
 public class LessThanOrEqualTo extends Comparator {
 
@@ -26,7 +27,8 @@ public class LessThanOrEqualTo extends Comparator {
 	}
 	@Override
 	public LessThanOrEqualTo isolate() {
-		LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(new Constant(0), getSecondChild().toSum().sumDiff(getFirstChild().toSum()));
+		LessThanOrEqualTo lessOrEqual =
+				new LessThanOrEqualTo(new Sum(), getSecondChild().toSum().addToSum(getFirstChild().multiply(-1)));
 		return lessOrEqual;
 	}
 	@Override

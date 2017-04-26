@@ -14,4 +14,10 @@ public abstract class Branch<Child extends Node> implements Node, Iterable<Child
 	public void unlock() { locked = false; }
 	@Override
 	public final String getSymbol() { return SymbolBindings.getSymbol(getClass()); }
+	public final boolean hasBranchChildren() {
+		for (Child child : this)
+			if (child instanceof Branch<?>)
+				return true;
+		return false;
+	}
 }

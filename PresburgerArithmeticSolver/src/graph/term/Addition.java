@@ -1,6 +1,5 @@
 package graph.term;
 
-import graph.Branch;
 import graph.Term;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
@@ -21,18 +20,6 @@ public class Addition extends TwoChildrenBranch<Term, Term> implements Term {
 	public Addition multiply(int factor) {
 		Addition add = new Addition(getFirstChild().multiply(factor), getSecondChild().multiply(factor));
 		return add;
-	}
-	@Override
-	public Term flatten() {
-		if (getFirstChild().equals(0))
-			return getSecondChild();
-		if (getSecondChild().equals(0))
-			return getFirstChild();
-		if (getFirstChild() instanceof Branch<?> || getSecondChild() instanceof Branch<?>) {
-			Sum sum = getFirstChild().toSum().addToSum(getSecondChild());
-			return sum;
-		}
-		return this;
 	}
 	@Override
 	public Addition copy() { return new Addition(getFirstChild().copy(), getSecondChild().copy()); }

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import parser.ToStringSorter;
+import parser.NodeSorter;
 
 public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> {
 
@@ -21,13 +21,23 @@ public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<
 		if (index == -1)
 			throw new RuntimeException("Can't find victim "+victim);
 		children.set(index, overtaker);
+		Collections.sort(children, new NodeSorter());
 	}
 	public MultipleChildrenBranch(Collection<Child> children) {
 		this.children.addAll(children);
-		Collections.sort(this.children, new ToStringSorter());
+		Collections.sort(this.children, new NodeSorter());
 	}
+	// custom implementation to allow use of "replaceChild(..)" call during iteration
 	@Override
-	public Iterator<Child> iterator() { return children.iterator(); }
+	public Iterator<Child> iterator() {
+		return new Iterator<Child>() {
+			int index = 0;
+			@Override
+			public boolean hasNext() { return index < children.size(); }
+			@Override
+			public Child next() { return children.get(index++); }
+		};
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MultipleChildrenBranch<?>))

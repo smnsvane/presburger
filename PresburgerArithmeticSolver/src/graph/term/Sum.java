@@ -5,30 +5,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
-import graph.Leaf;
+import graph.Branch;
 import graph.MultipleChildrenBranch;
 import graph.Term;
 import graph.VariableAssignment;
+import parser.Parser;
 
 public class Sum extends MultipleChildrenBranch<Term> implements Term {
 
 	public Sum(Collection<Term> children) { super(children); }
 	public Sum(Term...children) { super(Arrays.asList(children)); }
-	public Sum sumDiff(Sum subtractedSum) {
-		ArrayList<Term> sumChildren = new ArrayList<>();
-		for (Term t : this)
-			sumChildren.add(t);
-		for (Term t : subtractedSum)
-			sumChildren.add(t.multiply(-1));
-		Sum sum = new Sum(sumChildren);
-		return sum;
-	}
 	public Sum addToSum(Term add) {
 		ArrayList<Term> sumChildren = new ArrayList<>();
-		for (Term t : this)
-			sumChildren.add(t);
-		for (Term t : add.toSum())
-			sumChildren.add(t);
+		sumChildren.addAll(getChildren());
+		sumChildren.add(add);
 		Sum sum = new Sum(sumChildren);
 		return sum;
 	}
@@ -53,22 +43,13 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		Sum sum = new Sum(sumChildren);
 		return sum;
 	}
-	@Override
-	public Term flatten() {
-		if (getChildren().size() == 1) {
-			Term child = getChildren().get(0);
-			if (child instanceof Leaf)
-				return child;
-		}
+	@SuppressWarnings("unchecked")
+	public Sum flatten() {
 		ArrayList<Term> children = new ArrayList<>();
 		for (Term child : this) {
-			if (child instanceof Sum) {
-				Sum sumChild = (Sum) child;
-				children.addAll(sumChild.getChildren());
-			} else if (child instanceof Addition) {
-				Addition additionChild = (Addition) child;
-				children.add(additionChild.getFirstChild());
-				children.add(additionChild.getSecondChild());
+			if (child instanceof Sum || child instanceof Addition) {
+				for (Term grandChild : (Branch<Term>) child)
+					children.add(grandChild);
 			} else if (child instanceof Subtraction) {
 				Subtraction subtractionChild = (Subtraction) child;
 				children.add(subtractionChild.getFirstChild());
@@ -116,5 +97,19 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		for (Term child : this)
 			children.add(child.copy());
 		return new Sum(children);
+	}
+	@Override
+	public String toString() {
+		if (!Parser.prettyPrint)
+			return super.toString();
+		if (getChildren().isEmpty())
+			return "0";
+		if (getChildren().size() == 1)
+			return getChildren().get(0).toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(getChildren().get(0).toString());
+		for (int i = 1; i < getChildren().size(); i++)
+			sb.append(" + "+getChildren().get(i));
+		return sb.toString();
 	}
 }

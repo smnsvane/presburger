@@ -5,7 +5,6 @@ import graph.Term;
 import graph.VariableAssignment;
 import graph.formula.And;
 import graph.formula.True;
-import graph.term.Addition;
 import graph.term.Constant;
 import graph.term.Sum;
 
@@ -31,15 +30,15 @@ public class EqualTo extends Comparator {
 	@Override
 	public And toLessThan() {
 		LessThan child1 =
-			new LessThan(getFirstChild(), new Addition(getSecondChild(), new Constant(1)));
+			new LessThan(getFirstChild(), getSecondChild().toSum().addToSum(new Constant(1)));
 		LessThan child2 =
-				new LessThan(getSecondChild(), new Addition(getFirstChild(), new Constant(1)));
+				new LessThan(getSecondChild(), getFirstChild().toSum().addToSum(new Constant(1)));
 		And and = new And(child1, child2);
 		return and;
 	}
 	@Override
 	public EqualTo isolate() {
-		EqualTo equal = new EqualTo(new Constant(0), getSecondChild().toSum().sumDiff(getFirstChild().toSum()));
+		EqualTo equal = new EqualTo(new Sum(), getSecondChild().toSum().addToSum(getFirstChild().multiply(-1)));
 		return equal;
 	}
 	@Override

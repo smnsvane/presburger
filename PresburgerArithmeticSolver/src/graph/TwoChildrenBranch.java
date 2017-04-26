@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import parser.Parser;
 import parser.SymbolBindings;
 
 public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node> extends Branch<Node> {
@@ -57,6 +58,10 @@ public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node
 			child2String = "("+child2.toString()+")";
 		else
 			child2String = child2.toString();
+
+		if (Parser.prettyPrint)
+			return child1String+" "+getSymbol()+" "+child2String;
+
 		return child1String+getSymbol()+child2String;
 	}
 	@Override

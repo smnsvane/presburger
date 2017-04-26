@@ -32,7 +32,5 @@ public class Constant extends Leaf implements Term {
 	@Override
 	public Constant copy() { return new Constant(getValue()); }
 	@Override
-	public Term flatten() { return this; }
-	@Override
 	public void validate() {}
 }

@@ -8,5 +8,4 @@ public interface Term extends Node {
 	Sum toSum();
 	Term multiply(int factor);
 	Term copy();
-	Term flatten();
 }

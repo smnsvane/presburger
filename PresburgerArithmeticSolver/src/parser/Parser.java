@@ -27,6 +27,8 @@ import graph.term.Variable;
 
 public class Parser {
 
+	public static boolean prettyPrint = false;
+
 	public Formula parse(String rawFormula) {
 		Formula root = parseLogic(rawFormula);
 		root.validate();
