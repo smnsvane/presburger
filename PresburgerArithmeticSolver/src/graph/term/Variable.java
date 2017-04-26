@@ -12,6 +12,11 @@ public class Variable extends Leaf implements Term {
 	private String variableSymbol;
 	public String getVariableSymbol() { return variableSymbol; }
 
+	@Override
+	public String getSymbol() {
+		throw new RuntimeException("never call \"getSymbol()\" on "+getClass().getSimpleName());
+	}
+
 	public Variable(int factor, String variableSymbol) {
 		this.factor = factor;
 		this.variableSymbol = variableSymbol;

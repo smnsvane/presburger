@@ -263,13 +263,10 @@ public class Test {
 
 	@org.junit.Test
 	public void testCooperExample3() {
-		String input = "Ex.y=y";
+		String input = "Ax. 20+x <= 0 -> Ey. 3y +x <= 10 & 20 <= y - x";
 		Formula root = p.parse(input);
 		String parsing = root.toString();
 		assertEquals("Ex.y=y", parsing);
-		root = new Simplifier(root).go();
-		assertEquals("Ex.true", root.toString());
-		root = new VariableIsolater(root).go();
-		assertEquals("Ex.true", root.toString());
+//		this formula is true
 	}
 }
