@@ -21,7 +21,6 @@ public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<
 		if (index == -1)
 			throw new RuntimeException("Can't find victim "+victim);
 		children.set(index, overtaker);
-		Collections.sort(children, new NodeSorter());
 	}
 	public MultipleChildrenBranch(Collection<Child> children) {
 		this.children.addAll(children);

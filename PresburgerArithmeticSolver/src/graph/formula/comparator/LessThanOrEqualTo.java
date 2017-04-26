@@ -3,7 +3,6 @@ package graph.formula.comparator;
 import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
-import graph.term.Addition;
 import graph.term.Constant;
 import graph.term.Sum;
 
@@ -22,7 +21,7 @@ public class LessThanOrEqualTo extends Comparator {
 	}
 	@Override
 	public LessThan toLessThan() {
-		LessThan less = new LessThan(getFirstChild(), new Addition(getSecondChild(), new Constant(1)));
+		LessThan less = new LessThan(getFirstChild(), getSecondChild().toSum().addToSum(new Constant(1)));
 		return less;
 	}
 	@Override

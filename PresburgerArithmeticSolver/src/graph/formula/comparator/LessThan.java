@@ -61,10 +61,13 @@ public class LessThan extends Comparator {
 		Sum varSum = new Sum(var).compact();
 		Sum nonVarSum = new Sum(nonVar);
 		LessThan less;
-		Variable v = (Variable) varSum.getChildren().get(0);
-		if (v.getFactor() < 0)
-			less = new LessThan(nonVarSum.multiply(-1), varSum.multiply(-1));
-		else
+		if (varSum.getChildren().size() == 1) {
+			Variable v = (Variable) varSum.getChildren().get(0);
+			if (v.getFactor() < 0)
+				less = new LessThan(nonVarSum.multiply(-1), varSum.multiply(-1));
+			else
+				less = new LessThan(varSum, nonVarSum);
+		} else
 			less = new LessThan(varSum, nonVarSum);
 		return less;
 	}

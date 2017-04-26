@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
+
 import engine.Compacter;
 import engine.Flattener;
 import engine.Isolater;
@@ -18,6 +20,12 @@ import parser.Parser;
 public class Test {
 
 	private Parser p = new Parser();
+
+	@Before
+	public void before() {
+		Parser.prettyPrint = false;
+	}
+
 
 	@org.junit.Test
 	public void testRootSimplify() {
@@ -37,17 +45,6 @@ public class Test {
 		assertEquals("~x+1=y+1/x=y", simplifiedRoot.toString());
 		Node simplifiedGraphRoot = new Simplifier(root).go();
 		assertEquals("x+1!=y+1/x=y", simplifiedGraphRoot.toString());
-	}
-
-	@org.junit.Test
-	public void testSimpleFlattenerAndSimplify() {
-		String input = "x + 0 = x";
-		Formula root = p.parse(input);
-		assertEquals("x+0=x", root.toString());
-		root = new Flattener(root).go();
-		assertEquals("x=x", root.toString());
-		root = new Simplifier(root).go();
-		assertEquals("true", root.toString());
 	}
 
 	@org.junit.Test
@@ -72,22 +69,22 @@ public class Test {
 		root = new Isolater(root).go();
 		assertEquals("SUM[]=SUM[-y+-y, x]/SUM[]=SUM[-y+(-y+-1), x]", root.toString());
 		root = new Flattener(root).go();
-		assertEquals("SUM[]=SUM[x, -y, -y]/SUM[]=SUM[x, -y, -y, -1]", root.toString());
+		assertEquals("SUM[]=SUM[x, -y, -y]/SUM[]=SUM[-y+-1, x, -y]", root.toString());
 		root = new Compacter(root).go();
-		assertEquals("SUM[]=SUM[x, -2y]/SUM[]=SUM[x, -2y, -1]", root.toString());
+		assertEquals("SUM[]=SUM[x, -2y]/SUM[]=SUM[-y+-1, x, -y]", root.toString());
 		root = new ToLessThan(root).go();
-		assertEquals("(SUM[]<SUM[x, -2y, 1]&SUM[x, -2y]<SUM[0, 1])/(SUM[]<SUM[x, -2y, -1, 1]&SUM[x, -2y, -1]<SUM[0, 1])", root.toString());
+		assertEquals("(SUM[]<SUM[x, -2y, 1]&SUM[x, -2y]<SUM[1])/(SUM[]<SUM[-y+-1, x, -y, 1]&SUM[-y+-1, x, -y]<SUM[1])", root.toString());
 		root = new Flattener(root).go();
-		assertEquals("(SUM[]<SUM[x, -2y, 1]&SUM[x, -2y]<SUM[0, 1])/(SUM[]<SUM[x, -2y, -1, 1]&SUM[x, -2y, -1]<SUM[0, 1])", root.toString());
+		assertEquals("(SUM[]<SUM[x, -2y, 1]&SUM[x, -2y]<SUM[1])/(SUM[]<SUM[x, -y, -y, 1, -1]&SUM[x, -y, -y, -1]<SUM[1])", root.toString());
 		root = new Compacter(root).go();
 		assertEquals("(SUM[]<SUM[x, -2y, 1]&SUM[x, -2y]<SUM[1])/(SUM[]<SUM[x, -2y]&SUM[x, -2y, -1]<SUM[1])", root.toString());
 		VariableAssignment assignment = new VariableAssignment().put("x", 41).put("y", -23);
 		root = new VariableReplacer(root, assignment).go();
-		assertEquals("(SUM[0]<SUM[41, 1, 46]&SUM[41, 46]<SUM[1])/(SUM[]<SUM[41, 46]&SUM[41, 46, -1]<SUM[1])", root.toString());
+		assertEquals("(SUM[]<SUM[41, 46, 1]&SUM[41, 46]<SUM[1])/(SUM[]<SUM[41, 46]&SUM[41, 46, -1]<SUM[1])", root.toString());
 		root = new Compacter(root).go();
-		assertEquals("(SUM[0]<SUM[88]&SUM[87]<SUM[1])/(SUM[]<SUM[87]&SUM[86]<1)", root.toString());
+		assertEquals("(SUM[]<SUM[88]&SUM[87]<SUM[1])/(SUM[]<SUM[87]&SUM[86]<SUM[1])", root.toString());
 		root = new Flattener(root).go();
-		assertEquals("(SUM[0]<SUM[88]&SUM[87]<SUM[1])/(SUM[0]<SUM[87]&SUM[86]<SUM[1])", root.toString());
+		assertEquals("(SUM[]<SUM[88]&SUM[87]<SUM[1])/(SUM[]<SUM[87]&SUM[86]<SUM[1])", root.toString());
 		root = new Simplifier(root).go();
 		assertEquals("(true&false)/(true&false)", root.toString());
 		root = new Simplifier(root).go();
@@ -97,14 +94,37 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testFlattener() {
+	public void testPrettyPrint() {
+		Parser.prettyPrint = true;
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parse(input);
-		assertEquals("y+y=x/y+(y+1)=x", root.toString());
+		assertEquals("y + y = x / y + (y + 1) = x", root.toString());
+		root = new Isolater(root).go();
+		assertEquals("0 = (-y + -y) + x / 0 = (-y + (-y + -1)) + x", root.toString());
 		root = new Flattener(root).go();
-		assertEquals("y+y=x/SUM[y, y, 1]=x", root.toString());
+		assertEquals("0 = x + -y + -y / 0 = (-y + -1) + x + -y", root.toString());
+		root = new Compacter(root).go();
+		assertEquals("0 = x + -2y / 0 = (-y + -1) + x + -y", root.toString());
+		root = new ToLessThan(root).go();
+		assertEquals("(0 < x + -2y + 1 & x + -2y < 1) / (0 < (-y + -1) + x + -y + 1 & (-y + -1) + x + -y < 1)", root.toString());
+		root = new Flattener(root).go();
+		assertEquals("(0 < x + -2y + 1 & x + -2y < 1) / (0 < x + -y + -y + 1 + -1 & x + -y + -y + -1 < 1)", root.toString());
+		root = new Compacter(root).go();
+		assertEquals("(0 < x + -2y + 1 & x + -2y < 1) / (0 < x + -2y & x + -2y + -1 < 1)", root.toString());
+		VariableAssignment assignment = new VariableAssignment().put("x", 41).put("y", -23);
+		root = new VariableReplacer(root, assignment).go();
+		assertEquals("(0 < 41 + 46 + 1 & 41 + 46 < 1) / (0 < 41 + 46 & 41 + 46 + -1 < 1)", root.toString());
+		root = new Compacter(root).go();
+		assertEquals("(0 < 88 & 87 < 1) / (0 < 87 & 86 < 1)", root.toString());
+		root = new Flattener(root).go();
+		assertEquals("(0 < 88 & 87 < 1) / (0 < 87 & 86 < 1)", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("(true & false) / (true & false)", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("false / false", root.toString());
+		root = new Simplifier(root).go();
+		assertEquals("false", root.toString());
 	}
-
 
 	@org.junit.Test
 	public void testParseQuantifiers() {
@@ -191,7 +211,7 @@ public class Test {
 		root = new ToLessThan(root).go();
 		assertEquals("Ex.(3x+1<10/7<7x-6)&2|x", root.toString());
 		root = new VariableIsolater(root).go();
-		assertEquals("Ex.(3x<SUM[10, -1]/SUM[7, 6]<7x)&2|x", root.toString());
+		assertEquals("Ex.(SUM[3x]<SUM[10, -1]/SUM[7, 6]<SUM[7x])&2|x", root.toString());
 	}
 
 	@org.junit.Test
@@ -211,9 +231,9 @@ public class Test {
 		String input = "Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x";
 		Formula root = p.parse(input);
 		root = new ToLessThan(root).go();
-		assertEquals("Ex.~Ey.(10<(3x+1)+1&7x-6<(7+y)+1)/~2|x", root.toString());
+		assertEquals("Ex.~Ey.(10<SUM[3x, 1, 1]&7x-6<SUM[y, 7, 1])/~2|x", root.toString());
 		root = new VariableIsolater(root).go();
-		assertEquals("Ex.true", root.toString());
+		assertEquals("Ex.~Ey.(SUM[]<SUM[3x, 1, 1, -10]&SUM[7x, -1, -6, -7]<SUM[y])/~2|x", root.toString());
 	}
 
 	@org.junit.Test
@@ -236,9 +256,9 @@ public class Test {
 		Formula root = p.parse(input);
 		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
 		root = new ToLessThan(root).go();
-		assertEquals("Ex.~Ey.(3x+1<10/7+y<7x-6)&2|x", root.toString());
+		assertEquals("Ex.~Ey.(10<SUM[3x, 1, 1]&7x-6<SUM[y, 7, 1])/~2|x", root.toString());
 		root = new VariableIsolater(root).go();
-		assertEquals("Ex.true", root.toString());
+		assertEquals("Ex.~Ey.(SUM[]<SUM[3x, 1, 1, -10]&SUM[7x, -1, -6, -7]<SUM[y])/~2|x", root.toString());
 	}
 
 	@org.junit.Test

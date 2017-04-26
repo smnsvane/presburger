@@ -12,9 +12,7 @@ public class VariableIsolater implements Engine {
 
 	private Formula root;
 	private String variableSymbol;
-	public VariableIsolater(Formula root) {
-		this.root = root.copy();
-	}
+	public VariableIsolater(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
@@ -34,7 +32,7 @@ public class VariableIsolater implements Engine {
 						Exists exists = (Exists) child;
 						if (exists.hasNoQuantifiersInSubtree())
 							variableSymbol = exists.getVariableSymbol();
-					} else if (child instanceof LessThan) {
+					} else if (child instanceof LessThan && variableSymbol != null) {
 						LessThan less = (LessThan) child;
 						LessThan neW = less.isolate(variableSymbol);
 						parent.replaceChild(less, neW);

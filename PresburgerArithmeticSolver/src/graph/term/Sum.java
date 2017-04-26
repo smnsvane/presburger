@@ -65,6 +65,7 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 	public Sum compact() {
 		HashMap<String, Integer> varToFactor = new HashMap<>();
 		int constantValue = 0;
+		ArrayList<Term> children = new ArrayList<>();
 		for (Term t : this) {
 			if (t instanceof Constant) {
 				Constant c = (Constant) t;
@@ -76,9 +77,9 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 							varToFactor.get(v.getVariableSymbol()) + v.getFactor());
 				else
 					varToFactor.put(v.getVariableSymbol(), v.getFactor());
-			}
+			} else
+				children.add(t);
 		}
-		ArrayList<Term> children = new ArrayList<>();
 		for (String symbol : varToFactor.keySet()) {
 			int factor = varToFactor.get(symbol);
 			if (factor != 0) {
@@ -106,10 +107,17 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 			return "0";
 		if (getChildren().size() == 1)
 			return getChildren().get(0).toString();
+
 		StringBuilder sb = new StringBuilder();
-		sb.append(getChildren().get(0).toString());
-		for (int i = 1; i < getChildren().size(); i++)
-			sb.append(" + "+getChildren().get(i));
+		for (int i = 0; i < getChildren().size(); i++) {
+			String childString;
+			if (getChildren().get(i) instanceof Branch<?>)
+				childString = "("+getChildren().get(i)+")";
+			else
+				childString = getChildren().get(i).toString();
+			sb.append(childString+" + ");
+		}
+		sb.delete(sb.length()-3, sb.length());
 		return sb.toString();
 	}
 }
