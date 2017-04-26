@@ -4,10 +4,8 @@ import graph.Leaf;
 import graph.Term;
 import graph.VariableAssignment;
 
-public class Constant implements Term, Leaf {
+public class Constant extends Leaf implements Term {
 
-	@Override
-	public String getSymbol() { return null; }
 	private int value;
 	public int getValue() { return value; }
 	public Constant(int value) { this.value = value; }

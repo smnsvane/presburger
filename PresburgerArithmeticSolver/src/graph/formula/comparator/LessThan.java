@@ -34,6 +34,7 @@ public class LessThan extends Comparator {
 	public LessThan isolate(String variableSymbol) {
 		ArrayList<Term> var = new ArrayList<>();
 		ArrayList<Term> nonVar = new ArrayList<>();
+		//calling .toSum() in order to be able to iterate over the child's children
 		for (Term t1 : getFirstChild().toSum())
 			if (t1 instanceof Variable) {
 				Variable v = (Variable) t1;

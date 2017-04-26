@@ -1,6 +1,8 @@
 package graph;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import parser.SymbolBindings;
 
@@ -8,6 +10,8 @@ public abstract class SingleChildBranch<Child extends Node> extends Branch<Child
 
 	private Child child;
 	public Child getChild() { return child; }
+	@Override
+	public List<Child> getChildren() { return Collections.singletonList(child); }
 	@Override
 	public void replaceChild(Child victim, Child overtaker) {
 		if (isLocked())

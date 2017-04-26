@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import graph.Node;
 import graph.formula.And;
 import graph.formula.Divisable;
+import graph.formula.False;
 import graph.formula.Implies;
 import graph.formula.Not;
 import graph.formula.Or;
+import graph.formula.True;
 import graph.formula.comparator.EqualTo;
 import graph.formula.comparator.GreaterThan;
 import graph.formula.comparator.GreaterThanOrEqualTo;
@@ -17,9 +19,11 @@ import graph.formula.comparator.NotEqualTo;
 import graph.formula.quantifier.Exists;
 import graph.formula.quantifier.Forall;
 import graph.term.Addition;
+import graph.term.Constant;
 import graph.term.Product;
 import graph.term.Subtraction;
 import graph.term.Sum;
+import graph.term.Variable;
 
 public class SymbolBindings {
 
@@ -49,6 +53,10 @@ public class SymbolBindings {
 	}
 
 	static {
+		list.add(new Binding("CONSTANT", Constant.class, samePrecendence()));
+		list.add(new Binding("VARIABLE", Variable.class, samePrecendence()));
+		list.add(new Binding("false", False.class, samePrecendence()));
+		list.add(new Binding("true", True.class, nextPrecendence()));
 		list.add(new Binding("SUM", Sum.class, nextPrecendence()));
 		list.add(new Binding("*", Product.class, nextPrecendence()));
 		list.add(new Binding("+", Addition.class, nextPrecendence()));

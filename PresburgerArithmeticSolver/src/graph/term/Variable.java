@@ -4,9 +4,7 @@ import graph.Leaf;
 import graph.Term;
 import graph.VariableAssignment;
 
-public class Variable implements Term, Leaf {
-
-	public String getSymbol() { return null; }
+public class Variable extends Leaf implements Term {
 
 	private int factor;
 	public int getFactor() { return factor; }

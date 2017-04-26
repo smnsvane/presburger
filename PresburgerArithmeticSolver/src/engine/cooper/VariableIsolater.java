@@ -33,7 +33,7 @@ public class VariableIsolater implements Engine {
 					if (child instanceof Exists) {
 						Exists exists = (Exists) child;
 						if (exists.hasNoQuantifiersInSubtree())
-							variableSymbol = exists.getSymbol();
+							variableSymbol = exists.getVariableSymbol();
 					} else if (child instanceof LessThan) {
 						LessThan less = (LessThan) child;
 						LessThan neW = less.isolate(variableSymbol);

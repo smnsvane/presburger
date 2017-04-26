@@ -4,10 +4,8 @@ import graph.Formula;
 import graph.Leaf;
 import graph.VariableAssignment;
 
-public class True implements Formula, Leaf {
+public class True extends Leaf implements Formula {
 
-	@Override
-	public String getSymbol() { return "true"; }
 	@Override
 	public String toString() { return getSymbol(); }
 	@Override

@@ -211,7 +211,7 @@ public class Test {
 		String input = "Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x";
 		Formula root = p.parse(input);
 		root = new ToLessThan(root).go();
-		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
+		assertEquals("Ex.~Ey.(10<(3x+1)+1&7x-6<(7+y)+1)/~2|x", root.toString());
 		root = new VariableIsolater(root).go();
 		assertEquals("Ex.true", root.toString());
 	}

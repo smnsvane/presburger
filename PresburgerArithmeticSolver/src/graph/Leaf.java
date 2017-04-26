@@ -1,3 +1,9 @@
 package graph;
 
-public interface Leaf extends Node {}
+import parser.SymbolBindings;
+
+public abstract class Leaf implements Node {
+
+	@Override
+	public final String getSymbol() { return SymbolBindings.getSymbol(getClass()); }
+}

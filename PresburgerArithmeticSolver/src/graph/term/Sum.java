@@ -55,8 +55,8 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 	}
 	@Override
 	public Term flatten() {
-		if (numberOfChildren() == 1) {
-			Term child = iterator().next();
+		if (getChildren().size() == 1) {
+			Term child = getChildren().get(0);
 			if (child instanceof Leaf)
 				return child;
 		}
@@ -64,8 +64,7 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		for (Term child : this) {
 			if (child instanceof Sum) {
 				Sum sumChild = (Sum) child;
-				for (Term grandChild : sumChild)
-					children.add(grandChild);
+				children.addAll(sumChild.getChildren());
 			} else if (child instanceof Addition) {
 				Addition additionChild = (Addition) child;
 				children.add(additionChild.getFirstChild());

@@ -1,6 +1,9 @@
 package graph;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import parser.SymbolBindings;
 
@@ -10,6 +13,13 @@ public abstract class TwoChildrenBranch<Child1 extends Node, Child2 extends Node
 	private Child2 child2;
 	public Child1 getFirstChild() { return child1; }
 	public Child2 getSecondChild() { return child2; }
+	@Override
+	public List<Node> getChildren() {
+		ArrayList<Node> children = new ArrayList<>();
+		children.add(child1);
+		children.add(child2);
+		return Collections.unmodifiableList(children);
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void replaceChild(Node victim, Node overtaker) {

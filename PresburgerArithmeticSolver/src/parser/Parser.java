@@ -89,7 +89,7 @@ public class Parser {
 			Divisable divisable = new Divisable(
 					false,
 					((Constant) parseMath(rawFormula.substring(0, index))).getValue(),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(Divisable.class))));
 			return divisable;
 		}
 
@@ -97,7 +97,7 @@ public class Parser {
 		if (index != -1) {
 			LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(
 					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(LessThanOrEqualTo.class))));
 			return lessOrEqual;
 		}
 
@@ -105,7 +105,7 @@ public class Parser {
 		if (index != -1) {
 			GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(
 					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(GreaterThanOrEqualTo.class))));
 			return greaterOrEqual;
 		}
 
@@ -113,7 +113,7 @@ public class Parser {
 		if (index != -1) {
 			LessThan less = new LessThan(
 					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(LessThan.class))));
 			return less;
 		}
 
@@ -121,7 +121,7 @@ public class Parser {
 		if (index != -1) {
 			GreaterThan greater = new GreaterThan(
 					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(GreaterThan.class))));
 			return greater;
 		}
 
@@ -129,7 +129,7 @@ public class Parser {
 		if (index != -1) {
 			NotEqualTo notEqual = new NotEqualTo(
 					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(NotEqualTo.class))));
 			return notEqual;
 		}
 
@@ -137,7 +137,7 @@ public class Parser {
 		if (index != -1) {
 			EqualTo equalTo = new EqualTo(
 					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbol.length())));
+					parseMath(rawFormula.substring(index + symbolLength(EqualTo.class))));
 			return equalTo;
 		}
 
@@ -196,7 +196,7 @@ public class Parser {
 
 	private int findSymbolIndexInDepthZero(Class<? extends Node> clazz, String rawFormula) {
 		int depth = 0;
-		for (int i = 0; i <= rawFormula.length(); i++) {
+		for (int i = 0; i < rawFormula.length(); i++) {
 			char charInRawFormula = rawFormula.charAt(i);
 			if (charInRawFormula == '(')
 				depth++;

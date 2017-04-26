@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import parser.ToStringSorter;
 
 public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> {
 
 	private ArrayList<Child> children = new ArrayList<>();
-	public int numberOfChildren() { return children.size(); }
+	@Override
+	public List<Child> getChildren() { return Collections.unmodifiableList(children); }
 	@Override
 	public void replaceChild(Child victim, Child overtaker) {
 		if (isLocked())
