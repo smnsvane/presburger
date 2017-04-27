@@ -6,7 +6,6 @@ import graph.VariableAssignment;
 import graph.formula.And;
 import graph.formula.True;
 import graph.term.Constant;
-import graph.term.Sum;
 
 public class EqualTo extends Comparator {
 
@@ -22,24 +21,19 @@ public class EqualTo extends Comparator {
 		return notEqual;
 	}
 	@Override
-	public Formula simplify() {
+	public Formula reduce() {
 		if (getFirstChild().equals(getSecondChild()))
 			return new True();
-		return super.simplify();
+		return super.reduce();
 	}
 	@Override
-	public And toLessThan() {
-		LessThan child1 =
-			new LessThan(getFirstChild(), getSecondChild().toSum().addToSum(new Constant(1)));
-		LessThan child2 =
-				new LessThan(getSecondChild(), getFirstChild().toSum().addToSum(new Constant(1)));
+	public And toCooper() {
+		CooperLessThan child1 =
+			new CooperLessThan(getFirstChild().toSum(), getSecondChild().toSum().add(new Constant(1)));
+		CooperLessThan child2 =
+				new CooperLessThan(getSecondChild().toSum(), getFirstChild().toSum().add(new Constant(1)));
 		And and = new And(child1, child2);
 		return and;
-	}
-	@Override
-	public EqualTo isolate() {
-		EqualTo equal = new EqualTo(new Sum(), getSecondChild().toSum().addToSum(getFirstChild().multiply(-1)));
-		return equal;
 	}
 	@Override
 	public EqualTo copy() { return new EqualTo(getFirstChild().copy(), getSecondChild().copy()); }

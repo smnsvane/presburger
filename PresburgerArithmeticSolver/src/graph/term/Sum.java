@@ -15,19 +15,15 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 
 	public Sum(Collection<Term> children) { super(children); }
 	public Sum(Term...children) { super(Arrays.asList(children)); }
-	public Sum addToSum(Term add) {
+	public Sum add(Collection<Term> adds) {
 		ArrayList<Term> sumChildren = new ArrayList<>();
 		sumChildren.addAll(getChildren());
-		sumChildren.add(add);
+		for (Term t : adds)
+			sumChildren.add(t);
 		Sum sum = new Sum(sumChildren);
 		return sum;
 	}
-	public boolean onlyConstantChildren() {
-		for (Term t : this)
-			if (!(t instanceof Constant))
-				return false;
-		return true;
-	}
+	public Sum add(Term...adds) { return add(Arrays.asList(adds)); }
 	@Override
 	public int evaluate(VariableAssignment assignment) {
 		int value = 0;
@@ -109,15 +105,25 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 			return getChildren().get(0).toString();
 
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < getChildren().size(); i++) {
-			String childString;
-			if (getChildren().get(i) instanceof Branch<?>)
-				childString = "("+getChildren().get(i)+")";
-			else
-				childString = getChildren().get(i).toString();
-			sb.append(childString+" + ");
-		}
-		sb.delete(sb.length()-3, sb.length());
+		for (int i = 0; i < getChildren().size(); i++)
+			sb.append(sumChildToString(getChildren().get(i), i == 0));
 		return sb.toString();
+	}
+	private String sumChildToString(Term t, boolean firstChild) {
+		if (t instanceof Branch<?>)
+			return (firstChild?"":" + ")+"("+t+")";
+		if (firstChild)
+			return t.toString();
+		if (t instanceof Constant) {
+			Constant c = (Constant) t;
+			return (c.getValue() < 0?" - "+(-1*c.getValue()):" + "+c.getValue());
+		}
+		if (t instanceof Variable) {
+			Variable v = (Variable) t;
+			if (v.getFactor() < 0)
+				return " - "+(-1*v.getFactor())+v.getVariableSymbol();
+			return " + "+v.getFactor()+v.getVariableSymbol();
+		}
+		return t.toString();
 	}
 }

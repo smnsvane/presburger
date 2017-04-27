@@ -15,11 +15,11 @@ public class Not extends SingleChildBranch<Formula> implements Formula {
 	@Override
 	public Formula negate() { return getChild(); }
 	@Override
-	public Formula simplify() {
+	public Formula reduce() {
 		if (getChild() instanceof Exists)
 			return this;
 		Formula child = getChild().negate();
-		return (Formula) child.simplify();
+		return (Formula) child.reduce();
 	}
 	@Override
 	public Not copy() { return new Not(getChild().copy()); }

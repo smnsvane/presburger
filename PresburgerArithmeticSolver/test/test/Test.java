@@ -5,13 +5,15 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 
 import engine.Compacter;
+import engine.DeMorgan;
 import engine.Flattener;
-import engine.Isolater;
-import engine.Simplifier;
+import engine.ForallToExists;
+import engine.ImplicationRemover;
+import engine.ProductRemover;
+import engine.Reducer;
+import engine.ToLessThan;
+import engine.VariableIsolater;
 import engine.VariableReplacer;
-import engine.cooper.ToExister;
-import engine.cooper.ToLessThan;
-import engine.cooper.VariableIsolater;
 import graph.Formula;
 import graph.Node;
 import graph.VariableAssignment;
@@ -32,7 +34,7 @@ public class Test {
 		String input = "~(0 = x + 1)";
 		Formula root = p.parse(input);
 		assertEquals("~0=x+1", root.toString());
-		Formula simplifiedRoot = root.simplify();
+		Formula simplifiedRoot = root.reduce();
 		assertEquals("0!=x+1", simplifiedRoot.toString());
 	}
 
@@ -41,9 +43,9 @@ public class Test {
 		String input = "x + 1 = y + 1 -> x = y";
 		Formula root = p.parse(input);
 		assertEquals("x+1=y+1->x=y", root.toString());
-		Formula simplifiedRoot = root.simplify();
+		Formula simplifiedRoot = root.reduce();
 		assertEquals("~x+1=y+1/x=y", simplifiedRoot.toString());
-		Node simplifiedGraphRoot = new Simplifier(root).go();
+		Node simplifiedGraphRoot = new Reducer(root).go();
 		assertEquals("x+1!=y+1/x=y", simplifiedGraphRoot.toString());
 	}
 
@@ -66,8 +68,6 @@ public class Test {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parse(input);
 		assertEquals("y+y=x/y+(y+1)=x", root.toString());
-		root = new Isolater(root).go();
-		assertEquals("SUM[]=SUM[-y+-y, x]/SUM[]=SUM[-y+(-y+-1), x]", root.toString());
 		root = new Flattener(root).go();
 		assertEquals("SUM[]=SUM[x, -y, -y]/SUM[]=SUM[-y+-1, x, -y]", root.toString());
 		root = new Compacter(root).go();
@@ -85,11 +85,11 @@ public class Test {
 		assertEquals("(SUM[]<SUM[88]&SUM[87]<SUM[1])/(SUM[]<SUM[87]&SUM[86]<SUM[1])", root.toString());
 		root = new Flattener(root).go();
 		assertEquals("(SUM[]<SUM[88]&SUM[87]<SUM[1])/(SUM[]<SUM[87]&SUM[86]<SUM[1])", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("(true&false)/(true&false)", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("false/false", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("false", root.toString());
 	}
 
@@ -99,8 +99,6 @@ public class Test {
 		String input = "(y + y = x) / (y + y + 1 = x)";
 		Formula root = p.parse(input);
 		assertEquals("y + y = x / y + (y + 1) = x", root.toString());
-		root = new Isolater(root).go();
-		assertEquals("0 = (-y + -y) + x / 0 = (-y + (-y + -1)) + x", root.toString());
 		root = new Flattener(root).go();
 		assertEquals("0 = x + -y + -y / 0 = (-y + -1) + x + -y", root.toString());
 		root = new Compacter(root).go();
@@ -118,11 +116,11 @@ public class Test {
 		assertEquals("(0 < 88 & 87 < 1) / (0 < 87 & 86 < 1)", root.toString());
 		root = new Flattener(root).go();
 		assertEquals("(0 < 88 & 87 < 1) / (0 < 87 & 86 < 1)", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("(true & false) / (true & false)", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("false / false", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("false", root.toString());
 	}
 
@@ -139,9 +137,9 @@ public class Test {
 		Formula root = p.parse(input);
 		String parsing = root.toString();
 		assertEquals("10>11/3+4<15-6", parsing);
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("false/true", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("true", root.toString());
 	}
 
@@ -184,7 +182,7 @@ public class Test {
 		String parsing = root.toString();
 		assertEquals("x+1=y+1->x=y", parsing);
 
-		Formula simplifiedGraphRoot = new Simplifier(root).go();
+		Formula simplifiedGraphRoot = new Reducer(root).go();
 		parsing = simplifiedGraphRoot.toString();
 		assertEquals("x+1!=y+1/x=y", parsing);
 
@@ -193,11 +191,11 @@ public class Test {
 		parsing = assignedRoot.toString();
 		assertEquals("1+1!=1+1/1=1", parsing);
 
-		Formula simplifiedAssignedGraphRoot = new Simplifier(assignedRoot).go();
+		Formula simplifiedAssignedGraphRoot = new Reducer(assignedRoot).go();
 		parsing = simplifiedAssignedGraphRoot.toString();
 		assertEquals("false/true", parsing);
 
-		simplifiedAssignedGraphRoot = new Simplifier(simplifiedAssignedGraphRoot).go();
+		simplifiedAssignedGraphRoot = new Reducer(simplifiedAssignedGraphRoot).go();
 		parsing = simplifiedAssignedGraphRoot.toString();
 		assertEquals("true", parsing);
 	}
@@ -220,9 +218,9 @@ public class Test {
 		Formula root = p.parse(input);
 		String parsing = root.toString();
 		assertEquals("Ex.Ay.(3x+1<10/7x-6>7+y)&2|x", parsing);
-		root = new ToExister(root).go();
+		root = new ForallToExists(root).go();
 		assertEquals("Ex.~Ey.~((3x+1<10/7x-6>7+y)&2|x)", root.toString());
-		root = new Simplifier(root).go();
+		root = new Reducer(root).go();
 		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
 	}
 
@@ -251,22 +249,116 @@ public class Test {
 	}
 
 	@org.junit.Test
-	public void testCooperExample23() {
+	public void testCooper1() {
 		String input = "Ex.~(Ey.(3x+1>=10&7x-6<=7+y)/~2|x)";
 		Formula root = p.parse(input);
 		assertEquals("Ex.~Ey.(3x+1>=10&7x-6<=7+y)/~2|x", root.toString());
 		root = new ToLessThan(root).go();
-		assertEquals("Ex.~Ey.(10<SUM[3x, 1, 1]&7x-6<SUM[y, 7, 1])/~2|x", root.toString());
+		assertEquals("Ex.~Ey.(SUM[10]<SUM[3x, 1, 1]&SUM[7x, -6]<SUM[y, 7, 1])/~2|x", root.toString());
 		root = new VariableIsolater(root).go();
 		assertEquals("Ex.~Ey.(SUM[]<SUM[3x, 1, 1, -10]&SUM[7x, -1, -6, -7]<SUM[y])/~2|x", root.toString());
 	}
 
 	@org.junit.Test
-	public void testCooperExample3() {
+	public void testDeMorgan1() {
+		Parser.prettyPrint = true;
+		String input = "~~(~x<2&(true/y>=4))";
+		Formula root = p.parse(input);
+		assertEquals("~~(~x < 2 & (true / y >= 4))", root.toString());
+		root = new DeMorgan(root).go();
+		assertEquals("x >= 2 & (true / y >= 4)", root.toString());
+	}
+
+	@org.junit.Test
+	public void testDeMorgan2() {
+		Parser.prettyPrint = true;
+		String input = "~~~(~x<2&(true/y>=4))";
+		Formula root = p.parse(input);
+		assertEquals("~~~(~x < 2 & (true / y >= 4))", root.toString());
+		root = new DeMorgan(root).go();
+		assertEquals("x < 2 / (false & y < 4)", root.toString());
+		root = new Reducer(root).go();
+		assertEquals("x < 2 / false", root.toString());
+		root = new Reducer(root).go();
+		assertEquals("x < 2", root.toString());
+	}
+
+	@org.junit.Test
+	public void testCooper2() {
+		Parser.prettyPrint = true;
 		String input = "Ax. 20+x <= 0 -> Ey. 3y +x <= 10 & 20 <= y - x";
 		Formula root = p.parse(input);
-		String parsing = root.toString();
-		assertEquals("Ex.y=y", parsing);
+		assertEquals("Ax.20 + x <= 0 -> (Ey.3y + x <= 10 & 20 <= y - x)", root.toString());
+		// remove products
+		root = new ProductRemover(root).go();
+		assertEquals("Ax.20 + x <= 0 -> (Ey.3y + x <= 10 & 20 <= y - x)", root.toString());
+		// subtraction to addition
+		// addition to sum (flatten)
+		// remove implications
+		root = new ImplicationRemover(root).go();
+		assertEquals("Ax.~20 + x <= 0 / (Ey.3y + x <= 10 & 20 <= y - x)", root.toString());
+		// foralls to exists'
+		root = new ForallToExists(root).go();
+		assertEquals("~Ex.~(~20 + x <= 0 / (Ey.3y + x <= 10 & 20 <= y - x))", root.toString());
+		// press non-exists negations in (de morgan)
+		root = new DeMorgan(root).go();
+		assertEquals("~Ex.20 + x > 0 & ~(Ey.3y + x <= 10 & 20 <= y - x)", root.toString());
+		// press non-exists negations in (de morgan)
+		assertEquals("~Ex.20 + x > 0 & ~(Ey.3y + x <= 10 & 20 <= y - x)", root.toString());
+		// convert all comparators to less-than
+		assertEquals("~Ex.20 + x > 0 & ~(Ey.3y + x < 10 + 1 & 20 < y - x + 1)", root.toString());
+		// isolate y under Ey.
+		assertEquals("~Ex.20 + x > 0 & ~(Ey.3y < 10 + 1 - x & 20 + x - 1 < y)", root.toString());
+		// compact comparator children under Ey.
+		assertEquals("~Ex.20 + x > 0 & ~(Ey.3y < 11 - x & 19 + x < y)", root.toString());
+		// gcd on y factor under Ey.
+		assertEquals("~Ex.20 + x > 0 & ~(Ey.3y < 11 - x & 57 + 3x < 3y)", root.toString());
+		// replace 3y with y1 (and add divisor constraint)
+		assertEquals("~Ex.20 + x > 0 & ~(Ey1.y1 < 11 - x & 57 + 3x < y1 & 3|y1)", root.toString());
+		// cooper case 1 under Ey1.
+		assertEquals("true & false & 3|y1", root.toString());
+		// reduction of cooper case 1 under Ey1.
+		assertEquals("false", root.toString());
+		// cooper case 2 under Ey1.
+		assertEquals("Vee.j=1..3.b={57+3x}.y1 < 11 - x & 57 + 3x < y1 & 3|y1", root.toString());
+		// Vee b+j set
+		assertEquals("Vee.y1={58 + 3x, 59 + 3x, 60 + 3x}.y1 < 11 - x & 57 + 3x < y1 & 3|y1", root.toString());
+		// 58+3x and 59+3x is not dividable with 3
+		assertEquals("Vee.y1={60+3x}.y1 < 11 - x & 57 + 3x < y1 & 3|y1", root.toString());
+		// Vee expansion
+		assertEquals("60 + 3x < 11 - x & 57 + 3x < 60 + 3x & 3|60 + 3x", root.toString());
+		// insertion in original formula "case 1 or case 2"
+		assertEquals("~Ex.20 + x > 0 & ~(false / (60 + 3x < 11 - x & 57 + 3x < 60 + 3x & 3|60 + 3x))", root.toString());
+		// reduce
+		assertEquals("~Ex.20 + x > 0 & ~(60 + 3x < 11 - x & 57 + 3x < 60 + 3x & 3|60 + 3x)", root.toString());
+		// de morgan
+		assertEquals("~Ex.20 + x > 0 & (~60 + 3x < 11 - x / ~57 + 3x < 60 + 3x / ~3|60 + 3x)", root.toString());
+		// de morgan
+		assertEquals("~Ex.20 + x > 0 & (60 + 3x >= 11 - x / 57 + 3x >= 60 + 3x / ~3|60 + 3x)", root.toString());
+		// convert to less-than
+		assertEquals("~Ex.0 < 20 + x & (11 - x < 60 + 3x + 1 / 60 + 3x < 57 + 3x + 1 / ~3|60 + 3x)", root.toString());
+		// isolate x under Ex.
+		assertEquals("~Ex.0 - 20 < x & (11 - 60 - 1 < 2x / 0x < 57 + 1 - 60 / ~3|60 + 3x)", root.toString());
+		// simplify
+		assertEquals("~Ex.0 - 20 < x & (11 - 60 - 1 < 2x / 0 < 57 + 1 - 60 / ~3|60 + 3x)", root.toString());
+		// eval(null)
+		assertEquals("~Ex.0 - 20 < x & (11 - 60 - 1 < 2x / false / ~3|60 + 3x)", root.toString());
+		// reduce
+		assertEquals("~Ex.0 - 20 < x & (11 - 60 - 1 < 2x / ~3|60 + 3x)", root.toString());
+		// compact
+		assertEquals("~Ex.-20 < x & (-48 < 2x / ~3|60 + 3x)", root.toString());
+		// gcd on x factor under Ex.
+		assertEquals("~Ex.-120 < 6x & (-144 < 6x / ~6|120 + 6x)", root.toString());
+		// replace x with x1 under Ex.
+		assertEquals("~Ex1.-120 < x1 & (-144 < x1 / ~6|120 + x1) & 6|x1", root.toString());
+		// cooper case 1 under Ex.
+		assertEquals("false & (false / ~6|120 + x1) & 6x1", root.toString());
+		// reduce
+		assertEquals("false", root.toString());
+		// cooper case 2 under Ex.
+		assertEquals("Vee.j=1..6.b={}.y1 < 11 - x & 57 + 3x < y1 & 3|y1", root.toString());
+		
+		
 //		this formula is true
 	}
 }

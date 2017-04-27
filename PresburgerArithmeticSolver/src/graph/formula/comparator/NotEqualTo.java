@@ -4,7 +4,6 @@ import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
 import graph.formula.Or;
-import graph.term.Sum;
 
 public class NotEqualTo extends Comparator {
 
@@ -20,16 +19,11 @@ public class NotEqualTo extends Comparator {
 		return equal;
 	}
 	@Override
-	public Or toLessThan() {
-		LessThan child1 = new LessThan(getFirstChild(), getSecondChild());
-		LessThan child2 = new LessThan(getSecondChild(), getFirstChild());
+	public Or toCooper() {
+		CooperLessThan child1 = new CooperLessThan(getFirstChild().toSum(), getSecondChild().toSum());
+		CooperLessThan child2 = new CooperLessThan(getSecondChild().toSum(), getFirstChild().toSum());
 		Or or = new Or(child1, child2);
 		return or;
-	}
-	@Override
-	public NotEqualTo isolate() {
-		NotEqualTo notEqual = new NotEqualTo(new Sum(), getSecondChild().toSum().addToSum(getFirstChild().multiply(-1)));
-		return notEqual;
 	}
 	@Override
 	public NotEqualTo copy() { return new NotEqualTo(getFirstChild().copy(), getSecondChild().copy()); }

@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import graph.Node;
 import graph.formula.And;
-import graph.formula.Divisable;
+import graph.formula.Divisible;
 import graph.formula.False;
 import graph.formula.Implies;
 import graph.formula.Not;
 import graph.formula.Or;
 import graph.formula.True;
+import graph.formula.comparator.CooperLessThan;
 import graph.formula.comparator.EqualTo;
 import graph.formula.comparator.GreaterThan;
 import graph.formula.comparator.GreaterThanOrEqualTo;
@@ -61,10 +62,11 @@ public class SymbolBindings {
 		list.add(new Binding("*", Product.class, nextPrecendence()));
 		list.add(new Binding("+", Addition.class, nextPrecendence()));
 		list.add(new Binding("-", Subtraction.class, samePrecendence()));
-		list.add(new Binding("|", Divisable.class, nextPrecendence()));
+		list.add(new Binding("|", Divisible.class, nextPrecendence()));
 		list.add(new Binding("=", EqualTo.class, nextPrecendence()));
 		list.add(new Binding("!=", NotEqualTo.class, nextPrecendence()));
 		list.add(new Binding(">", GreaterThan.class, nextPrecendence()));
+		list.add(new Binding("<", CooperLessThan.class, nextPrecendence()));
 		list.add(new Binding("<", LessThan.class, nextPrecendence()));
 		list.add(new Binding(">=", GreaterThanOrEqualTo.class, nextPrecendence()));
 		list.add(new Binding("<=", LessThanOrEqualTo.class, nextPrecendence()));

@@ -3,7 +3,6 @@ package graph.formula.comparator;
 import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
-import graph.term.Sum;
 
 public class GreaterThan extends Comparator {
 
@@ -20,14 +19,9 @@ public class GreaterThan extends Comparator {
 		return lessOrEqual;
 	}
 	@Override
-	public LessThan toLessThan() {
-		LessThan less = new LessThan(getSecondChild(), getFirstChild());
+	public CooperLessThan toCooper() {
+		CooperLessThan less = new CooperLessThan(getSecondChild().toSum(), getFirstChild().toSum());
 		return less;
-	}
-	@Override
-	public GreaterThan isolate() {
-		GreaterThan greater = new GreaterThan(new Sum(), getSecondChild().toSum().addToSum(getFirstChild().multiply(-1)));
-		return greater;
 	}
 	@Override
 	public GreaterThan copy() { return new GreaterThan(getFirstChild().copy(), getSecondChild().copy()); }

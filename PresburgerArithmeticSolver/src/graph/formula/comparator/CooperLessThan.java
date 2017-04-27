@@ -1,39 +1,64 @@
 package graph.formula.comparator;
 
 
+import java.util.ListIterator;
+
 import graph.Formula;
+import graph.Term;
 import graph.TwoChildrenBranch;
 import graph.VariableAssignment;
 import graph.formula.False;
 import graph.formula.True;
-import graph.term.SumMap;
+import graph.term.Constant;
+import graph.term.Sum;
+import graph.term.Variable;
 
-public class CooperLessThan extends TwoChildrenBranch<SumMap, SumMap> implements Formula {
+public class CooperLessThan extends TwoChildrenBranch<Sum, Sum> implements Formula {
 
-	public CooperLessThan(SumMap child1, SumMap child2) { super(child1, child2); }
+	public CooperLessThan(Sum child1, Sum child2) { super(child1, child2); }
 	@Override
 	public boolean evaluate(VariableAssignment varAss) {
 		return getFirstChild().evaluate(varAss) <
 				getSecondChild().evaluate(varAss);
 	}
 	@Override
-	public Formula negate() { throw new RuntimeException("not implemented"); }
+	public CooperLessThan negate() {
+		CooperLessThan less = new CooperLessThan(getSecondChild(), getFirstChild().add(new Constant(1)));
+		return less;
+	}
 	@Override
 	public CooperLessThan copy() { return new CooperLessThan(getFirstChild().copy(), getSecondChild().copy()); }
 
-//	public CooperLessThan isolate(String variableSymbol) {
-//		ArrayList<Term> var = new ArrayList<>();
-//		ArrayList<Term> nonVar = new ArrayList<>();
-//		nonVar.addAll(getFirstChild().getChildren());
-//		nonVar.addAll(getSecondChild().getChildren());
-//		for (int i = 0; i < nonVar.size(); i++)
-//			if (nonVar instanceof Variable) {
-//				
-//			}
-//			
-//	}
+	public CooperLessThan isolate(String variableSymbol) {
+
+		int varFactor = 0;
+		Sum nonVar = getSecondChild().add(getFirstChild().multiply(-1).getChildren());
+		for (ListIterator<Term> it = nonVar.iterator(); it.hasNext();) {
+			Term t = it.next();
+			if (t instanceof Variable) {
+				Variable v = (Variable) t;
+				if (v.getVariableSymbol().equals(variableSymbol)) {
+					it.remove();
+					varFactor += v.getFactor();
+				}
+			}
+		}
+
+		if (varFactor == 0)
+			return new CooperLessThan(new Sum(), nonVar);
+
+		if (varFactor < 0) {
+			varFactor *= -1;
+			nonVar = nonVar.multiply(-1);
+			CooperLessThan less = new CooperLessThan(nonVar, new Sum(new Variable(varFactor, variableSymbol)));
+			return less;
+		}
+
+		CooperLessThan less = new CooperLessThan(new Sum(new Variable(varFactor, variableSymbol)), nonVar);
+		return less;
+	}
 	@Override
-	public Formula simplify() {
+	public Formula reduce() {
 		try {
 			if (evaluate(null))
 				return new True();

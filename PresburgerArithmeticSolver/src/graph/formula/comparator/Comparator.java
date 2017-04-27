@@ -9,10 +9,9 @@ import graph.formula.True;
 public abstract class Comparator extends TwoChildrenBranch<Term, Term> implements Formula {
 
 	public Comparator(Term child1, Term child2) { super(child1, child2); }
-	public abstract Comparator isolate();
-	public abstract Formula toLessThan();
+	public abstract Formula toCooper();
 	@Override
-	public Formula simplify() {
+	public Formula reduce() {
 		try {
 			if (evaluate(null))
 				return new True();

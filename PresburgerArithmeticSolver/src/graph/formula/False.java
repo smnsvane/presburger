@@ -13,7 +13,7 @@ public class False extends Leaf implements Formula {
 	@Override
 	public Formula negate() { return new True(); }
 	@Override
-	public False simplify() { return this; }
+	public False reduce() { return this; }
 	@Override
 	public boolean equals(Object obj) { return obj instanceof False; }
 	@Override

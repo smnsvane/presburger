@@ -14,7 +14,7 @@ public class Forall extends Quantifier {
 		return exists;
 	}
 	@Override
-	public Formula simplify() { return this; }
+	public Formula reduce() { return this; }
 	public Not toExists() {
 		Not notChild = new Not(getChild());
 		Exists exists = new Exists(getVariableSymbol(), notChild);

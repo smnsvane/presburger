@@ -1,10 +1,9 @@
-package engine.cooper;
+package engine;
 
-import engine.Engine;
-import engine.GraphTransverser;
 import graph.Branch;
 import graph.Formula;
 import graph.Node;
+import graph.formula.comparator.CooperLessThan;
 import graph.formula.comparator.LessThan;
 import graph.formula.quantifier.Exists;
 
@@ -22,6 +21,7 @@ public class VariableIsolater implements Engine {
 			if (exists.hasNoQuantifiersInSubtree())
 				variableSymbol = exists.getVariableSymbol();
 		}
+
 		if (root instanceof Branch<?>) {
 			@SuppressWarnings("unchecked")
 			GraphTransverser transverser = new GraphTransverser((Branch<Node>) root);
@@ -33,8 +33,8 @@ public class VariableIsolater implements Engine {
 						if (exists.hasNoQuantifiersInSubtree())
 							variableSymbol = exists.getVariableSymbol();
 					} else if (child instanceof LessThan && variableSymbol != null) {
-						LessThan less = (LessThan) child;
-						LessThan neW = less.isolate(variableSymbol);
+						CooperLessThan less = (CooperLessThan) child;
+						CooperLessThan neW = less.isolate(variableSymbol);
 						parent.replaceChild(less, neW);
 					}
 				transverser.done();

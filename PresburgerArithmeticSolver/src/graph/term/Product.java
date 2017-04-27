@@ -17,9 +17,7 @@ public class Product extends TwoChildrenBranch<Constant, Term> implements Term {
 		return mul;
 	}
 	@Override
-	public Sum toSum() {
-		return new Sum(this);
-	}
+	public Sum toSum() { return new Sum(this); }
 	public Term simplify() {
 		Term overtaker = getSecondChild().multiply(getFirstChild().getValue());
 		return overtaker;

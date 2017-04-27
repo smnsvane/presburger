@@ -5,10 +5,10 @@ import graph.Formula;
 import graph.Node;
 import graph.formula.comparator.Comparator;
 
-public class Isolater implements Engine {
+public class ToLessThan implements Engine {
 
 	private Formula root;
-	public Isolater(Formula root) { this.root = root.copy(); }
+	public ToLessThan(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
@@ -21,13 +21,12 @@ public class Isolater implements Engine {
 				for (Node child : parent)
 					if (child instanceof Comparator) {
 						Comparator comp = (Comparator) child;
-						Comparator neW = comp.isolate();
+						Formula neW = comp.toCooper();
 						parent.replaceChild(child, neW);
 					}
 				transverser.done();
 			}
 		}
-
 		return root;
 	}
 }

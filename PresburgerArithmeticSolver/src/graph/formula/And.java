@@ -13,11 +13,14 @@ public class And extends TwoChildrenBranch<Formula, Formula> implements Formula 
 				getSecondChild().evaluate(varAss);
 	}
 	@Override
-	public Formula negate() {
-		return new Or(getFirstChild().negate(), getSecondChild().negate());
+	public Or negate() {
+		Formula negatedChild1 = getFirstChild().negate();
+		Formula negatedChild2 = getSecondChild().negate();
+		Or or = new Or(negatedChild1, negatedChild2);
+		return or;
 	}
 	@Override
-	public Formula simplify() {
+	public Formula reduce() {
 		if (getFirstChild() instanceof True)
 			return getSecondChild();
 		if (getSecondChild() instanceof True)

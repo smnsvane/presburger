@@ -11,9 +11,9 @@ public class True extends Leaf implements Formula {
 	@Override
 	public boolean evaluate(VariableAssignment varAss) { return true; }
 	@Override
-	public Formula negate() { return new True(); }
+	public Formula negate() { return new False(); }
 	@Override
-	public True simplify() { return this; }
+	public True reduce() { return this; }
 	@Override
 	public boolean equals(Object obj) { return obj instanceof True; }
 	@Override

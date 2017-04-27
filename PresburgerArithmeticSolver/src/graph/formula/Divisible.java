@@ -5,11 +5,11 @@ import graph.SingleChildBranch;
 import graph.Term;
 import graph.VariableAssignment;
 
-public class Divisable extends SingleChildBranch<Term> implements Formula {
+public class Divisible extends SingleChildBranch<Term> implements Formula {
 
 	private boolean negated;
 	private int divisor;
-	public Divisable(boolean negated, int divisor, Term child) {
+	public Divisible(boolean negated, int divisor, Term child) {
 		super(child);
 		this.negated = negated;
 		this.divisor = divisor;
@@ -27,9 +27,9 @@ public class Divisable extends SingleChildBranch<Term> implements Formula {
 		return this;
 	}
 	@Override
-	public Divisable simplify() { return this; }
+	public Divisible reduce() { return this; }
 	@Override
-	public Divisable copy() { return new Divisable(negated, divisor, getChild().copy()); }
+	public Divisible copy() { return new Divisible(negated, divisor, getChild().copy()); }
 	@Override
 	public String toString() { return (negated?"~":"")+divisor+getSymbol()+getChild(); }
 }

@@ -4,7 +4,6 @@ import graph.Formula;
 import graph.Term;
 import graph.VariableAssignment;
 import graph.term.Constant;
-import graph.term.Sum;
 
 public class GreaterThanOrEqualTo extends Comparator {
 
@@ -20,15 +19,9 @@ public class GreaterThanOrEqualTo extends Comparator {
 		return less;
 	}
 	@Override
-	public LessThan toLessThan() {
-		LessThan less = new LessThan(getSecondChild(), getFirstChild().toSum().addToSum(new Constant(1)));
+	public CooperLessThan toCooper() {
+		CooperLessThan less = new CooperLessThan(getSecondChild().toSum(), getFirstChild().toSum().add(new Constant(1)));
 		return less;
-	}
-	@Override
-	public GreaterThanOrEqualTo isolate() {
-		GreaterThanOrEqualTo greaterOrEqual =
-				new GreaterThanOrEqualTo(new Sum(), getSecondChild().toSum().addToSum(getFirstChild().multiply(-1)));
-		return greaterOrEqual;
 	}
 	@Override
 	public GreaterThanOrEqualTo copy() { return new GreaterThanOrEqualTo(getFirstChild().copy(), getSecondChild().copy()); }

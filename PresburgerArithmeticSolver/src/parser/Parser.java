@@ -7,10 +7,12 @@ import graph.Formula;
 import graph.Node;
 import graph.Term;
 import graph.formula.And;
-import graph.formula.Divisable;
+import graph.formula.Divisible;
+import graph.formula.False;
 import graph.formula.Implies;
 import graph.formula.Not;
 import graph.formula.Or;
+import graph.formula.True;
 import graph.formula.comparator.EqualTo;
 import graph.formula.comparator.GreaterThan;
 import graph.formula.comparator.GreaterThanOrEqualTo;
@@ -86,91 +88,97 @@ public class Parser {
 			return not;
 		}
 
-		int index = findSymbolIndexInDepthZero(Divisable.class, rawFormula);
+		int index = findSymbolIndexInDepthZero(Divisible.class, rawFormula);
 		if (index != -1) {
-			Divisable divisable = new Divisable(
+			Divisible divisable = new Divisible(
 					false,
-					((Constant) parseMath(rawFormula.substring(0, index))).getValue(),
-					parseMath(rawFormula.substring(index + symbolLength(Divisable.class))));
+					((Constant) parseTerm(rawFormula.substring(0, index))).getValue(),
+					parseTerm(rawFormula.substring(index + symbolLength(Divisible.class))));
 			return divisable;
 		}
 
 		index = findSymbolIndexInDepthZero(LessThanOrEqualTo.class, rawFormula);
 		if (index != -1) {
 			LessThanOrEqualTo lessOrEqual = new LessThanOrEqualTo(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(LessThanOrEqualTo.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(LessThanOrEqualTo.class))));
 			return lessOrEqual;
 		}
 
 		index = findSymbolIndexInDepthZero(GreaterThanOrEqualTo.class, rawFormula);
 		if (index != -1) {
 			GreaterThanOrEqualTo greaterOrEqual = new GreaterThanOrEqualTo(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(GreaterThanOrEqualTo.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(GreaterThanOrEqualTo.class))));
 			return greaterOrEqual;
 		}
 
 		index = findSymbolIndexInDepthZero(LessThan.class, rawFormula);
 		if (index != -1) {
 			LessThan less = new LessThan(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(LessThan.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(LessThan.class))));
 			return less;
 		}
 
 		index = findSymbolIndexInDepthZero(GreaterThan.class, rawFormula);
 		if (index != -1) {
 			GreaterThan greater = new GreaterThan(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(GreaterThan.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(GreaterThan.class))));
 			return greater;
 		}
 
 		index = findSymbolIndexInDepthZero(NotEqualTo.class, rawFormula);
 		if (index != -1) {
 			NotEqualTo notEqual = new NotEqualTo(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(NotEqualTo.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(NotEqualTo.class))));
 			return notEqual;
 		}
 
 		index = findSymbolIndexInDepthZero(EqualTo.class, rawFormula);
 		if (index != -1) {
 			EqualTo equalTo = new EqualTo(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(EqualTo.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(EqualTo.class))));
 			return equalTo;
 		}
+
+		if (rawFormula.equals(SymbolBindings.getSymbol(True.class)))
+			return new True();
+
+		if (rawFormula.equals(SymbolBindings.getSymbol(False.class)))
+			return new False();
 
 		throw new RuntimeException(rawFormula+" could not be parsed as a "+Formula.class.getSimpleName());
 	}
 
-	private Term parseMath(String rawFormula) {
+	private Term parseTerm(String rawFormula) {
 
 		rawFormula = removeEnclosingBrackets(rawFormula.trim()).trim();
 
 		int index = findSymbolIndexInDepthZero(Addition.class, rawFormula);
 		if (index != -1) {
 			Addition add = new Addition(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(Addition.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(Addition.class))));
 			return add;
 		}
 		//FIXME: addition and subtraction have to be parsed with same precedence
 		index = findSymbolIndexInDepthZero(Subtraction.class, rawFormula);
 		if (index != -1) {
 			Subtraction sub = new Subtraction(
-					parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(Subtraction.class))));
+					parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(Subtraction.class))));
 			return sub;
 		}
 
 		index = findSymbolIndexInDepthZero(Product.class, rawFormula);
 		if (index != -1) {
 			Product mul = new Product(
-					(Constant) parseMath(rawFormula.substring(0, index)),
-					parseMath(rawFormula.substring(index + symbolLength(Product.class))));
+					(Constant) parseTerm(rawFormula.substring(0, index)),
+					parseTerm(rawFormula.substring(index + symbolLength(Product.class))));
 			return mul;
 		}
 

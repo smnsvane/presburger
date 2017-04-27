@@ -18,7 +18,7 @@ public class Implies extends TwoChildrenBranch<Formula, Formula> implements Form
 		return and;
 	}
 	@Override
-	public Formula simplify() {
+	public Or reduce() {
 		Not not = new Not(getFirstChild());
 		Or or = new Or(not, getSecondChild());
 		return or;

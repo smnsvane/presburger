@@ -4,6 +4,6 @@ public interface Formula extends Node {
 
 	boolean evaluate(VariableAssignment assignment);
 	Formula negate();
-	Formula simplify();
+	Formula reduce();
 	Formula copy();
 }

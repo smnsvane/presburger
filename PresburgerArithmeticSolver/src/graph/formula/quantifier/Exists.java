@@ -17,7 +17,7 @@ public class Exists extends Quantifier {
 		return forall;
 	}
 	@Override
-	public Exists simplify() { return this; }
+	public Exists reduce() { return this; }
 	public Not toForall() {
 		Forall forall = new Forall(getVariableSymbol(), getChild().negate());
 		Not not = new Not(forall);

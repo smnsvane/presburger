@@ -1,16 +1,15 @@
-package engine.cooper;
+package engine;
 
-import engine.Engine;
-import engine.GraphTransverser;
 import graph.Branch;
 import graph.Formula;
 import graph.Node;
-import graph.formula.comparator.Comparator;
+import graph.Term;
+import graph.term.Product;
 
-public class ToLessThan implements Engine {
+public class ProductRemover implements Engine {
 
 	private Formula root;
-	public ToLessThan(Formula root) { this.root = root.copy(); }
+	public ProductRemover(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
@@ -21,10 +20,10 @@ public class ToLessThan implements Engine {
 			while (transverser.hasNext()) {
 				Branch<Node> parent = transverser.next();
 				for (Node child : parent)
-					if (child instanceof Comparator) {
-						Comparator comp = (Comparator) child;
-						Formula neW = comp.toLessThan();
-						parent.replaceChild(child, neW);
+					if (child instanceof Product) {
+						Product p = (Product) child;
+						Term neW = p.simplify();
+						parent.replaceChild(p, neW);
 					}
 				transverser.done();
 			}
