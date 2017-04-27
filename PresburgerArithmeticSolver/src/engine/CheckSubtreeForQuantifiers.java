@@ -3,18 +3,20 @@ package engine;
 import graph.Branch;
 import graph.Formula;
 import graph.Node;
-import graph.formula.Not;
+import graph.formula.False;
+import graph.formula.True;
+import graph.formula.quantifier.Quantifier;
 
-public class DeMorgan implements Engine {
+public class CheckSubtreeForQuantifiers implements Engine {
 
 	private Formula root;
-	public DeMorgan(Formula root) { this.root = root.copy(); }
+	public CheckSubtreeForQuantifiers(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
 
-		while (root instanceof Not)
-			root = ((Not) root).getChild().negate();
+		if (root instanceof Quantifier)
+			return new True();
 
 		if (root instanceof Branch<?>) {
 			@SuppressWarnings("unchecked")
@@ -22,14 +24,11 @@ public class DeMorgan implements Engine {
 			while (transverser.hasNext()) {
 				Branch<Node> parent = transverser.next();
 				for (Node child : parent)
-					if (child instanceof Not) {
-						Not n = (Not) child;
-						Formula neW = n.getChild().negate();
-						parent.replaceChild(n, neW);
-					}
+					if (child instanceof Quantifier)
+						return new True();
 				transverser.done();
 			}
 		}
-		return root;
+		return new False();
 	}
 }

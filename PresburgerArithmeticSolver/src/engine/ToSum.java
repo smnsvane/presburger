@@ -3,17 +3,18 @@ package engine;
 import graph.Branch;
 import graph.Formula;
 import graph.Node;
-import graph.Term;
-import graph.formula.comparator.Comparator;
-import graph.term.Product;
+import graph.formula.Not;
 
-public class LessThanToCooperLessThan implements Engine {
+public class ToSum implements Engine {
 
 	private Formula root;
-	public LessThanToCooperLessThan(Formula root) { this.root = root.copy(); }
+	public ToSum(Formula root) { this.root = root.copy(); }
 
 	@Override
 	public Formula go() {
+
+		while (root instanceof Not)
+			root = ((Not) root).getChild().negate();
 
 		if (root instanceof Branch<?>) {
 			@SuppressWarnings("unchecked")
@@ -21,10 +22,10 @@ public class LessThanToCooperLessThan implements Engine {
 			while (transverser.hasNext()) {
 				Branch<Node> parent = transverser.next();
 				for (Node child : parent)
-					if (child instanceof Comparator) {
-						Product p = (Product) child;
-						Term neW = p.simplify();
-						parent.replaceChild(p, neW);
+					if (child instanceof Not) {
+						Not n = (Not) child;
+						Formula neW = n.getChild().negate();
+						parent.replaceChild(n, neW);
 					}
 				transverser.done();
 			}

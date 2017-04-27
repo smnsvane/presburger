@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-import parser.NodeSorter;
-
 public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<Child> {
 
 	private ArrayList<Child> children = new ArrayList<>();
@@ -22,11 +20,7 @@ public abstract class MultipleChildrenBranch<Child extends Node> extends Branch<
 			throw new RuntimeException("Can't find victim "+victim);
 		children.set(index, overtaker);
 	}
-	public MultipleChildrenBranch(Collection<Child> children) {
-		this.children.addAll(children);
-		Collections.sort(this.children, new NodeSorter());
-	}
-	// custom implementation to allow use of "replaceChild(..)" call during iteration
+	public MultipleChildrenBranch(Collection<Child> children) { this.children.addAll(children); }
 	@Override
 	public ListIterator<Child> iterator() {
 		return new ListIterator<Child>() {

@@ -3,12 +3,14 @@ package graph.term;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 import graph.Branch;
 import graph.MultipleChildrenBranch;
 import graph.Term;
 import graph.VariableAssignment;
+import parser.NodeSorter;
 import parser.Parser;
 
 public class Sum extends MultipleChildrenBranch<Term> implements Term {
@@ -85,6 +87,7 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		}
 		if (constantValue != 0)
 			children.add(new Constant(constantValue));
+		Collections.sort(children, new NodeSorter());
 		Sum sum = new Sum(children);
 		return sum;
 	}
@@ -120,9 +123,10 @@ public class Sum extends MultipleChildrenBranch<Term> implements Term {
 		}
 		if (t instanceof Variable) {
 			Variable v = (Variable) t;
+			String factorString = Math.abs(v.getFactor())==1?"":""+Math.abs(v.getFactor());
 			if (v.getFactor() < 0)
-				return " - "+(-1*v.getFactor())+v.getVariableSymbol();
-			return " + "+v.getFactor()+v.getVariableSymbol();
+				return " - "+factorString+v.getVariableSymbol();
+			return " + "+factorString+v.getVariableSymbol();
 		}
 		return t.toString();
 	}

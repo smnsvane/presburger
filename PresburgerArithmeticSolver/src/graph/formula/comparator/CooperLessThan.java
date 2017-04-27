@@ -33,16 +33,18 @@ public class CooperLessThan extends TwoChildrenBranch<Sum, Sum> implements Formu
 
 		int varFactor = 0;
 		Sum nonVar = getSecondChild().add(getFirstChild().multiply(-1).getChildren());
+		nonVar.unlock();
 		for (ListIterator<Term> it = nonVar.iterator(); it.hasNext();) {
 			Term t = it.next();
 			if (t instanceof Variable) {
 				Variable v = (Variable) t;
 				if (v.getVariableSymbol().equals(variableSymbol)) {
 					it.remove();
-					varFactor += v.getFactor();
+					varFactor -= v.getFactor(); // to account for the -1 when it was moved to nonVar
 				}
 			}
 		}
+		nonVar.lock();
 
 		if (varFactor == 0)
 			return new CooperLessThan(new Sum(), nonVar);

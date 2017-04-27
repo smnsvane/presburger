@@ -1,20 +1,21 @@
 package graph.formula.quantifier;
 
-import engine.GraphTransverser;
-import graph.Branch;
+import engine.CheckSubtreeForQuantifiers;
 import graph.Formula;
-import graph.Node;
 import graph.formula.Not;
+import graph.formula.True;
 
 public class Exists extends Quantifier {
 
+	private boolean negated = false;
 	public Exists(String variableSymbol, Formula formula) {
 		super(variableSymbol, formula);
 	}
 	@Override
-	public Formula negate() {
-		Forall forall = new Forall(getVariableSymbol(), getChild().negate());
-		return forall;
+	public Exists negate() {
+		Exists negatedExists = copy();
+		negatedExists.negated = !negated;
+		return negatedExists;
 	}
 	@Override
 	public Exists reduce() { return this; }
@@ -24,17 +25,17 @@ public class Exists extends Quantifier {
 		return not;
 	}
 	@Override
-	public Exists copy() { return new Exists(getVariableSymbol(), getChild().copy()); }
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public boolean hasNoQuantifiersInSubtree() {
-		if (getChild() instanceof Branch<?>) {
-			GraphTransverser transverser = new GraphTransverser((Branch<Node>) getChild());
-			while (transverser.hasNext()) {
-				Branch obj = transverser.next();
-				if (obj instanceof Quantifier)
-					return false;
-			}
-		}
-		return true;
+	public Exists copy() {
+		Exists e = new Exists(getVariableSymbol(), getChild().copy());
+		e.negated = negated;
+		return e;
+	}
+	public boolean hasQuantifiersInSubtree() {
+		Formula result = new CheckSubtreeForQuantifiers(getChild()).go();
+		return result instanceof True;
+	}
+	@Override
+	public String toString() {
+		return (negated?"~":"")+super.toString();
 	}
 }

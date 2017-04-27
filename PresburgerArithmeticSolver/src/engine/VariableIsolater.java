@@ -4,7 +4,6 @@ import graph.Branch;
 import graph.Formula;
 import graph.Node;
 import graph.formula.comparator.CooperLessThan;
-import graph.formula.comparator.LessThan;
 import graph.formula.quantifier.Exists;
 
 public class VariableIsolater implements Engine {
@@ -18,7 +17,7 @@ public class VariableIsolater implements Engine {
 
 		if (root instanceof Exists) {
 			Exists exists = (Exists) root;
-			if (exists.hasNoQuantifiersInSubtree())
+			if (!exists.hasQuantifiersInSubtree())
 				variableSymbol = exists.getVariableSymbol();
 		}
 
@@ -30,9 +29,9 @@ public class VariableIsolater implements Engine {
 				for (Node child : parent)
 					if (child instanceof Exists) {
 						Exists exists = (Exists) child;
-						if (exists.hasNoQuantifiersInSubtree())
+						if (!exists.hasQuantifiersInSubtree())
 							variableSymbol = exists.getVariableSymbol();
-					} else if (child instanceof LessThan && variableSymbol != null) {
+					} else if (child instanceof CooperLessThan && variableSymbol != null) {
 						CooperLessThan less = (CooperLessThan) child;
 						CooperLessThan neW = less.isolate(variableSymbol);
 						parent.replaceChild(less, neW);
